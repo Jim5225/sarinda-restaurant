@@ -1,0 +1,294 @@
+import React, { useState, useMemo } from 'react';
+import { useStore } from '../context/StoreContext';
+import { translations } from '../data/translations';
+import { Search, Plus, Star, Flame, Sparkles, Filter, Check } from 'lucide-react';
+import { MenuItem } from '../types';
+
+export const MenuSection: React.FC = () => {
+  const { lang, menu, addToCart, setDetailItem, setIsCartOpen } = useStore();
+  const t = translations[lang];
+
+  const categories: Array<MenuItem['category'] | 'All'> = [
+    'All',
+    'Biryani',
+    'Mutton',
+    'Chicken',
+    'Fish & Prawn',
+    'Set Menu',
+    'Dessert',
+    'Drinks'
+  ];
+
+  const [selectedCategory, setSelectedCategory] = useState<string>('All');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filterSpicy, setFilterSpicy] = useState(false);
+  const [filterSignatureOnly, setFilterSignatureOnly] = useState(false);
+  const [addedToast, setAddedToast] = useState<string | null>(null);
+
+  const filteredMenu = useMemo(() => {
+    return menu.filter((item) => {
+      // Category match
+      if (selectedCategory !== 'All' && item.category !== selectedCategory) {
+        return false;
+      }
+      // Search match
+      if (searchQuery.trim()) {
+        const query = searchQuery.toLowerCase();
+        const matchName = item.name.toLowerCase().includes(query) || item.banglaName.includes(query);
+        const matchDesc = item.description.toLowerCase().includes(query) || item.banglaDescription.includes(query);
+        if (!matchName && !matchDesc) return false;
+      }
+      // Filters
+      if (filterSpicy && !item.isSpicy) return false;
+      if (filterSignatureOnly && !item.isSignature) return false;
+
+      return true;
+    });
+  }, [menu, selectedCategory, searchQuery, filterSpicy, filterSignatureOnly]);
+
+  const handleQuickAdd = (item: MenuItem, e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (item.addons && item.addons.length > 0) {
+      setDetailItem(item);
+    } else {
+      addToCart(item, 1);
+      setAddedToast(lang === 'en' ? `Added ${item.name}` : `${item.banglaName} যোগ করা হয়েছে`);
+      setTimeout(() => setAddedToast(null), 2500);
+    }
+  };
+
+  return (
+    <section id="menu" className="py-16 bg-white scroll-mt-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        {/* Toast Feedback */}
+        {addedToast && (
+          <div className="fixed bottom-20 right-6 z-50 bg-brand-primary text-white px-4 py-3 rounded-2xl shadow-float flex items-center gap-2 border border-brand-leaf animate-in slide-in-from-bottom">
+            <Check className="w-5 h-5 text-brand-gold stroke-[3]" />
+            <span className="text-sm font-bold">{addedToast}</span>
+            <button
+              onClick={() => setIsCartOpen(true)}
+              className="ml-2 underline text-xs text-brand-gold hover:text-white"
+            >
+              {lang === 'en' ? 'View Bag' : 'ব্যাগ দেখুন'}
+            </button>
+          </div>
+        )}
+
+        {/* Section Title */}
+        <div className="text-center max-w-2xl mx-auto mb-10">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-brand-primary/10 text-brand-primary text-xs font-bold uppercase tracking-wider mb-2">
+            <Sparkles className="w-3.5 h-3.5 text-brand-accent" />
+            <span>{lang === 'en' ? 'Freshly Prepared Daily' : 'প্রতিদিন টাটকা তৈরি'}</span>
+          </div>
+          <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-brand-primary">
+            {lang === 'en' ? 'Our Digital Menu' : 'সারিন্দার ডিজিটাল মেনু'}
+          </h2>
+          <p className="text-sm sm:text-base text-brand-muted mt-2">
+            {lang === 'en'
+              ? 'Select your favorite dishes and order directly for fast delivery or dine-in pre-order.'
+              : 'আপনার পছন্দের পদ নির্বাচন করুন এবং দ্রুত হোম ডেলিভারি পেতে সরাসরি অর্ডার করুন।'}
+          </p>
+        </div>
+
+        {/* Search Bar & Filter Controls */}
+        <div className="bg-brand-cream/60 p-4 rounded-3xl border border-brand-border mb-8 shadow-xs">
+          <div className="flex flex-col md:flex-row gap-3 items-center justify-between">
+            
+            {/* Search Input */}
+            <div className="relative w-full md:w-80">
+              <Search className="w-4 h-4 text-brand-muted absolute left-3.5 top-1/2 -translate-y-1/2" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder={t.searchPlaceholder}
+                className="w-full pl-10 pr-4 py-2.5 rounded-2xl bg-white border border-brand-border text-sm text-brand-charcoal focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary transition"
+              />
+            </div>
+
+            {/* Quick Filter Toggles */}
+            <div className="flex flex-wrap items-center gap-2 w-full md:w-auto justify-start md:justify-end">
+              <button
+                onClick={() => setFilterSignatureOnly(!filterSignatureOnly)}
+                className={`px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 transition cursor-pointer ${
+                  filterSignatureOnly
+                    ? 'bg-brand-primary text-white shadow-xs'
+                    : 'bg-white text-brand-charcoal border border-brand-border hover:bg-brand-cream'
+                }`}
+              >
+                <Sparkles className="w-3.5 h-3.5 text-brand-gold" />
+                <span>{lang === 'en' ? 'Chef Signature' : 'শেফ স্পেশাল'}</span>
+              </button>
+
+              <button
+                onClick={() => setFilterSpicy(!filterSpicy)}
+                className={`px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 transition cursor-pointer ${
+                  filterSpicy
+                    ? 'bg-amber-600 text-white shadow-xs'
+                    : 'bg-white text-brand-charcoal border border-brand-border hover:bg-brand-cream'
+                }`}
+              >
+                <Flame className="w-3.5 h-3.5 text-red-500" />
+                <span>{lang === 'en' ? 'Spicy Items' : 'ঝাল আইটেম'}</span>
+              </button>
+            </div>
+
+          </div>
+        </div>
+
+        {/* Category Tabs */}
+        <div className="flex space-x-2 overflow-x-auto pb-4 mb-8 no-scrollbar" style={{ scrollbarWidth: 'none' }}>
+          {categories.map((cat) => {
+            const isActive = selectedCategory === cat;
+            return (
+              <button
+                key={cat}
+                onClick={() => setSelectedCategory(cat)}
+                className={`px-5 py-2.5 rounded-2xl text-xs sm:text-sm font-bold whitespace-nowrap transition-all duration-200 cursor-pointer ${
+                  isActive
+                    ? 'bg-brand-primary text-white shadow-md scale-102'
+                    : 'bg-brand-cream text-brand-charcoal/80 hover:bg-brand-primary/10 hover:text-brand-primary border border-brand-border/60'
+                }`}
+              >
+                {cat === 'All' ? t.allCategories : cat}
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Dishes Grid */}
+        {filteredMenu.length === 0 ? (
+          <div className="text-center py-16 bg-brand-cream/30 rounded-3xl border border-dashed border-brand-border">
+            <Filter className="w-10 h-10 text-brand-muted mx-auto mb-2 opacity-50" />
+            <p className="font-serif text-lg text-brand-charcoal font-bold">
+              {lang === 'en' ? 'No dishes found matching your criteria' : 'আপনার পছন্দের কোনো খাবার পাওয়া যায়নি'}
+            </p>
+            <p className="text-xs text-brand-muted mt-1">
+              {lang === 'en' ? 'Try searching for something else or clear filters.' : 'অন্য কোনো নাম দিয়ে সার্চ করুন অথবা ফিল্টার ক্লিয়ার করুন।'}
+            </p>
+            <button
+              onClick={() => {
+                setSearchQuery('');
+                setSelectedCategory('All');
+                setFilterSpicy(false);
+                setFilterSignatureOnly(false);
+              }}
+              className="mt-4 px-4 py-2 bg-brand-primary text-white rounded-xl text-xs font-bold"
+            >
+              {lang === 'en' ? 'Reset Filters' : 'ফিল্টার রিসেট করুন'}
+            </button>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {filteredMenu.map((item) => {
+              const hasAddons = item.addons && item.addons.length > 0;
+              return (
+                <div
+                  key={item.id}
+                  onClick={() => setDetailItem(item)}
+                  className="bg-white rounded-3xl overflow-hidden border border-brand-border/80 shadow-soft hover:shadow-elevated transition-all duration-300 flex flex-col group cursor-pointer"
+                >
+                  {/* Image container */}
+                  <div className="relative h-48 overflow-hidden bg-brand-cream">
+                    <img
+                      src={item.image}
+                      alt={item.name}
+                      className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+                      loading="lazy"
+                    />
+
+                    {/* Badges */}
+                    <div className="absolute top-3 left-3 flex flex-col gap-1">
+                      {item.isSignature && (
+                        <span className="bg-brand-primary/95 text-brand-gold text-[10px] font-extrabold px-2.5 py-0.5 rounded-full shadow uppercase tracking-wider backdrop-blur-xs">
+                          ★ {t.signatureBadge}
+                        </span>
+                      )}
+                      {item.isPopular && !item.isSignature && (
+                        <span className="bg-amber-600/90 text-white text-[10px] font-extrabold px-2.5 py-0.5 rounded-full shadow uppercase tracking-wider backdrop-blur-xs">
+                          🔥 {t.bestsellerBadge}
+                        </span>
+                      )}
+                    </div>
+
+                    {item.originalPrice && (
+                      <span className="absolute top-3 right-3 bg-brand-accent text-white text-[11px] font-black px-2 py-0.5 rounded-full shadow">
+                        SAVE ৳{item.originalPrice - item.price}
+                      </span>
+                    )}
+
+                    {/* Rating badge */}
+                    <div className="absolute bottom-2 left-3 bg-black/60 backdrop-blur-xs text-white text-xs px-2 py-0.5 rounded-md flex items-center gap-1">
+                      <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
+                      <span>{item.rating}</span>
+                      <span className="text-[10px] text-white/70">({item.reviewsCount})</span>
+                    </div>
+
+                    {item.prepTime && (
+                      <div className="absolute bottom-2 right-3 bg-white/90 backdrop-blur-xs text-brand-charcoal text-[10px] font-semibold px-2 py-0.5 rounded-md">
+                        {item.prepTime}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Body Content */}
+                  <div className="p-5 flex-1 flex flex-col justify-between">
+                    <div>
+                      <div className="flex items-center justify-between text-[11px] font-bold uppercase tracking-wider text-brand-leaf mb-1">
+                        <span>{item.category}</span>
+                        {item.isSpicy && (
+                          <span className="text-red-500 flex items-center gap-0.5 font-semibold">
+                            <Flame className="w-3 h-3" /> {t.spicyBadge}
+                          </span>
+                        )}
+                      </div>
+
+                      <h3 className="font-serif font-bold text-lg text-brand-charcoal group-hover:text-brand-primary transition line-clamp-1">
+                        {lang === 'en' ? item.name : item.banglaName}
+                      </h3>
+
+                      <p className="text-xs text-brand-muted mt-1.5 line-clamp-2 leading-relaxed">
+                        {lang === 'en' ? item.description : item.banglaDescription}
+                      </p>
+                    </div>
+
+                    {/* Price and Add CTA */}
+                    <div className="flex items-center justify-between mt-5 pt-3 border-t border-brand-border/60">
+                      <div>
+                        <div className="flex items-baseline gap-1.5">
+                          <span className="font-extrabold text-xl text-brand-primary">
+                            ৳{item.price}
+                          </span>
+                          {item.originalPrice && (
+                            <span className="text-xs line-through text-brand-muted">
+                              ৳{item.originalPrice}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+
+                      <button
+                        onClick={(e) => handleQuickAdd(item, e)}
+                        disabled={!item.isAvailable}
+                        className={`px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition shadow-xs cursor-pointer ${
+                          !item.isAvailable
+                            ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                            : 'bg-brand-primary text-white hover:bg-brand-dark group-hover:scale-105 active:scale-95'
+                        }`}
+                      >
+                        <Plus className="w-3.5 h-3.5" />
+                        <span>{hasAddons ? t.customise : t.addToCart}</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+
+      </div>
+    </section>
+  );
+};
