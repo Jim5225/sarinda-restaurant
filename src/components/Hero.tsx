@@ -204,36 +204,36 @@ export const Hero: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8 items-center">
           
           {/* Left Column: Text & CTAs */}
-          <div className="lg:col-span-6 space-y-5 text-center lg:text-left">
+          <div className="lg:col-span-6 space-y-6 text-center lg:text-left">
             
             {/* Trust Pill */}
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-primary/10 border border-brand-primary/20 text-brand-primary text-xs sm:text-sm font-semibold shadow-xs">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-primary/10 border border-brand-primary/25 text-brand-primary text-xs sm:text-sm font-extrabold shadow-xs">
               <Sparkles className="w-4 h-4 text-brand-accent" />
               <span>{t.heroTag}</span>
             </div>
 
             {/* Headline */}
-            <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold tracking-tight text-brand-primary leading-[1.14]">
+            <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-black tracking-tight text-brand-primary leading-[1.14]">
               {t.heroTitle}
             </h1>
 
             {/* Supporting Copy */}
-            <p className="text-sm sm:text-base text-brand-charcoal/80 max-w-xl mx-auto lg:mx-0 leading-relaxed font-normal">
+            <p className="text-base sm:text-lg text-brand-charcoal font-semibold max-w-xl mx-auto lg:mx-0 leading-relaxed">
               {t.heroSub}
             </p>
 
             {/* Highlights List */}
-            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3 pt-1 text-xs sm:text-sm font-medium text-brand-charcoal/90">
-              <span className="flex items-center gap-1.5 bg-white px-3 py-1.5 rounded-xl border border-brand-border shadow-xs">
-                <CheckCircle2 className="w-4 h-4 text-brand-leaf" />
+            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3 pt-1 text-xs sm:text-sm font-bold text-brand-charcoal">
+              <span className="flex items-center gap-1.5 bg-white px-3.5 py-2 rounded-xl border border-brand-border shadow-xs">
+                <CheckCircle2 className="w-4 h-4 text-brand-leaf font-bold" />
                 {lang === 'en' ? 'Slow Dum Cooked' : 'আসল দম রান্না'}
               </span>
-              <span className="flex items-center gap-1.5 bg-white px-3 py-1.5 rounded-xl border border-brand-border shadow-xs">
-                <CheckCircle2 className="w-4 h-4 text-brand-leaf" />
+              <span className="flex items-center gap-1.5 bg-white px-3.5 py-2 rounded-xl border border-brand-border shadow-xs">
+                <CheckCircle2 className="w-4 h-4 text-brand-leaf font-bold" />
                 {lang === 'en' ? 'Pure Mustard Oil & Ghee' : 'খাঁটি ঘি ও সরিষার তেল'}
               </span>
-              <span className="flex items-center gap-1.5 bg-white px-3 py-1.5 rounded-xl border border-brand-border shadow-xs">
-                <Clock className="w-4 h-4 text-brand-leaf" />
+              <span className="flex items-center gap-1.5 bg-white px-3.5 py-2 rounded-xl border border-brand-border shadow-xs">
+                <Clock className="w-4 h-4 text-brand-leaf font-bold" />
                 {lang === 'en' ? '30-40 Min Delivery' : '৩০-৪০ মিনিটে ডেলিভারি'}
               </span>
             </div>
@@ -242,17 +242,17 @@ export const Hero: React.FC = () => {
             <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3.5 pt-2">
               <button
                 onClick={handleOrderClick}
-                className="w-full sm:w-auto px-7 py-3.5 rounded-2xl text-sm font-bold text-white bg-brand-primary hover:bg-brand-dark transition-all duration-200 shadow-elevated hover:shadow-float flex items-center justify-center gap-2 group cursor-pointer"
+                className="w-full sm:w-auto px-8 py-4 rounded-2xl text-base font-black text-white bg-brand-primary hover:bg-brand-dark transition-all duration-200 shadow-elevated hover:shadow-float flex items-center justify-center gap-2.5 group cursor-pointer"
               >
                 <span>{t.orderNow}</span>
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition duration-200" />
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-1.5 transition duration-200" />
               </button>
 
               <button
                 onClick={() => setIsReservationOpen(true)}
-                className="w-full sm:w-auto px-6 py-3.5 rounded-2xl text-sm font-bold text-brand-primary bg-white hover:bg-brand-cream border-2 border-brand-primary/20 hover:border-brand-primary transition-all duration-200 shadow-soft flex items-center justify-center gap-2 cursor-pointer"
+                className="w-full sm:w-auto px-7 py-4 rounded-2xl text-base font-black text-brand-primary bg-white hover:bg-brand-cream border-2 border-brand-primary/30 hover:border-brand-primary transition-all duration-200 shadow-soft flex items-center justify-center gap-2 cursor-pointer"
               >
-                <CalendarDays className="w-4 h-4 text-brand-leaf" />
+                <CalendarDays className="w-5 h-5 text-brand-leaf" />
                 <span>{t.bookTable}</span>
               </button>
             </div>
@@ -260,20 +260,20 @@ export const Hero: React.FC = () => {
             {/* Social Proof Snippet */}
             <div className="pt-2 flex items-center justify-center lg:justify-start gap-4 text-xs sm:text-sm text-brand-muted">
               <div className="flex -space-x-2 overflow-hidden">
-                <img className="inline-block h-8 w-8 rounded-full ring-2 ring-white object-cover" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80" alt="Customer" />
-                <img className="inline-block h-8 w-8 rounded-full ring-2 ring-white object-cover" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=100&q=80" alt="Customer" />
-                <img className="inline-block h-8 w-8 rounded-full ring-2 ring-white object-cover" src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=100&q=80" alt="Customer" />
-                <div className="inline-flex items-center justify-center h-8 w-8 rounded-full bg-brand-primary text-white text-[11px] font-bold ring-2 ring-white">
+                <img className="inline-block h-9 w-9 rounded-full ring-2 ring-white object-cover" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80" alt="Customer" />
+                <img className="inline-block h-9 w-9 rounded-full ring-2 ring-white object-cover" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=100&q=80" alt="Customer" />
+                <img className="inline-block h-9 w-9 rounded-full ring-2 ring-white object-cover" src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=100&q=80" alt="Customer" />
+                <div className="inline-flex items-center justify-center h-9 w-9 rounded-full bg-brand-primary text-white text-xs font-black ring-2 ring-white">
                   +1k
                 </div>
               </div>
               <div>
                 <div className="flex text-amber-500">
                   {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="w-3.5 h-3.5 fill-amber-400" />
+                    <Star key={i} className="w-4 h-4 fill-amber-400" />
                   ))}
                 </div>
-                <p className="text-xs text-brand-charcoal font-medium">
+                <p className="text-sm text-brand-charcoal font-bold">
                   {lang === 'en' ? 'Rated 4.9 by 1,200+ food lovers' : '১২০০+ ভোজনরসিকের প্রিয় রেস্তোরাঁ'}
                 </p>
               </div>
@@ -286,13 +286,13 @@ export const Hero: React.FC = () => {
             
             {/* View Mode Toggle Pill on Top */}
             <div className="flex items-center justify-between mb-3 px-1">
-              <div className="flex items-center gap-1.5 bg-brand-cream/80 p-1 rounded-2xl border border-brand-border text-xs">
+              <div className="flex items-center gap-1.5 bg-brand-cream/80 p-1.5 rounded-2xl border border-brand-border text-xs sm:text-sm">
                 <button
                   onClick={() => setRightView('ai')}
-                  className={`px-3 py-1.5 rounded-xl font-bold transition flex items-center gap-1.5 cursor-pointer ${
+                  className={`px-3.5 py-1.5 rounded-xl font-black transition flex items-center gap-1.5 cursor-pointer ${
                     rightView === 'ai'
                       ? 'bg-brand-primary text-white shadow-sm'
-                      : 'text-brand-charcoal/70 hover:text-brand-primary'
+                      : 'text-brand-charcoal hover:text-brand-primary'
                   }`}
                 >
                   <Bot className="w-4 h-4 text-brand-gold animate-pulse" />
@@ -301,46 +301,46 @@ export const Hero: React.FC = () => {
 
                 <button
                   onClick={() => setRightView('photo')}
-                  className={`px-3 py-1.5 rounded-xl font-bold transition flex items-center gap-1.5 cursor-pointer ${
+                  className={`px-3.5 py-1.5 rounded-xl font-black transition flex items-center gap-1.5 cursor-pointer ${
                     rightView === 'photo'
                       ? 'bg-brand-primary text-white shadow-sm'
-                      : 'text-brand-charcoal/70 hover:text-brand-primary'
+                      : 'text-brand-charcoal hover:text-brand-primary'
                   }`}
                 >
-                  <UtensilsCrossed className="w-3.5 h-3.5 text-brand-accent" />
+                  <UtensilsCrossed className="w-4 h-4 text-brand-accent" />
                   <span>{lang === 'en' ? 'Kacchi Photo View' : 'কাচ্চি ছবি ভিউ'}</span>
                 </button>
               </div>
 
-              <div className="hidden sm:flex items-center gap-1.5 text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
-                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
+              <div className="hidden sm:flex items-center gap-1.5 text-xs font-black text-emerald-800 bg-emerald-100/70 px-3 py-1.5 rounded-full border border-emerald-300">
+                <span className="w-2 h-2 rounded-full bg-emerald-600 animate-ping" />
                 <span>{lang === 'en' ? 'Instant Order Concierge' : 'লাইভ ফুড কনসিয়ার্জ'}</span>
               </div>
             </div>
 
             {/* TAB 1: SARINDA AI INTERACTIVE LIVE CHAT TERMINAL */}
             {rightView === 'ai' ? (
-              <div className="relative rounded-3xl overflow-hidden shadow-2xl bg-white border-2 border-brand-gold/40 flex flex-col h-[510px] animate-in zoom-in-95 duration-200">
+              <div className="relative rounded-3xl overflow-hidden shadow-2xl bg-white border-2 border-brand-gold/40 flex flex-col h-[520px] animate-in zoom-in-95 duration-200">
                 
                 {/* Header with Title requested by User */}
                 <div className="p-4 bg-gradient-to-r from-brand-dark via-brand-primary to-brand-dark text-white flex items-center justify-between shrink-0 shadow-md">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-2xl bg-white/10 border border-brand-gold/40 flex items-center justify-center text-brand-gold shadow">
+                    <div className="w-11 h-11 rounded-2xl bg-white/10 border border-brand-gold/40 flex items-center justify-center text-brand-gold shadow">
                       <Bot className="w-6 h-6 animate-pulse" />
                     </div>
                     <div>
                       <div className="flex items-center gap-1.5">
-                        <span className="text-xs sm:text-sm font-extrabold text-brand-gold tracking-tight">
+                        <span className="text-sm font-black text-brand-gold tracking-tight">
                           Sarinda AI
                         </span>
                         <span className="text-white/40">•</span>
-                        <span className="text-[11px] font-bold text-emerald-400 flex items-center gap-1">
-                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
+                        <span className="text-xs font-black text-emerald-400 flex items-center gap-1">
+                          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
                           Online
                         </span>
                       </div>
                       {/* Exact Title requested by User */}
-                      <h3 className="font-serif text-xs sm:text-sm font-bold text-brand-cream/95 leading-tight">
+                      <h3 className="font-serif text-sm sm:text-base font-black text-brand-cream leading-tight">
                         {lang === 'en'
                           ? 'Order your favorite food by asking the agent'
                           : 'পছন্দের খাবার অর্ডার করুন এজেন্টকে জিজ্ঞাসা করে'}
@@ -350,10 +350,10 @@ export const Hero: React.FC = () => {
 
                   <button
                     onClick={() => setChatMessages(initialHeroMessages)}
-                    className="p-1.5 rounded-xl hover:bg-white/10 text-brand-cream/70 hover:text-white transition"
+                    className="p-2 rounded-xl hover:bg-white/10 text-brand-cream/80 hover:text-white transition cursor-pointer"
                     title="Reset Conversation"
                   >
-                    <RotateCcw className="w-4 h-4" />
+                    <RotateCcw className="w-4 h-4 font-bold" />
                   </button>
                 </div>
 
@@ -365,10 +365,10 @@ export const Hero: React.FC = () => {
                       className={`flex flex-col ${msg.sender === 'user' ? 'items-end' : 'items-start'}`}
                     >
                       <div
-                        className={`max-w-[88%] rounded-2xl p-3 text-xs leading-relaxed ${
+                        className={`max-w-[88%] rounded-2xl p-3.5 text-xs sm:text-sm leading-relaxed ${
                           msg.sender === 'user'
-                            ? 'bg-brand-primary text-white rounded-br-none shadow-xs font-medium'
-                            : 'bg-white text-brand-charcoal border border-brand-border shadow-xs rounded-bl-none'
+                            ? 'bg-brand-primary text-white rounded-br-none shadow-xs font-bold'
+                            : 'bg-white text-brand-charcoal border border-brand-border shadow-xs rounded-bl-none font-semibold'
                         }`}
                       >
                         {msg.text}
@@ -380,21 +380,21 @@ export const Hero: React.FC = () => {
                           <img
                             src={msg.recommendedItem.image}
                             alt={msg.recommendedItem.name}
-                            className="w-14 h-14 rounded-xl object-cover shrink-0"
+                            className="w-16 h-16 rounded-xl object-cover shrink-0 shadow-xs"
                           />
                           <div className="flex-1 min-w-0">
-                            <span className="text-[10px] font-bold uppercase text-brand-leaf block">
+                            <span className="text-[11px] font-black uppercase text-brand-leaf block">
                               {msg.recommendedItem.category}
                             </span>
-                            <h4 className="font-serif font-bold text-xs text-brand-charcoal truncate">
+                            <h4 className="font-serif font-black text-sm text-brand-charcoal truncate">
                               {lang === 'en' ? msg.recommendedItem.name : msg.recommendedItem.banglaName}
                             </h4>
                             <div className="flex items-center gap-1.5 mt-0.5">
-                              <span className="text-xs font-black text-brand-primary">
+                              <span className="text-sm font-black text-brand-primary">
                                 ৳{msg.recommendedItem.price}
                               </span>
                               {msg.recommendedItem.portionNote && (
-                                <span className="text-[10px] text-brand-muted">
+                                <span className="text-xs text-brand-muted font-bold">
                                   ({msg.recommendedItem.portionNote})
                                 </span>
                               )}
@@ -402,9 +402,9 @@ export const Hero: React.FC = () => {
                           </div>
                           <button
                             onClick={() => handleQuickAddRecommended(msg.recommendedItem!)}
-                            className="px-3 py-1.5 rounded-xl bg-brand-primary hover:bg-brand-dark text-white font-bold text-[11px] flex items-center gap-1 shrink-0 shadow-xs cursor-pointer"
+                            className="px-3.5 py-2 rounded-xl bg-brand-primary hover:bg-brand-dark text-white font-black text-xs flex items-center gap-1 shrink-0 shadow-sm cursor-pointer"
                           >
-                            <ShoppingBag className="w-3 h-3" />
+                            <ShoppingBag className="w-3.5 h-3.5" />
                             <span>{lang === 'en' ? 'Add' : 'অর্ডার'}</span>
                           </button>
                         </div>
@@ -414,9 +414,9 @@ export const Hero: React.FC = () => {
                       {msg.action && (
                         <button
                           onClick={() => handleActionClick(msg.action!)}
-                          className="mt-1.5 px-3.5 py-1.5 rounded-xl bg-brand-primary text-white text-[11px] font-bold shadow-xs hover:bg-brand-dark transition cursor-pointer flex items-center gap-1.5"
+                          className="mt-1.5 px-4 py-2 rounded-xl bg-brand-primary text-white text-xs font-black shadow-xs hover:bg-brand-dark transition cursor-pointer flex items-center gap-1.5"
                         >
-                          <Sparkles className="w-3 h-3 text-brand-gold" />
+                          <Sparkles className="w-3.5 h-3.5 text-brand-gold" />
                           <span>{msg.action.label}</span>
                         </button>
                       )}
@@ -425,20 +425,20 @@ export const Hero: React.FC = () => {
 
                   {isTyping && (
                     <div className="flex items-center gap-1.5 bg-white p-2.5 rounded-2xl border border-brand-border w-16">
-                      <span className="w-1.5 h-1.5 bg-brand-primary rounded-full animate-bounce" />
-                      <span className="w-1.5 h-1.5 bg-brand-primary rounded-full animate-bounce [animation-delay:0.2s]" />
-                      <span className="w-1.5 h-1.5 bg-brand-primary rounded-full animate-bounce [animation-delay:0.4s]" />
+                      <span className="w-2 h-2 bg-brand-primary rounded-full animate-bounce" />
+                      <span className="w-2 h-2 bg-brand-primary rounded-full animate-bounce [animation-delay:0.2s]" />
+                      <span className="w-2 h-2 bg-brand-primary rounded-full animate-bounce [animation-delay:0.4s]" />
                     </div>
                   )}
                 </div>
 
                 {/* Quick Prompts Carousel */}
-                <div className="px-3 py-2 bg-brand-cream/50 border-t border-brand-border/60 overflow-x-auto flex gap-1.5 no-scrollbar shrink-0">
+                <div className="px-3 py-2.5 bg-brand-cream/50 border-t border-brand-border/60 overflow-x-auto flex gap-2 no-scrollbar shrink-0">
                   {quickPrompts.map((prompt, idx) => (
                     <button
                       key={idx}
                       onClick={() => handleHeroAiQuery(prompt)}
-                      className="px-2.5 py-1 rounded-xl bg-white border border-brand-border text-[11px] font-semibold text-brand-charcoal hover:bg-brand-primary hover:text-white transition whitespace-nowrap shrink-0 cursor-pointer shadow-2xs"
+                      className="px-3 py-1.5 rounded-xl bg-white border border-brand-border text-xs font-bold text-brand-charcoal hover:bg-brand-primary hover:text-white transition whitespace-nowrap shrink-0 cursor-pointer shadow-2xs"
                     >
                       {prompt}
                     </button>
@@ -458,15 +458,15 @@ export const Hero: React.FC = () => {
                     value={inputVal}
                     onChange={(e) => setInputVal(e.target.value)}
                     placeholder={lang === 'en' ? 'Type food name or ask: 4 person combo...' : 'পছন্দের খাবারের নাম বা ৪ জনের কম্বো লিখুন...'}
-                    className="flex-1 px-3.5 py-2.5 rounded-xl bg-brand-cream/40 border border-brand-border text-xs text-brand-charcoal focus:outline-none focus:ring-1 focus:ring-brand-primary placeholder:text-brand-muted/70"
+                    className="flex-1 px-4 py-2.5 rounded-xl bg-brand-cream/40 border border-brand-border text-sm font-semibold text-brand-charcoal focus:outline-none focus:ring-2 focus:ring-brand-primary placeholder:text-brand-muted/70"
                   />
                   <button
                     type="submit"
                     disabled={!inputVal.trim()}
-                    className="p-2.5 rounded-xl bg-brand-accent hover:bg-brand-accentHover text-white disabled:opacity-40 transition cursor-pointer shadow-xs"
+                    className="p-2.5 rounded-xl bg-brand-accent hover:bg-brand-accentHover text-white disabled:opacity-40 transition cursor-pointer shadow-sm"
                     title="Send"
                   >
-                    <Send className="w-4 h-4" />
+                    <Send className="w-5 h-5 font-bold" />
                   </button>
                 </form>
 

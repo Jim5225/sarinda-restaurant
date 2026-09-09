@@ -48,30 +48,30 @@ export const SignatureHighlight: React.FC = () => {
 
           {/* Text & Culinary Craftsmanship */}
           <div className="lg:col-span-6 space-y-6">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-brand-gold text-xs font-bold uppercase tracking-wider">
-              <Sparkles className="w-3.5 h-3.5" />
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 text-brand-gold text-xs sm:text-sm font-black uppercase tracking-wider">
+              <Sparkles className="w-4 h-4" />
               <span>{lang === 'en' ? 'Crown Jewel of Sarinda' : 'আমাদের সেরা নিবেদন'}</span>
             </div>
 
-            <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight">
+            <h2 className="font-serif text-3xl sm:text-5xl font-black leading-tight tracking-tight">
               {lang === 'en' ? signature.name : signature.banglaName}
             </h2>
 
-            <p className="text-base text-brand-cream/80 leading-relaxed">
+            <p className="text-base sm:text-lg font-medium text-brand-cream/90 leading-relaxed">
               {lang === 'en' ? signature.description : signature.banglaDescription}
             </p>
 
             {/* Quality Checklist */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-2">
               {[
                 lang === 'en' ? 'Prime farm mutton cuts' : 'সেরা মানের খাসির মাংস',
                 lang === 'en' ? 'Fragrant aged Chinigura rice' : 'সুগন্ধি পুরোনো চিনিগুঁড়া চাল',
                 lang === 'en' ? 'Shahi saffron & pure ghee' : 'শাহী জাফরান ও খাঁটি গাওয়া ঘি',
                 lang === 'en' ? 'Sealed earthen handi dum' : 'সিল্ড মাটির হাঁড়িতে খাঁটি দম'
               ].map((text, idx) => (
-                <div key={idx} className="flex items-center gap-2.5 text-sm text-brand-cream">
-                  <div className="w-5 h-5 rounded-full bg-brand-leaf/40 flex items-center justify-center text-brand-gold">
-                    <Check className="w-3 h-3 stroke-[3]" />
+                <div key={idx} className="flex items-center gap-2.5 text-sm sm:text-base font-bold text-brand-cream">
+                  <div className="w-6 h-6 rounded-full bg-brand-leaf/40 flex items-center justify-center text-brand-gold shrink-0">
+                    <Check className="w-3.5 h-3.5 stroke-[3]" />
                   </div>
                   <span>{text}</span>
                 </div>
@@ -81,17 +81,17 @@ export const SignatureHighlight: React.FC = () => {
             {/* Price and CTA */}
             <div className="pt-4 flex flex-wrap items-center gap-6">
               <div className="flex items-baseline gap-3">
-                <span className="text-3xl sm:text-4xl font-black text-brand-gold">৳{signature.price}</span>
+                <span className="text-3xl sm:text-5xl font-black text-brand-gold">৳{signature.price}</span>
                 {signature.originalPrice && (
-                  <span className="text-lg line-through text-white/50">৳{signature.originalPrice}</span>
+                  <span className="text-xl font-bold line-through text-white/50">৳{signature.originalPrice}</span>
                 )}
               </div>
 
               <button
                 onClick={() => setDetailItem(signature)}
-                className="px-7 py-3.5 rounded-2xl bg-brand-accent hover:bg-brand-accentHover text-white font-bold text-sm shadow-elevated hover:shadow-float flex items-center gap-2 transition duration-200 cursor-pointer"
+                className="px-8 py-4 rounded-2xl bg-brand-accent hover:bg-brand-accentHover text-white font-black text-base shadow-elevated hover:shadow-float flex items-center gap-2.5 transition duration-200 cursor-pointer"
               >
-                <ShoppingBag className="w-4 h-4" />
+                <ShoppingBag className="w-5 h-5" />
                 <span>{t.addToCart}</span>
               </button>
             </div>

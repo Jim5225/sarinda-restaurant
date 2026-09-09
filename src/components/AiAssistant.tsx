@@ -203,14 +203,14 @@ export const AiAssistant: React.FC = () => {
           {/* Header */}
           <div className="p-4 bg-brand-primary text-white flex items-center justify-between">
             <div className="flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded-2xl bg-white/10 flex items-center justify-center text-brand-gold">
-                <Bot className="w-5 h-5" />
+              <div className="w-10 h-10 rounded-2xl bg-white/10 flex items-center justify-center text-brand-gold">
+                <Bot className="w-6 h-6" />
               </div>
               <div>
-                <h3 className="font-serif font-bold text-sm leading-tight flex items-center gap-1.5">
-                  Sarinda Foodie AI <Sparkles className="w-3 h-3 text-brand-gold" />
+                <h3 className="font-serif font-black text-base leading-tight flex items-center gap-1.5">
+                  Sarinda Foodie AI <Sparkles className="w-3.5 h-3.5 text-brand-gold" />
                 </h3>
-                <p className="text-[10px] text-brand-cream/70 font-medium">
+                <p className="text-xs text-brand-cream/80 font-bold">
                   {lang === 'en' ? 'Online • Menu & Reservation Expert' : 'অনলাইন • মেনু ও বুকিং সহকারী'}
                 </p>
               </div>
@@ -232,9 +232,9 @@ export const AiAssistant: React.FC = () => {
                 className={`flex flex-col ${m.sender === 'user' ? 'items-end' : 'items-start'}`}
               >
                 <div
-                  className={`max-w-[85%] rounded-2xl p-3 text-xs leading-relaxed ${
+                  className={`max-w-[85%] rounded-2xl p-3.5 text-sm font-semibold leading-relaxed ${
                     m.sender === 'user'
-                      ? 'bg-brand-primary text-white rounded-br-none'
+                      ? 'bg-brand-primary text-white rounded-br-none font-bold'
                       : 'bg-white text-brand-charcoal border border-brand-border shadow-xs rounded-bl-none whitespace-pre-line'
                   }`}
                 >
@@ -244,9 +244,9 @@ export const AiAssistant: React.FC = () => {
                 {m.action && (
                   <button
                     onClick={() => handleActionClick(m.action!)}
-                    className="mt-1.5 px-3 py-1.5 rounded-xl bg-brand-primary text-white text-[11px] font-bold shadow-xs hover:bg-brand-dark transition cursor-pointer flex items-center gap-1.5"
+                    className="mt-1.5 px-3.5 py-2 rounded-xl bg-brand-primary text-white text-xs font-black shadow-xs hover:bg-brand-dark transition cursor-pointer flex items-center gap-1.5"
                   >
-                    <Sparkles className="w-3 h-3 text-brand-gold" />
+                    <Sparkles className="w-3.5 h-3.5 text-brand-gold" />
                     <span>{m.action.label}</span>
                   </button>
                 )}
@@ -263,12 +263,12 @@ export const AiAssistant: React.FC = () => {
           </div>
 
           {/* Suggested Prompts Pills */}
-          <div className="p-2 bg-brand-cream/60 border-t border-brand-border/60 overflow-x-auto flex gap-1.5 no-scrollbar">
+          <div className="p-2.5 bg-brand-cream/60 border-t border-brand-border/60 overflow-x-auto flex gap-2 no-scrollbar">
             {suggestedPrompts.map((p, idx) => (
               <button
                 key={idx}
                 onClick={() => handleSend(p)}
-                className="px-2.5 py-1 rounded-lg bg-white border border-brand-border text-[10px] font-semibold text-brand-charcoal hover:bg-brand-primary hover:text-white transition whitespace-nowrap shrink-0 cursor-pointer"
+                className="px-3 py-1.5 rounded-xl bg-white border border-brand-border text-xs font-bold text-brand-charcoal hover:bg-brand-primary hover:text-white transition whitespace-nowrap shrink-0 cursor-pointer shadow-xs"
               >
                 {p}
               </button>
@@ -288,12 +288,12 @@ export const AiAssistant: React.FC = () => {
               value={inputText}
               onChange={(e) => setInputText(e.target.value)}
               placeholder={lang === 'en' ? 'Ask about dishes, pricing, booking...' : 'খাবারের নাম বা টেবিল বুকিং নিয়ে জানতে লিখুন...'}
-              className="flex-1 px-3.5 py-2 rounded-xl bg-brand-cream/40 border border-brand-border text-xs text-brand-charcoal focus:outline-none focus:ring-1 focus:ring-brand-primary"
+              className="flex-1 px-3.5 py-2.5 rounded-xl bg-brand-cream/40 border border-brand-border text-sm font-semibold text-brand-charcoal placeholder:font-normal focus:outline-none focus:ring-1 focus:ring-brand-primary"
             />
             <button
               type="submit"
               disabled={!inputText.trim()}
-              className="p-2 rounded-xl bg-brand-primary text-white hover:bg-brand-dark disabled:opacity-40 transition cursor-pointer"
+              className="p-2.5 rounded-xl bg-brand-primary text-white hover:bg-brand-dark disabled:opacity-40 transition cursor-pointer"
             >
               <Send className="w-4 h-4" />
             </button>

@@ -49,10 +49,10 @@ export const TrustIndicators: React.FC = () => {
                   <Icon className="w-6 h-6" />
                 </div>
                 <div>
-                  <h4 className="font-serif font-bold text-base text-brand-primary">
+                  <h4 className="font-serif font-black text-lg text-brand-primary">
                     {f.title}
                   </h4>
-                  <p className="text-xs text-brand-muted mt-1 leading-relaxed">
+                  <p className="text-sm font-semibold text-brand-muted mt-1 leading-relaxed">
                     {f.desc}
                   </p>
                 </div>

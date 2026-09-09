@@ -79,7 +79,7 @@ export const SarindaAiBanner: React.FC = () => {
               </div>
 
               {/* Big Dynamic Headline as requested by user */}
-              <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white leading-tight">
+              <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white leading-tight">
                 {lang === 'en' ? (
                   <>
                     Find Food Instantly by Asking <span className="text-brand-gold">Sarinda AI</span>
@@ -92,7 +92,7 @@ export const SarindaAiBanner: React.FC = () => {
               </h2>
 
               {/* Subtitle */}
-              <p className="text-sm sm:text-base text-brand-cream/80 leading-relaxed font-medium">
+              <p className="text-base sm:text-lg text-brand-cream leading-relaxed font-bold">
                 {lang === 'en'
                   ? 'Ask anything about our authentic recipes, spice levels, family meal recommendations, live pricing, and table bookings.'
                   : 'আমাদের আসল কাচ্চির স্বাদ, মশলার তীব্রতা, ফ্যামিলি কম্বো নির্বাচন, লাইভ দাম বা টেবিল বুকিং নিয়ে যেকোনো প্রশ্ন করুন।'}
@@ -104,7 +104,7 @@ export const SarindaAiBanner: React.FC = () => {
                   onSubmit={handleAskSubmit}
                   className="relative flex items-center bg-white rounded-2xl p-2 shadow-2xl border-2 border-brand-gold/50 focus-within:border-brand-gold transition duration-200"
                 >
-                  <div className="w-10 h-10 rounded-xl bg-brand-primary text-brand-gold flex items-center justify-center shrink-0 ml-1">
+                  <div className="w-11 h-11 rounded-xl bg-brand-primary text-brand-gold flex items-center justify-center shrink-0 ml-1">
                     <Bot className="w-6 h-6 animate-pulse" />
                   </div>
 
@@ -113,22 +113,22 @@ export const SarindaAiBanner: React.FC = () => {
                     value={queryInput}
                     onChange={(e) => setQueryInput(e.target.value)}
                     placeholder={displayedText || (lang === 'en' ? 'Ask Sarinda AI anything...' : 'সারিন্দা এআই-কে জিজ্ঞেস করুন...')}
-                    className="flex-1 px-4 py-2 text-xs sm:text-sm text-brand-charcoal placeholder:text-brand-muted/70 focus:outline-none font-medium"
+                    className="flex-1 px-4 py-2.5 text-sm sm:text-base text-brand-charcoal placeholder:text-brand-muted/70 focus:outline-none font-bold"
                   />
 
                   <button
                     type="submit"
-                    className="px-5 py-3 rounded-xl bg-brand-accent hover:bg-brand-accentHover text-white font-bold text-xs sm:text-sm flex items-center gap-2 shadow-md transition transform active:scale-95 cursor-pointer shrink-0"
+                    className="px-6 py-3.5 rounded-xl bg-brand-accent hover:bg-brand-accentHover text-white font-black text-xs sm:text-sm flex items-center gap-2 shadow-md transition transform active:scale-95 cursor-pointer shrink-0"
                   >
                     <span>{lang === 'en' ? 'Ask AI' : 'জিজ্ঞেস করুন'}</span>
-                    <Send className="w-4 h-4" />
+                    <Send className="w-4 h-4 font-bold" />
                   </button>
                 </form>
               </div>
 
               {/* Quick AI Suggestion Chips */}
               <div className="flex flex-wrap items-center gap-2 pt-1">
-                <span className="text-xs font-semibold text-brand-cream/70 mr-1">
+                <span className="text-xs sm:text-sm font-extrabold text-brand-cream mr-1">
                   {lang === 'en' ? 'Try Asking:' : 'ক্লিক করে ট্রাই করুন:'}
                 </span>
 
@@ -155,9 +155,9 @@ export const SarindaAiBanner: React.FC = () => {
                     <button
                       key={idx}
                       onClick={() => handleChipClick(chip.text)}
-                      className="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-brand-gold hover:text-brand-dark border border-white/15 text-xs font-medium text-brand-cream transition flex items-center gap-1.5 cursor-pointer shadow-xs"
+                      className="px-3.5 py-2 rounded-xl bg-white/15 hover:bg-brand-gold hover:text-brand-dark border border-white/20 text-xs sm:text-sm font-bold text-brand-cream transition flex items-center gap-1.5 cursor-pointer shadow-xs"
                     >
-                      <ChipIcon className="w-3.5 h-3.5 text-brand-gold" />
+                      <ChipIcon className="w-4 h-4 text-brand-gold" />
                       <span>{chip.text}</span>
                     </button>
                   );

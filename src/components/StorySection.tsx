@@ -49,48 +49,48 @@ export const StorySection: React.FC = () => {
 
           {/* Text Content */}
           <div className="lg:col-span-6 space-y-6">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-brand-leaf/10 text-brand-leaf text-xs font-bold uppercase tracking-wider">
-              <Sparkles className="w-3.5 h-3.5" />
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-leaf/10 text-brand-leaf text-xs sm:text-sm font-black uppercase tracking-wider">
+              <Sparkles className="w-4 h-4" />
               <span>{lang === 'en' ? 'Our Heritage & Passion' : 'ঐতিহ্য ও ভালোবাসা'}</span>
             </div>
 
-            <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-brand-primary leading-tight">
+            <h2 className="font-serif text-3xl sm:text-5xl font-black text-brand-primary leading-tight tracking-tight">
               {t.ourStory}
             </h2>
 
-            <p className="text-sm sm:text-base text-brand-charcoal/80 leading-relaxed">
+            <p className="text-base sm:text-lg font-medium text-brand-charcoal/90 leading-relaxed">
               {t.storyP1}
             </p>
 
-            <p className="text-sm sm:text-base text-brand-muted leading-relaxed">
+            <p className="text-base sm:text-lg font-medium text-brand-muted leading-relaxed">
               {t.storyP2}
             </p>
 
             {/* Core Values Icons */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
               <div className="flex items-start gap-3">
-                <div className="w-10 h-10 rounded-xl bg-orange-50 text-brand-accent flex items-center justify-center shrink-0">
-                  <Heart className="w-5 h-5" />
+                <div className="w-11 h-11 rounded-2xl bg-orange-50 text-brand-accent flex items-center justify-center shrink-0">
+                  <Heart className="w-6 h-6" />
                 </div>
                 <div>
-                  <h4 className="font-serif font-bold text-sm text-brand-primary">
+                  <h4 className="font-serif font-black text-base text-brand-primary">
                     {lang === 'en' ? 'Cooked with Love' : 'ভালোবাসা দিয়ে রান্না'}
                   </h4>
-                  <p className="text-xs text-brand-muted mt-0.5">
+                  <p className="text-xs sm:text-sm font-medium text-brand-muted mt-0.5 leading-relaxed">
                     {lang === 'en' ? 'Traditional slow fire cooking with hand-ground spices.' : 'ঘরোয়া মমতায় তৈরি খাঁটি মশলার নিখুঁত রান্না।'}
                   </p>
                 </div>
               </div>
 
               <div className="flex items-start gap-3">
-                <div className="w-10 h-10 rounded-xl bg-emerald-50 text-brand-leaf flex items-center justify-center shrink-0">
-                  <ShieldCheck className="w-5 h-5" />
+                <div className="w-11 h-11 rounded-2xl bg-emerald-50 text-brand-leaf flex items-center justify-center shrink-0">
+                  <ShieldCheck className="w-6 h-6" />
                 </div>
                 <div>
-                  <h4 className="font-serif font-bold text-sm text-brand-primary">
+                  <h4 className="font-serif font-black text-base text-brand-primary">
                     {lang === 'en' ? 'Uncompromised Hygiene' : 'নিখুঁত স্বাস্থ্যবিধি'}
                   </h4>
-                  <p className="text-xs text-brand-muted mt-0.5">
+                  <p className="text-xs sm:text-sm font-medium text-brand-muted mt-0.5 leading-relaxed">
                     {lang === 'en' ? 'Spotless modern kitchen meeting top food safety standards.' : 'সর্বোচ্চ স্বাস্থ্যসম্মত পরিবেশে খাবার প্রস্তুত।'}
                   </p>
                 </div>
@@ -100,7 +100,7 @@ export const StorySection: React.FC = () => {
             <div className="pt-2">
               <button
                 onClick={() => setIsReservationOpen(true)}
-                className="px-6 py-3 rounded-xl bg-brand-primary hover:bg-brand-dark text-white font-bold text-xs sm:text-sm shadow-md transition cursor-pointer"
+                className="px-8 py-4 rounded-2xl bg-brand-primary hover:bg-brand-dark text-white font-black text-sm sm:text-base shadow-lg hover:shadow-xl transition cursor-pointer"
               >
                 {lang === 'en' ? 'Visit Us — Reserve a Table' : 'আমাদের রেস্তোরাঁয় আসুন — টেবিল বুক করুন'}
               </button>

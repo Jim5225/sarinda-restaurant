@@ -4,11 +4,18 @@
 
 @layer base {
   body {
-    @apply font-sans antialiased text-brand-charcoal bg-brand-cream selection:bg-brand-accent selection:text-white;
+    @apply font-sans font-medium text-[15px] sm:text-[16px] antialiased text-brand-charcoal bg-brand-cream selection:bg-brand-accent selection:text-white leading-relaxed;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply font-serif;
+    @apply font-serif font-bold tracking-tight text-brand-primary;
+  }
+
+  /* Make Bengali text naturally bold, clear and impactful */
+  [lang="bn"], .font-sans {
+    letter-spacing: -0.01em;
   }
 }
 
