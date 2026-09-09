@@ -1,4 +1,4 @@
-import { MenuItem, Offer, Review } from '../types';
+import { MenuItem, Offer, Review, DailyExpense } from '../types';
 
 export const INITIAL_MENU_ITEMS: MenuItem[] = [
   // ==================== 1. BIRYANI (বিরিয়ানি) ====================
@@ -1540,3 +1540,95 @@ export const GALLERY_IMAGES = [
     category: 'Dessert'
   }
 ];
+
+export const INITIAL_EXPENSES: DailyExpense[] = [
+  {
+    id: 'exp-1',
+    title: 'Prime Mutton (খাসির মাংস ২৫ কেজি)',
+    banglaTitle: 'খাসির মাংস ২৫ কেজি (কাচ্চির জন্য)',
+    category: 'meat_poultry',
+    amount: 25000,
+    paymentMethod: 'cash',
+    recordedBy: 'Mohammad Rahim (Manager)',
+    date: new Date().toISOString().split('T')[0],
+    notes: 'Puron Dhaka Halal meat market, fresh batch'
+  },
+  {
+    id: 'exp-2',
+    title: 'Farm Fresh Chicken (সোনালী ও ব্রয়লার মুরগি ৩০ কেজি)',
+    banglaTitle: 'সোনালী মুরগি ও ব্রয়লার ৩০ কেজি (রোস্ট ও গ্রিল)',
+    category: 'meat_poultry',
+    amount: 6300,
+    paymentMethod: 'cash',
+    recordedBy: 'Mohammad Rahim (Manager)',
+    date: new Date().toISOString().split('T')[0],
+    notes: 'Cleaned, dressed and sorted for roast'
+  },
+  {
+    id: 'exp-3',
+    title: 'Premium Basmati & Chinigura Rice (বাসমতি চাল ৫০ কেজি)',
+    banglaTitle: 'বাসমতি চাল ১ বস্তা (৫০ কেজি)',
+    category: 'rice_spices',
+    amount: 7500,
+    paymentMethod: 'bank',
+    recordedBy: 'Accountant Tanvir',
+    date: new Date().toISOString().split('T')[0],
+    notes: 'Premium aged extra-long grain basmati'
+  },
+  {
+    id: 'exp-4',
+    title: 'Mustard Oil & Pure Ghee (খাঁটি গাওয়া ঘি ও সরিষার তেল)',
+    banglaTitle: 'খাঁটি ঘি ৫ কেজি ও ঘানিভাঙ্গা সরিষার তেল ১০ লিটার',
+    category: 'oil_ghee',
+    amount: 4200,
+    paymentMethod: 'cash',
+    recordedBy: 'Chef Kabir Hossain',
+    date: new Date().toISOString().split('T')[0],
+    notes: 'High aromatic grade for slow dum cooking'
+  },
+  {
+    id: 'exp-5',
+    title: 'Vegetables, Yogurt & Herbs (আলু, পেঁয়াজ, টক দই, পুদিনা)',
+    banglaTitle: 'কাচ্চির আলু, বেরেস্তার পেঁয়াজ, টক দই ও পুদিনা',
+    category: 'vegetables_dairy',
+    amount: 3150,
+    paymentMethod: 'cash',
+    recordedBy: 'Mohammad Rahim (Manager)',
+    date: new Date().toISOString().split('T')[0],
+    notes: 'Daily bazaar supplies from wholesale market'
+  },
+  {
+    id: 'exp-6',
+    title: 'Commercial LPG Cylinder (৪৫ কেজি গ্যাস সিলিন্ডার)',
+    banglaTitle: 'কমার্শিয়াল এলপিজি গ্যাস সিলিন্ডার (৪৫ কেজি)',
+    category: 'utilities',
+    amount: 4800,
+    paymentMethod: 'cash',
+    recordedBy: 'Supervisor Jahir',
+    date: new Date().toISOString().split('T')[0],
+    notes: 'Main kitchen stove fuel replacement'
+  },
+  {
+    id: 'exp-7',
+    title: 'Food Packaging Boxes & Carry Bags (কাচ্চি বক্স ও ব্যাগ)',
+    banglaTitle: 'সিলিং ফয়েল বক্স ও ব্র্যান্ডেড ফুড ব্যাগ (১০০০ পিস)',
+    category: 'packaging',
+    amount: 3600,
+    paymentMethod: 'bkash',
+    recordedBy: 'Storekeeper Alam',
+    date: new Date().toISOString().split('T')[0],
+    notes: 'Thermal leak-proof packaging supplies'
+  },
+  {
+    id: 'exp-8',
+    title: 'Daily Staff Allowance & Shifts (কিচেন হেল্পার ও ডেলিভারি)',
+    banglaTitle: 'দৈনিক কিচেন সহকারী ও ডেলিভারি বয় মজুরি/ভাতা',
+    category: 'staff_wages',
+    amount: 5500,
+    paymentMethod: 'cash',
+    recordedBy: 'Mohammad Rahim (Manager)',
+    date: new Date().toISOString().split('T')[0],
+    notes: 'Daily shift wages disbursement'
+  }
+];
+

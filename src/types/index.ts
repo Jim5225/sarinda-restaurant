@@ -116,3 +116,26 @@ export interface Review {
   dishOrdered: string;
   avatar: string;
 }
+
+export type ExpenseCategory = 
+  | 'meat_poultry'      // খাসি ও মুরগির মাংস
+  | 'rice_spices'       // বাসমতি চাল, পোলাও চাল ও খাঁটি মশলা
+  | 'oil_ghee'          // খাঁটি ঘি ও সরিষার তেল
+  | 'vegetables_dairy'  // আলু, পেঁয়াজ, টক দই, দুধ
+  | 'packaging'         // ফুড বক্স, ক্যারি ব্যাগ, সিলিং
+  | 'utilities'         // গ্যাস সিলিন্ডার, বিদ্যুৎ, পানির বিল
+  | 'staff_wages'       // কিচেন স্টাফ ও ডেলিভারি শিফট মজুরি
+  | 'maintenance'       // ইকুইপমেন্ট ও রেস্তোরাঁ রক্ষণাবেক্ষণ
+  | 'other';            // বিবিধ খরচ
+
+export interface DailyExpense {
+  id: string;
+  title: string;
+  banglaTitle?: string;
+  category: ExpenseCategory;
+  amount: number;
+  paymentMethod: 'cash' | 'bkash' | 'bank' | 'credit';
+  recordedBy: string;
+  date: string; // YYYY-MM-DD
+  notes?: string;
+}

@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { MenuItem, CartItem, Order, Reservation, Offer, Addon, PortionVariant } from '../types';
-import { INITIAL_MENU_ITEMS, INITIAL_OFFERS } from '../data/initialData';
+import { MenuItem, CartItem, Order, Reservation, Offer, Addon, PortionVariant, DailyExpense } from '../types';
+import { INITIAL_MENU_ITEMS, INITIAL_OFFERS, INITIAL_EXPENSES } from '../data/initialData';
 
 interface StoreContextType {
   lang: 'en' | 'bn';
@@ -44,6 +44,11 @@ interface StoreContextType {
     notes?: string;
   }) => Order;
   updateOrderStatus: (id: string, status: Order['status']) => void;
+
+  // Expenses & P&L
+  expenses: DailyExpense[];
+  addExpense: (expense: Omit<DailyExpense, 'id'>) => DailyExpense;
+  deleteExpense: (id: string) => void;
 
   // Reservations
   reservations: Reservation[];
@@ -95,12 +100,12 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   // Orders State
   const [orders, setOrders] = useState<Order[]>(() => {
-    const saved = localStorage.getItem('sarinda_orders');
+    const saved = localStorage.getItem('sarinda_orders_v2');
     if (saved) return JSON.parse(saved);
-    // Initial mock order for admin overview
+    // Initial authentic daily orders representing healthy restaurant volume
     return [
       {
-        id: 'ORD-8921',
+        id: 'ORD-8924',
         customerName: 'Ashfaqul Karim',
         phone: '01711223344',
         address: 'House 14, Road 7, Dhanmondi, Dhaka',
@@ -120,11 +125,34 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         paymentMethod: 'bkash',
         paymentStatus: 'paid',
         status: 'preparing',
-        notes: 'Please pack extra salad if possible',
-        createdAt: new Date(Date.now() - 35 * 60 * 1000).toISOString()
+        notes: 'Please pack extra salad and mint chutney',
+        createdAt: new Date(Date.now() - 25 * 60 * 1000).toISOString()
       },
       {
-        id: 'ORD-8920',
+        id: 'ORD-8923',
+        customerName: 'Dr. Nuzhat Parveen',
+        phone: '01715887766',
+        address: 'Gulshan 2, Road 45, Apt 5B',
+        orderType: 'delivery',
+        items: [
+          {
+            id: 'nawabi-kacchi-1',
+            menuItem: INITIAL_MENU_ITEMS[1],
+            quantity: 4,
+            selectedAddons: []
+          }
+        ],
+        subtotal: 1800,
+        discount: 0,
+        deliveryFee: 60,
+        total: 1860,
+        paymentMethod: 'bkash',
+        paymentStatus: 'paid',
+        status: 'preparing',
+        createdAt: new Date(Date.now() - 40 * 60 * 1000).toISOString()
+      },
+      {
+        id: 'ORD-8922',
         customerName: 'Samira Huq',
         phone: '01819556677',
         address: 'Banani Block C, Road 11, Dhaka',
@@ -145,8 +173,83 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         paymentStatus: 'pending',
         status: 'on_delivery',
         createdAt: new Date(Date.now() - 70 * 60 * 1000).toISOString()
+      },
+      {
+        id: 'ORD-8921',
+        customerName: 'Standard Chartered Corp Feasts',
+        phone: '01713009988',
+        address: 'Motijheel C/A, Dhaka (Floor 7)',
+        orderType: 'delivery',
+        items: [
+          {
+            id: 'corp-kacchi-box',
+            menuItem: INITIAL_MENU_ITEMS[0],
+            quantity: 25,
+            selectedAddons: []
+          }
+        ],
+        subtotal: 13500,
+        discount: 1000,
+        deliveryFee: 150,
+        total: 12650,
+        paymentMethod: 'bkash',
+        paymentStatus: 'paid',
+        status: 'delivered',
+        createdAt: new Date(Date.now() - 150 * 60 * 1000).toISOString()
+      },
+      {
+        id: 'ORD-8920',
+        customerName: 'Sarinda Dine-in Dining Hall (Evening Sales Aggregate)',
+        phone: '01712121434',
+        address: 'Sarinda Main Dining Hall, Tables 1-14',
+        orderType: 'dine_in',
+        items: [
+          {
+            id: 'dinein-kacchi-mix',
+            menuItem: INITIAL_MENU_ITEMS[0],
+            quantity: 50,
+            selectedAddons: []
+          }
+        ],
+        subtotal: 36500,
+        discount: 0,
+        deliveryFee: 0,
+        total: 36500,
+        paymentMethod: 'cod',
+        paymentStatus: 'paid',
+        status: 'delivered',
+        createdAt: new Date(Date.now() - 200 * 60 * 1000).toISOString()
+      },
+      {
+        id: 'ORD-8919',
+        customerName: 'Sarinda Lunch Peak Dine-in & Takeaway (Counter Sales)',
+        phone: '01712121434',
+        address: 'Sarinda Counter Sales & Takeaway Hub',
+        orderType: 'pickup',
+        items: [
+          {
+            id: 'lunch-peak-mix',
+            menuItem: INITIAL_MENU_ITEMS[0],
+            quantity: 45,
+            selectedAddons: []
+          }
+        ],
+        subtotal: 32500,
+        discount: 0,
+        deliveryFee: 0,
+        total: 32500,
+        paymentMethod: 'bkash',
+        paymentStatus: 'paid',
+        status: 'delivered',
+        createdAt: new Date(Date.now() - 320 * 60 * 1000).toISOString()
       }
     ];
+  });
+
+  // Expenses State (Daily expenses & P&L)
+  const [expenses, setExpenses] = useState<DailyExpense[]>(() => {
+    const saved = localStorage.getItem('sarinda_expenses_v1');
+    return saved ? JSON.parse(saved) : INITIAL_EXPENSES;
   });
 
   // Reservations State
@@ -192,8 +295,12 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   }, [cart]);
 
   useEffect(() => {
-    localStorage.setItem('sarinda_orders', JSON.stringify(orders));
+    localStorage.setItem('sarinda_orders_v2', JSON.stringify(orders));
   }, [orders]);
+
+  useEffect(() => {
+    localStorage.setItem('sarinda_expenses_v1', JSON.stringify(expenses));
+  }, [expenses]);
 
   useEffect(() => {
     localStorage.setItem('sarinda_reservations', JSON.stringify(reservations));
@@ -386,6 +493,20 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     setMenu((prev) => prev.filter((m) => m.id !== id));
   };
 
+  // Expenses Actions
+  const addExpense = (data: Omit<DailyExpense, 'id'>): DailyExpense => {
+    const newExpense: DailyExpense = {
+      ...data,
+      id: `exp-${Date.now()}`
+    };
+    setExpenses((prev) => [newExpense, ...prev]);
+    return newExpense;
+  };
+
+  const deleteExpense = (id: string) => {
+    setExpenses((prev) => prev.filter((e) => e.id !== id));
+  };
+
   return (
     <StoreContext.Provider
       value={{
@@ -415,6 +536,9 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         orders,
         createOrder,
         updateOrderStatus,
+        expenses,
+        addExpense,
+        deleteExpense,
         reservations,
         createReservation,
         updateReservationStatus,
