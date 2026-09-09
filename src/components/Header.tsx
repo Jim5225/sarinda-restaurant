@@ -42,8 +42,8 @@ export const Header: React.FC = () => {
           <div className="flex items-center space-x-6 text-brand-cream/80 text-[12px]">
             <span>{t.openHours}</span>
             <span>•</span>
-            <a href="tel:+8801711234567" className="hover:text-brand-gold transition flex items-center gap-1 font-medium">
-              <Phone className="w-3 h-3 text-brand-gold" /> +880 1711-234567
+            <a href="tel:+8801712121434" className="hover:text-brand-gold transition flex items-center gap-1 font-medium">
+              <Phone className="w-3 h-3 text-brand-gold" /> +880 1712-121434
             </a>
             <span>•</span>
             <button 

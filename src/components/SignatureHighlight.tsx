@@ -7,7 +7,7 @@ export const SignatureHighlight: React.FC = () => {
   const { lang, setDetailItem, menu } = useStore();
   const t = translations[lang];
 
-  const signature = menu.find(item => item.id === 'kacchi-special') || menu[0];
+  const signature = menu.find(item => item.id === 'special-kacchi-biryani' || item.isSignature) || menu[0];
 
   return (
     <section className="py-16 bg-brand-primary text-white relative overflow-hidden">
@@ -23,8 +23,8 @@ export const SignatureHighlight: React.FC = () => {
             <div className="relative mx-auto max-w-lg">
               <div className="relative rounded-3xl overflow-hidden shadow-2xl border-4 border-white/10">
                 <img
-                  src="https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?auto=format&fit=crop&w=900&q=80"
-                  alt="Sarinda Royal Kacchi Biryani"
+                  src={signature.image}
+                  alt={signature.name}
                   className="w-full h-80 sm:h-96 object-cover transform hover:scale-105 transition duration-700"
                 />
                 <div className="absolute top-4 left-4 bg-brand-gold text-brand-dark px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider flex items-center gap-1 shadow-lg">

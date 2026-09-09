@@ -5,13 +5,36 @@ export interface Addon {
   price: number;
 }
 
+export interface PortionVariant {
+  id: string;
+  name: string;
+  banglaName: string;
+  price: number;
+}
+
+export type MenuCategory = 
+  | 'Biryani' 
+  | 'Khichuri' 
+  | 'Kebab' 
+  | 'Meat' 
+  | 'Fish' 
+  | 'Rice' 
+  | 'Vorta & Dal' 
+  | 'Naan & Paratha' 
+  | 'Kebab Platter' 
+  | 'Dessert' 
+  | 'Drinks';
+
 export interface MenuItem {
   id: string;
   name: string;
   banglaName: string;
-  category: 'Biryani' | 'Chicken' | 'Mutton' | 'Fish & Prawn' | 'Set Menu' | 'Dessert' | 'Drinks';
+  category: MenuCategory;
   price: number;
   originalPrice?: number;
+  portionNote?: string;
+  banglaPortionNote?: string;
+  portions?: PortionVariant[];
   description: string;
   banglaDescription: string;
   image: string;
@@ -30,6 +53,7 @@ export interface MenuItem {
 export interface CartItem {
   id: string;
   menuItem: MenuItem;
+  selectedPortion?: PortionVariant;
   quantity: number;
   selectedAddons: Addon[];
   notes?: string;

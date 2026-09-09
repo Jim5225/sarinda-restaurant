@@ -3,6 +3,7 @@ import { useStore } from './context/StoreContext';
 import { Header } from './components/Header';
 import { Hero } from './components/Hero';
 import { TrustIndicators } from './components/TrustIndicators';
+import { SarindaAiBanner } from './components/SarindaAiBanner';
 import { PopularHorizontal } from './components/PopularHorizontal';
 import { SignatureHighlight } from './components/SignatureHighlight';
 import { MenuSection } from './components/MenuSection';
@@ -42,6 +43,7 @@ export const App: React.FC = () => {
       <main className="flex-1">
         <Hero />
         <TrustIndicators />
+        <SarindaAiBanner />
         <PopularHorizontal />
         <SignatureHighlight />
         <MenuSection />

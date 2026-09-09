@@ -633,13 +633,17 @@ export const AdminPortal: React.FC = () => {
                     onChange={(e) => setNewItemCategory(e.target.value as any)}
                     className="w-full p-2.5 rounded-xl border border-slate-200 bg-slate-50 font-semibold"
                   >
-                    <option value="Biryani">Biryani</option>
-                    <option value="Mutton">Mutton</option>
-                    <option value="Chicken">Chicken</option>
-                    <option value="Fish & Prawn">Fish & Prawn</option>
-                    <option value="Set Menu">Set Menu</option>
-                    <option value="Dessert">Dessert</option>
-                    <option value="Drinks">Drinks</option>
+                    <option value="Biryani">Biryani (বিরিয়ানি)</option>
+                    <option value="Khichuri">Khichuri (খিচুড়ি)</option>
+                    <option value="Kebab">Kebab (কাবাব)</option>
+                    <option value="Meat">Meat & Curry (মাংস)</option>
+                    <option value="Fish">Fish (মাছ)</option>
+                    <option value="Rice">Rice (ভাত)</option>
+                    <option value="Vorta & Dal">Vorta & Dal (ভর্তা/সবজি/ডাল)</option>
+                    <option value="Naan & Paratha">Naan & Paratha (নান ও পরটা)</option>
+                    <option value="Kebab Platter">Kebab Platter (কাবাব প্লেটার)</option>
+                    <option value="Dessert">Dessert (ডেজার্ট)</option>
+                    <option value="Drinks">Drinks (ড্রিংকস)</option>
                   </select>
                 </div>
 

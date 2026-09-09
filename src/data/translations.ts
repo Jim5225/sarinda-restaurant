@@ -8,10 +8,34 @@ export const translations = {
     orderNow: 'Order Online',
     bookTable: 'Book a Table',
     viewMenu: 'Explore Menu',
-    callUs: 'Call: +880 1711-234567',
+    callUs: 'Call: +880 1712-121434',
+    phoneRaw: '+8801712121434',
+    facebookUrl: 'https://facebook.com/sarindabd',
+    facebookText: 'facebook.com/sarindabd',
     openHours: 'Open Daily: 11:00 AM - 11:30 PM',
     address: 'Dhanmondi 27 (Old), Road 16, Dhaka, Bangladesh',
     
+    // Category Names
+    categoryNames: {
+      All: 'All Dishes',
+      Biryani: 'Biryani',
+      Khichuri: 'Khichuri',
+      Kebab: 'Kebab',
+      Meat: 'Meat & Curry',
+      Fish: 'Fresh Fish',
+      Rice: 'Rice',
+      'Vorta & Dal': 'Vorta & Dal',
+      'Naan & Paratha': 'Naan & Paratha',
+      'Kebab Platter': 'Kebab Platter',
+      Dessert: 'Dessert',
+      Drinks: 'Drinks'
+    },
+
+    // Portions & options
+    selectPortion: 'Choose Portion / Size',
+    portionSize: 'Portion Size',
+    portionNoteLabel: 'Serving info',
+
     // Navigation
     navHome: 'Home',
     navMenu: 'Menu',
@@ -103,9 +127,33 @@ export const translations = {
     orderNow: 'অনলাইন অর্ডার করুন',
     bookTable: 'টেবিল বুকিং',
     viewMenu: 'মেনু দেখুন',
-    callUs: 'কল করুন: +৮৮০ ১৭১১-২৩৪৫৬৭',
+    callUs: 'কল করুন: +৮৮০ ১৭১২-১২১৪৩৪',
+    phoneRaw: '+8801712121434',
+    facebookUrl: 'https://facebook.com/sarindabd',
+    facebookText: 'facebook.com/sarindabd',
     openHours: 'প্রতিদিন: সকাল ১১:০০ - রাত ১১:৩০',
     address: 'ধানমন্ডি ২৭ (পুরাতন), রোড ১৬, ঢাকা, বাংলাদেশ',
+    
+    // Category Names
+    categoryNames: {
+      All: 'সকল পদ',
+      Biryani: 'বিরিয়ানি',
+      Khichuri: 'খিচুড়ি',
+      Kebab: 'কাবাব',
+      Meat: 'মাংস',
+      Fish: 'মাছ',
+      Rice: 'ভাত',
+      'Vorta & Dal': 'ভর্তা/সবজি/ডাল',
+      'Naan & Paratha': 'নান ও পরটা',
+      'Kebab Platter': 'কাবাব প্লেটার',
+      Dessert: 'ডেজার্ট',
+      Drinks: 'ড্রিংকস'
+    },
+
+    // Portions & options
+    selectPortion: 'পরিমাণ / সাইজ নির্বাচন করুন',
+    portionSize: 'পরিমাণ / সাইজ',
+    portionNoteLabel: 'পরিবেশন তথ্য',
 
     // Navigation
     navHome: 'হোম',

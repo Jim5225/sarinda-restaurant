@@ -17,7 +17,8 @@ export const SearchModal: React.FC = () => {
         item.name.toLowerCase().includes(q) ||
         item.banglaName.includes(q) ||
         item.category.toLowerCase().includes(q) ||
-        item.description.toLowerCase().includes(q)
+        item.description.toLowerCase().includes(q) ||
+        item.banglaDescription.includes(q)
     );
   }, [query, menu]);
 
@@ -30,7 +31,9 @@ export const SearchModal: React.FC = () => {
 
   const handleQuickAdd = (item: MenuItem, e: React.MouseEvent) => {
     e.stopPropagation();
-    if (item.addons && item.addons.length > 0) {
+    const hasAddons = item.addons && item.addons.length > 0;
+    const hasPortions = item.portions && item.portions.length > 0;
+    if (hasAddons || hasPortions) {
       handleSelect(item);
     } else {
       addToCart(item, 1);

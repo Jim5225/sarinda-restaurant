@@ -20,7 +20,9 @@ export const PopularHorizontal: React.FC = () => {
 
   const handleAdd = (item: MenuItem, e: React.MouseEvent) => {
     e.stopPropagation();
-    if (item.addons && item.addons.length > 0) {
+    const hasAddons = item.addons && item.addons.length > 0;
+    const hasPortions = item.portions && item.portions.length > 0;
+    if (hasAddons || hasPortions) {
       setDetailItem(item);
     } else {
       addToCart(item, 1);
@@ -74,6 +76,9 @@ export const PopularHorizontal: React.FC = () => {
         >
           {popularItems.map((item) => {
             const hasAddons = item.addons && item.addons.length > 0;
+            const hasPortions = item.portions && item.portions.length > 0;
+            const displayPortionNote = lang === 'en' ? item.portionNote : (item.banglaPortionNote || item.portionNote);
+
             return (
               <div
                 key={item.id}
@@ -93,9 +98,9 @@ export const PopularHorizontal: React.FC = () => {
                       ★ {t.signatureBadge}
                     </span>
                   )}
-                  {item.originalPrice && (
-                    <span className="absolute top-3 right-3 bg-brand-accent text-white text-[11px] font-extrabold px-2 py-0.5 rounded-full shadow-md">
-                      SAVE ৳{item.originalPrice - item.price}
+                  {displayPortionNote && (
+                    <span className="absolute top-3 right-3 bg-brand-primary/90 text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full shadow border border-white/20">
+                      {displayPortionNote}
                     </span>
                   )}
                   <div className="absolute bottom-2 left-3 bg-black/60 backdrop-blur-xs text-white text-xs px-2 py-0.5 rounded-md flex items-center gap-1">
@@ -109,7 +114,7 @@ export const PopularHorizontal: React.FC = () => {
                 <div className="p-5 flex-1 flex flex-col justify-between">
                   <div>
                     <span className="text-[11px] font-bold uppercase tracking-wider text-brand-leaf">
-                      {item.category}
+                      {(t.categoryNames as any)?.[item.category] || item.category}
                     </span>
                     <h3 className="font-serif font-bold text-lg text-brand-charcoal group-hover:text-brand-primary transition mt-1 line-clamp-1">
                       {lang === 'en' ? item.name : item.banglaName}
@@ -122,15 +127,29 @@ export const PopularHorizontal: React.FC = () => {
                   {/* Price and Add CTA */}
                   <div className="flex items-center justify-between mt-4 pt-3 border-t border-brand-border/60">
                     <div>
-                      <div className="flex items-baseline gap-1.5">
-                        <span className="font-extrabold text-xl text-brand-primary">৳{item.price}</span>
-                        {item.originalPrice && (
-                          <span className="text-xs line-through text-brand-muted">৳{item.originalPrice}</span>
-                        )}
-                      </div>
-                      <span className="text-[10px] text-brand-muted block">
-                        {item.prepTime || '20 mins'}
-                      </span>
+                      {hasPortions && item.portions && item.portions.length > 1 ? (
+                        <div className="flex flex-col">
+                          <span className="font-extrabold text-base text-brand-primary">
+                            {lang === 'en'
+                              ? `৳${item.portions[0].price} - ৳${item.portions[item.portions.length - 1].price}`
+                              : `${item.portions[0].price}৳ - ${item.portions[item.portions.length - 1].price}৳`}
+                          </span>
+                          <span className="text-[10px] text-brand-muted">
+                            {lang === 'en' ? 'Choose size' : 'সাইজ নির্বাচন করুন'}
+                          </span>
+                        </div>
+                      ) : (
+                        <div className="flex items-baseline gap-1.5">
+                          <span className="font-extrabold text-xl text-brand-primary">
+                            {lang === 'en' ? `৳${item.price}` : `${item.price}৳`}
+                          </span>
+                          {item.originalPrice && (
+                            <span className="text-xs line-through text-brand-muted">
+                              {lang === 'en' ? `৳${item.originalPrice}` : `${item.originalPrice}৳`}
+                            </span>
+                          )}
+                        </div>
+                      )}
                     </div>
 
                     <button
@@ -143,7 +162,7 @@ export const PopularHorizontal: React.FC = () => {
                       }`}
                     >
                       <Plus className="w-3.5 h-3.5" />
-                      <span>{hasAddons ? t.customise : t.addToCart}</span>
+                      <span>{(hasAddons || hasPortions) ? t.customise : t.addToCart}</span>
                     </button>
                   </div>
                 </div>

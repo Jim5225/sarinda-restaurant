@@ -116,8 +116,9 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onProceedCheckout }) => 
               {/* Items List */}
               <div className="space-y-3">
                 {cart.map((cartItem, idx) => {
+                  const basePrice = cartItem.selectedPortion ? cartItem.selectedPortion.price : cartItem.menuItem.price;
                   const itemAddonsTotal = cartItem.selectedAddons.reduce((sum, a) => sum + a.price, 0);
-                  const itemLinePrice = (cartItem.menuItem.price + itemAddonsTotal) * cartItem.quantity;
+                  const itemLinePrice = (basePrice + itemAddonsTotal) * cartItem.quantity;
 
                   return (
                     <div
@@ -137,12 +138,21 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onProceedCheckout }) => 
                           </h4>
                           <button
                             onClick={() => removeFromCart(idx)}
-                            className="text-brand-muted hover:text-red-500 transition p-1"
+                            className="text-brand-muted hover:text-red-500 transition p-1 cursor-pointer"
                             title="Remove"
                           >
                             <Trash2 className="w-3.5 h-3.5" />
                           </button>
                         </div>
+
+                        {/* Selected Portion if any */}
+                        {cartItem.selectedPortion && (
+                          <div className="mt-0.5">
+                            <span className="inline-block bg-brand-primary/10 text-brand-primary text-[11px] px-2 py-0.5 rounded-md font-bold">
+                              {lang === 'en' ? cartItem.selectedPortion.name : cartItem.selectedPortion.banglaName}
+                            </span>
+                          </div>
+                        )}
 
                         {/* Add-ons list if any */}
                         {cartItem.selectedAddons.length > 0 && (

@@ -85,7 +85,7 @@ export const ContactSection: React.FC = () => {
                   </div>
                   <div>
                     <h4 className="font-bold text-xs uppercase tracking-wider text-brand-muted">Direct Hotline</h4>
-                    <p className="font-semibold text-brand-charcoal mt-0.5">+880 1711-234567 / +880 1819-876543</p>
+                    <p className="font-semibold text-brand-charcoal mt-0.5">+880 1712-121434</p>
                   </div>
                 </div>
 
@@ -94,8 +94,8 @@ export const ContactSection: React.FC = () => {
                     <Mail className="w-5 h-5" />
                   </div>
                   <div>
-                    <h4 className="font-bold text-xs uppercase tracking-wider text-brand-muted">Email</h4>
-                    <p className="font-semibold text-brand-charcoal mt-0.5">hello@sarindarestaurant.com</p>
+                    <h4 className="font-bold text-xs uppercase tracking-wider text-brand-muted">Email & Social</h4>
+                    <p className="font-semibold text-brand-charcoal mt-0.5">facebook.com/sarindabd</p>
                   </div>
                 </div>
               </div>
@@ -103,16 +103,16 @@ export const ContactSection: React.FC = () => {
               {/* Direct Instant Messaging CTAs */}
               <div className="pt-4 border-t border-brand-border space-y-2">
                 <a
-                  href="tel:+8801711234567"
+                  href="tel:+8801712121434"
                   className="w-full py-3 px-4 rounded-2xl bg-brand-primary hover:bg-brand-dark text-white font-bold text-xs flex items-center justify-center gap-2 shadow-xs transition"
                 >
                   <Phone className="w-4 h-4 text-brand-gold" />
-                  <span>{lang === 'en' ? 'Click to Call Directly' : 'সরাসরি কল করুন'}</span>
+                  <span>{lang === 'en' ? 'Click to Call Directly (+880 1712-121434)' : 'সরাসরি কল করুন (+৮৮০ ১৭১২-১২১৪৩৪)'}</span>
                 </a>
 
                 <div className="grid grid-cols-2 gap-2">
                   <a
-                    href="https://wa.me/8801711234567?text=Hello%20Sarinda%20Restaurant,%20I%20would%20like%20to%20place%20an%20order"
+                    href="https://wa.me/8801712121434?text=Hello%20Sarinda%20Restaurant,%20I%20would%20like%20to%20place%20an%20order"
                     target="_blank"
                     rel="noreferrer"
                     className="py-2.5 px-3 rounded-2xl bg-[#25D366] hover:bg-[#20ba59] text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-xs transition"
@@ -122,13 +122,13 @@ export const ContactSection: React.FC = () => {
                   </a>
 
                   <a
-                    href="https://m.me/sarindarestaurant"
+                    href="https://facebook.com/sarindabd"
                     target="_blank"
                     rel="noreferrer"
                     className="py-2.5 px-3 rounded-2xl bg-[#0084FF] hover:bg-[#0073e6] text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-xs transition"
                   >
                     <MessageSquare className="w-4 h-4" />
-                    <span>Messenger</span>
+                    <span>Facebook Page</span>
                   </a>
                 </div>
               </div>

@@ -160,20 +160,39 @@ export const AiAssistant: React.FC = () => {
 
   return (
     <>
-      {/* Floating Launcher Button */}
-      <div className="fixed bottom-20 sm:bottom-6 right-4 sm:right-6 z-40">
+      {/* Floating Launcher Button with Prominent Dynamic Callout */}
+      <div className="fixed bottom-20 sm:bottom-6 right-4 sm:right-6 z-40 flex items-center gap-3">
+        {/* Dynamic Tooltip Pill */}
+        {!isAiChatOpen && (
+          <div
+            onClick={() => setIsAiChatOpen(true)}
+            className="hidden md:flex items-center gap-2 bg-brand-dark/95 text-white py-2 px-3.5 rounded-2xl shadow-elevated border border-brand-gold/40 cursor-pointer animate-bounce duration-1000 backdrop-blur-md hover:bg-brand-dark transition"
+          >
+            <Sparkles className="w-3.5 h-3.5 text-brand-gold shrink-0 animate-spin [animation-duration:3s]" />
+            <span className="text-xs font-bold text-brand-gold">
+              {lang === 'en' ? 'Find food instantly by asking Sarinda AI' : 'খাবার ঝটপট খুঁজে নিন Sarinda AI কে জিজ্ঞেস করে'}
+            </span>
+          </div>
+        )}
+
         <button
           onClick={() => setIsAiChatOpen(!isAiChatOpen)}
-          className="relative group p-4 rounded-3xl bg-brand-primary hover:bg-brand-dark text-white shadow-float hover:scale-105 transition-all duration-300 flex items-center gap-2.5 cursor-pointer border-2 border-brand-leaf/30"
+          className="relative group p-4 sm:px-5 rounded-3xl bg-brand-primary hover:bg-brand-dark text-white shadow-float hover:scale-105 transition-all duration-300 flex items-center gap-2.5 cursor-pointer border-2 border-brand-gold shadow-brand-gold/20"
           aria-label="Open Sarinda AI Concierge"
         >
-          <div className="w-6 h-6 flex items-center justify-center">
-            <Bot className="w-6 h-6 text-brand-gold animate-pulse" />
+          <div className="w-7 h-7 flex items-center justify-center">
+            <Bot className="w-7 h-7 text-brand-gold animate-pulse" />
           </div>
-          <span className="hidden sm:inline-block font-bold text-xs pr-1">
-            {lang === 'en' ? 'Sarinda AI Concierge' : 'সারিন্দা এআই অ্যাসিস্ট্যান্ট'}
-          </span>
-          <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-brand-accent rounded-full border-2 border-white" />
+          <div className="hidden sm:block text-left">
+            <p className="text-[10px] uppercase font-black tracking-wider text-brand-gold">
+              {lang === 'en' ? 'Signature AI' : 'সিগনেচার এআই'}
+            </p>
+            <p className="font-bold text-xs text-white">
+              {lang === 'en' ? 'Sarinda Concierge' : 'সারিন্দা সহকারী'}
+            </p>
+          </div>
+          <span className="absolute -top-1 -right-1 w-4 h-4 bg-brand-accent rounded-full border-2 border-white animate-ping" />
+          <span className="absolute -top-1 -right-1 w-4 h-4 bg-brand-accent rounded-full border-2 border-white" />
         </button>
       </div>
 

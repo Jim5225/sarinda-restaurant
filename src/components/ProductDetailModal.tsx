@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useStore } from '../context/StoreContext';
 import { translations } from '../data/translations';
 import { X, Plus, Minus, Check, Star, Flame, ShoppingBag } from 'lucide-react';
-import { Addon } from '../types';
+import { Addon, PortionVariant } from '../types';
 
 export const ProductDetailModal: React.FC = () => {
   const { lang, detailItem, setDetailItem, addToCart, setIsCartOpen } = useStore();
@@ -11,6 +11,18 @@ export const ProductDetailModal: React.FC = () => {
   const [quantity, setQuantity] = useState(1);
   const [selectedAddons, setSelectedAddons] = useState<Addon[]>([]);
   const [specialNote, setSpecialNote] = useState('');
+  const [selectedPortion, setSelectedPortion] = useState<PortionVariant | undefined>(undefined);
+
+  useEffect(() => {
+    if (detailItem?.portions && detailItem.portions.length > 0) {
+      setSelectedPortion(detailItem.portions[0]);
+    } else {
+      setSelectedPortion(undefined);
+    }
+    setQuantity(1);
+    setSelectedAddons([]);
+    setSpecialNote('');
+  }, [detailItem]);
 
   if (!detailItem) return null;
 
@@ -25,14 +37,17 @@ export const ProductDetailModal: React.FC = () => {
     });
   };
 
+  const basePrice = selectedPortion ? selectedPortion.price : detailItem.price;
   const addonsTotal = selectedAddons.reduce((sum, a) => sum + a.price, 0);
-  const itemTotal = (detailItem.price + addonsTotal) * quantity;
+  const itemTotal = (basePrice + addonsTotal) * quantity;
 
   const handleAddToCart = () => {
-    addToCart(detailItem, quantity, selectedAddons, specialNote.trim() || undefined);
+    addToCart(detailItem, quantity, selectedAddons, specialNote.trim() || undefined, selectedPortion);
     setDetailItem(null);
     setIsCartOpen(true);
   };
+
+  const displayPortionNote = lang === 'en' ? detailItem.portionNote : (detailItem.banglaPortionNote || detailItem.portionNote);
 
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
@@ -73,9 +88,16 @@ export const ProductDetailModal: React.FC = () => {
           {/* Title and Price */}
           <div>
             <div className="flex items-center justify-between gap-2">
-              <span className="text-xs font-bold uppercase tracking-wider text-brand-leaf">
-                {detailItem.category}
-              </span>
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-bold uppercase tracking-wider text-brand-leaf">
+                  {(t.categoryNames as any)?.[detailItem.category] || detailItem.category}
+                </span>
+                {displayPortionNote && (
+                  <span className="text-[11px] bg-brand-primary/10 text-brand-primary px-2.5 py-0.5 rounded-full font-bold">
+                    {displayPortionNote}
+                  </span>
+                )}
+              </div>
               {detailItem.isAvailable ? (
                 <span className="text-xs font-semibold text-brand-leaf flex items-center gap-1">
                   <Check className="w-3.5 h-3.5" />
@@ -94,7 +116,7 @@ export const ProductDetailModal: React.FC = () => {
 
             <div className="flex items-baseline gap-2 mt-2">
               <span className="text-2xl sm:text-3xl font-black text-brand-primary">
-                ৳{detailItem.price}
+                ৳{basePrice}
               </span>
               {detailItem.originalPrice && (
                 <span className="text-sm line-through text-brand-muted">
@@ -107,6 +129,45 @@ export const ProductDetailModal: React.FC = () => {
               {lang === 'en' ? detailItem.description : detailItem.banglaDescription}
             </p>
           </div>
+
+          {/* Portion / Size Selector */}
+          {detailItem.portions && detailItem.portions.length > 0 && (
+            <div className="border-t border-brand-border pt-4">
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="text-sm font-bold text-brand-charcoal uppercase tracking-wider">
+                  {t.selectPortion}
+                </h3>
+                <span className="text-xs text-brand-primary font-bold">
+                  {selectedPortion ? (lang === 'en' ? selectedPortion.name : selectedPortion.banglaName) : ''}
+                </span>
+              </div>
+
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
+                {detailItem.portions.map((portion) => {
+                  const isSelected = selectedPortion?.id === portion.id;
+                  return (
+                    <button
+                      key={portion.id}
+                      type="button"
+                      onClick={() => setSelectedPortion(portion)}
+                      className={`p-3 rounded-2xl border text-left transition cursor-pointer flex flex-col justify-between ${
+                        isSelected
+                          ? 'border-brand-primary bg-brand-primary/10 ring-2 ring-brand-primary/30 text-brand-primary shadow-xs'
+                          : 'border-brand-border bg-brand-cream/30 hover:bg-brand-cream text-brand-charcoal'
+                      }`}
+                    >
+                      <span className="text-xs font-bold">
+                        {lang === 'en' ? portion.name : portion.banglaName}
+                      </span>
+                      <span className="text-sm font-extrabold mt-1 text-brand-primary">
+                        ৳{portion.price}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
 
           {/* Upsells / Add-ons Section */}
           {detailItem.addons && detailItem.addons.length > 0 && (

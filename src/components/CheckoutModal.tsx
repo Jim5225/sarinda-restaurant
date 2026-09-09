@@ -334,7 +334,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose })
                           bKash Online / QR Payment
                         </span>
                         <span className="text-[11px] text-brand-muted">
-                          Merchant: 01711234567 (Send Money / Counter Pay)
+                          Merchant: 01712121434 (Send Money / Counter Pay)
                         </span>
                       </div>
                     </div>
@@ -361,7 +361,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose })
                           Nagad Payment
                         </span>
                         <span className="text-[11px] text-brand-muted">
-                          Merchant: 01711234567
+                          Merchant: 01712121434
                         </span>
                       </div>
                     </div>

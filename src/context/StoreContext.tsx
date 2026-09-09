@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { MenuItem, CartItem, Order, Reservation, Offer, Addon } from '../types';
+import { MenuItem, CartItem, Order, Reservation, Offer, Addon, PortionVariant } from '../types';
 import { INITIAL_MENU_ITEMS, INITIAL_OFFERS } from '../data/initialData';
 
 interface StoreContextType {
@@ -17,7 +17,7 @@ interface StoreContextType {
 
   // Cart
   cart: CartItem[];
-  addToCart: (item: MenuItem, quantity?: number, selectedAddons?: Addon[], notes?: string) => void;
+  addToCart: (item: MenuItem, quantity?: number, selectedAddons?: Addon[], notes?: string, selectedPortion?: PortionVariant) => void;
   removeFromCart: (index: number) => void;
   updateCartQuantity: (index: number, quantity: number) => void;
   clearCart: () => void;
@@ -76,7 +76,7 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   // Menu State
   const [menu, setMenu] = useState<MenuItem[]>(() => {
-    const saved = localStorage.getItem('sarinda_menu');
+    const saved = localStorage.getItem('sarinda_menu_v3');
     return saved ? JSON.parse(saved) : INITIAL_MENU_ITEMS;
   });
 
@@ -184,7 +184,7 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   }, [lang]);
 
   useEffect(() => {
-    localStorage.setItem('sarinda_menu', JSON.stringify(menu));
+    localStorage.setItem('sarinda_menu_v3', JSON.stringify(menu));
   }, [menu]);
 
   useEffect(() => {
@@ -211,7 +211,7 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
 
   const cartSubtotal = cart.reduce((sum, item) => {
-    const itemPrice = item.menuItem.price;
+    const itemPrice = item.selectedPortion ? item.selectedPortion.price : item.menuItem.price;
     const addonsTotal = item.selectedAddons.reduce((acc, addon) => acc + addon.price, 0);
     return sum + (itemPrice + addonsTotal) * item.quantity;
   }, 0);
@@ -229,14 +229,16 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     item: MenuItem,
     quantity: number = 1,
     selectedAddons: Addon[] = [],
-    notes?: string
+    notes?: string,
+    selectedPortion?: PortionVariant
   ) => {
     setCart((prev) => {
-      // Check if exact same item with exact same addons already exists
+      // Check if exact same item with exact same portion and addons already exists
       const addonIdsKey = selectedAddons.map(a => a.id).sort().join(',');
       const existingIndex = prev.findIndex(
         (ci) =>
           ci.menuItem.id === item.id &&
+          ci.selectedPortion?.id === selectedPortion?.id &&
           ci.selectedAddons.map(a => a.id).sort().join(',') === addonIdsKey &&
           (ci.notes || '') === (notes || '')
       );
@@ -249,8 +251,9 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         return [
           ...prev,
           {
-            id: `${item.id}-${Date.now()}`,
+            id: `${item.id}-${selectedPortion?.id || 'std'}-${Date.now()}`,
             menuItem: item,
+            selectedPortion,
             quantity,
             selectedAddons,
             notes

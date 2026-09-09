@@ -11,10 +11,14 @@ export const MenuSection: React.FC = () => {
   const categories: Array<MenuItem['category'] | 'All'> = [
     'All',
     'Biryani',
-    'Mutton',
-    'Chicken',
-    'Fish & Prawn',
-    'Set Menu',
+    'Khichuri',
+    'Kebab',
+    'Meat',
+    'Fish',
+    'Rice',
+    'Vorta & Dal',
+    'Naan & Paratha',
+    'Kebab Platter',
     'Dessert',
     'Drinks'
   ];
@@ -48,7 +52,9 @@ export const MenuSection: React.FC = () => {
 
   const handleQuickAdd = (item: MenuItem, e: React.MouseEvent) => {
     e.stopPropagation();
-    if (item.addons && item.addons.length > 0) {
+    const hasAddons = item.addons && item.addons.length > 0;
+    const hasPortions = item.portions && item.portions.length > 0;
+    if (hasAddons || hasPortions) {
       setDetailItem(item);
     } else {
       addToCart(item, 1);
@@ -151,7 +157,7 @@ export const MenuSection: React.FC = () => {
                     : 'bg-brand-cream text-brand-charcoal/80 hover:bg-brand-primary/10 hover:text-brand-primary border border-brand-border/60'
                 }`}
               >
-                {cat === 'All' ? t.allCategories : cat}
+                {cat === 'All' ? t.allCategories : (t.categoryNames as any)?.[cat] || cat}
               </button>
             );
           })}
@@ -183,6 +189,10 @@ export const MenuSection: React.FC = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {filteredMenu.map((item) => {
               const hasAddons = item.addons && item.addons.length > 0;
+              const hasPortions = item.portions && item.portions.length > 0;
+              const needsCustomise = hasAddons || hasPortions;
+              const displayPortionNote = lang === 'en' ? item.portionNote : (item.banglaPortionNote || item.portionNote);
+
               return (
                 <div
                   key={item.id}
@@ -212,9 +222,9 @@ export const MenuSection: React.FC = () => {
                       )}
                     </div>
 
-                    {item.originalPrice && (
-                      <span className="absolute top-3 right-3 bg-brand-accent text-white text-[11px] font-black px-2 py-0.5 rounded-full shadow">
-                        SAVE ৳{item.originalPrice - item.price}
+                    {displayPortionNote && (
+                      <span className="absolute top-3 right-3 bg-brand-primary/90 backdrop-blur-xs text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow border border-white/20">
+                        {displayPortionNote}
                       </span>
                     )}
 
@@ -236,7 +246,7 @@ export const MenuSection: React.FC = () => {
                   <div className="p-5 flex-1 flex flex-col justify-between">
                     <div>
                       <div className="flex items-center justify-between text-[11px] font-bold uppercase tracking-wider text-brand-leaf mb-1">
-                        <span>{item.category}</span>
+                        <span>{(t.categoryNames as any)?.[item.category] || item.category}</span>
                         {item.isSpicy && (
                           <span className="text-red-500 flex items-center gap-0.5 font-semibold">
                             <Flame className="w-3 h-3" /> {t.spicyBadge}
@@ -256,16 +266,29 @@ export const MenuSection: React.FC = () => {
                     {/* Price and Add CTA */}
                     <div className="flex items-center justify-between mt-5 pt-3 border-t border-brand-border/60">
                       <div>
-                        <div className="flex items-baseline gap-1.5">
-                          <span className="font-extrabold text-xl text-brand-primary">
-                            ৳{item.price}
-                          </span>
-                          {item.originalPrice && (
-                            <span className="text-xs line-through text-brand-muted">
-                              ৳{item.originalPrice}
+                        {hasPortions && item.portions && item.portions.length > 1 ? (
+                          <div className="flex flex-col">
+                            <span className="font-extrabold text-base sm:text-lg text-brand-primary">
+                              {lang === 'en' 
+                                ? `৳${item.portions[0].price} - ৳${item.portions[item.portions.length - 1].price}`
+                                : `${item.portions[0].price}৳ - ${item.portions[item.portions.length - 1].price}৳`}
                             </span>
-                          )}
-                        </div>
+                            <span className="text-[10px] text-brand-muted">
+                              {lang === 'en' ? 'Choose size' : 'সাইজ নির্বাচন করুন'}
+                            </span>
+                          </div>
+                        ) : (
+                          <div className="flex items-baseline gap-1.5">
+                            <span className="font-extrabold text-xl text-brand-primary">
+                              {lang === 'en' ? `৳${item.price}` : `${item.price}৳`}
+                            </span>
+                            {item.originalPrice && (
+                              <span className="text-xs line-through text-brand-muted">
+                                {lang === 'en' ? `৳${item.originalPrice}` : `${item.originalPrice}৳`}
+                              </span>
+                            )}
+                          </div>
+                        )}
                       </div>
 
                       <button
@@ -278,7 +301,7 @@ export const MenuSection: React.FC = () => {
                         }`}
                       >
                         <Plus className="w-3.5 h-3.5" />
-                        <span>{hasAddons ? t.customise : t.addToCart}</span>
+                        <span>{needsCustomise ? t.customise : t.addToCart}</span>
                       </button>
                     </div>
                   </div>
