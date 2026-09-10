@@ -21,7 +21,9 @@ export const AiAssistant: React.FC = () => {
     setActiveTab,
     setIsReservationOpen,
     menu,
-    offers
+    offers,
+    initialAiPrompt,
+    setInitialAiPrompt
   } = useStore();
   const t = translations[lang];
 
@@ -38,6 +40,15 @@ export const AiAssistant: React.FC = () => {
   const [messages, setMessages] = useState<ChatMessage[]>(initialMessages);
   const [inputText, setInputText] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+
+  // Auto-send prompt when opened from banner or suggestion chip
+  React.useEffect(() => {
+    if (initialAiPrompt && initialAiPrompt.trim()) {
+      const prompt = initialAiPrompt.trim();
+      setInitialAiPrompt('');
+      handleSend(prompt);
+    }
+  }, [initialAiPrompt]);
 
   const suggestedPrompts = [
     lang === 'en' ? "Show today's popular dishes" : "জনপ্রিয় খাবারগুলো দেখান",
@@ -76,7 +87,7 @@ export const AiAssistant: React.FC = () => {
 
     // 3. Popular dishes / Biryani / Kacchi
     if (q.includes('popular') || q.includes('best') || q.includes('kacchi') || q.includes('biryani') || q.includes('কাচ্চি') || q.includes('জনপ্রিয়')) {
-      const kacchi = menu.find(m => m.id === 'kacchi-special');
+      const kacchi = menu.find(m => m.id === 'kacchi-special') || menu[0];
       const rezala = menu.find(m => m.id === 'mutton-rezala');
       return {
         id: `ai-${Date.now()}`,
@@ -124,7 +135,7 @@ export const AiAssistant: React.FC = () => {
     };
   };
 
-  const handleSend = (textToSend?: string) => {
+  const handleSend = async (textToSend?: string) => {
     const text = textToSend || inputText;
     if (!text.trim()) return;
 
@@ -138,11 +149,42 @@ export const AiAssistant: React.FC = () => {
     setInputText('');
     setIsTyping(true);
 
+    // Call secure backend proxy (/api/chat)
+    try {
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          prompt: text.trim(),
+          lang,
+          history: messages.map(m => ({ sender: m.sender, text: m.text }))
+        })
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        if (data?.text) {
+          const reply: ChatMessage = {
+            id: `ai-${Date.now()}`,
+            sender: 'ai',
+            text: data.text,
+            action: data.action
+          };
+          setMessages((prev) => [...prev, reply]);
+          setIsTyping(false);
+          return;
+        }
+      }
+    } catch (err) {
+      console.warn('Backend proxy error, using local fallback:', err);
+    }
+
+    // Graceful fallback if backend offline
     setTimeout(() => {
       const reply = generateAiReply(text);
       setMessages((prev) => [...prev, reply]);
       setIsTyping(false);
-    }, 600);
+    }, 450);
   };
 
   const handleActionClick = (action: NonNullable<ChatMessage['action']>) => {

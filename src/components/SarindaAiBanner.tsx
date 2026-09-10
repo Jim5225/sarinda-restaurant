@@ -3,7 +3,7 @@ import { useStore } from '../context/StoreContext';
 import { Bot, Sparkles, Send, ArrowRight, Flame, Users, Calendar, Tag } from 'lucide-react';
 
 export const SarindaAiBanner: React.FC = () => {
-  const { lang, setIsAiChatOpen } = useStore();
+  const { lang, openAiWithPrompt, setIsAiChatOpen } = useStore();
   const [queryInput, setQueryInput] = useState('');
 
   // Dynamic cycling text phrases
@@ -28,13 +28,13 @@ export const SarindaAiBanner: React.FC = () => {
   // Typewriter effect
   useEffect(() => {
     const currentPhrase = phrases[currentPhraseIndex];
-    const typingSpeed = isDeleting ? 30 : 60;
+    const typingSpeed = isDeleting ? 30 : 65;
 
     const timer = setTimeout(() => {
       if (!isDeleting) {
         setDisplayedText(currentPhrase.substring(0, displayedText.length + 1));
-        if (displayedText.length + 1 === currentPhrase.length) {
-          setTimeout(() => setIsDeleting(true), 2200);
+        if (displayedText.length === currentPhrase.length) {
+          setTimeout(() => setIsDeleting(true), 2400);
         }
       } else {
         setDisplayedText(currentPhrase.substring(0, displayedText.length - 1));
@@ -50,11 +50,15 @@ export const SarindaAiBanner: React.FC = () => {
 
   const handleAskSubmit = (e?: React.FormEvent) => {
     if (e) e.preventDefault();
-    setIsAiChatOpen(true);
+    const promptToSend = queryInput.trim() || displayedText;
+    if (promptToSend) {
+      openAiWithPrompt(promptToSend);
+      setQueryInput('');
+    }
   };
 
-  const handleChipClick = (_text: string) => {
-    setIsAiChatOpen(true);
+  const handleChipClick = (text: string) => {
+    openAiWithPrompt(text);
   };
 
   return (

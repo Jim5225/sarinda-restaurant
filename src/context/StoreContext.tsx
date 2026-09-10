@@ -68,6 +68,9 @@ interface StoreContextType {
   setLastOrder: (order: Order | null) => void;
   isAiChatOpen: boolean;
   setIsAiChatOpen: (open: boolean) => void;
+  initialAiPrompt: string;
+  setInitialAiPrompt: (prompt: string) => void;
+  openAiWithPrompt: (prompt: string) => void;
 }
 
 const StoreContext = createContext<StoreContextType | undefined>(undefined);
@@ -280,6 +283,12 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [lastOrder, setLastOrder] = useState<Order | null>(null);
   const [isAiChatOpen, setIsAiChatOpen] = useState(false);
+  const [initialAiPrompt, setInitialAiPrompt] = useState<string>('');
+
+  const openAiWithPrompt = (prompt: string) => {
+    setInitialAiPrompt(prompt);
+    setIsAiChatOpen(true);
+  };
 
   // Sync to local storage
   useEffect(() => {
@@ -553,7 +562,10 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         lastOrder,
         setLastOrder,
         isAiChatOpen,
-        setIsAiChatOpen
+        setIsAiChatOpen,
+        initialAiPrompt,
+        setInitialAiPrompt,
+        openAiWithPrompt
       }}
     >
       {children}
