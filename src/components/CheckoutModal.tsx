@@ -11,17 +11,23 @@ interface CheckoutModalProps {
 }
 
 export const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose }) => {
-  const { lang, cart, cartSubtotal, cartDeliveryFee, cartDiscount, cartTotal, createOrder } = useStore();
+  const { lang, cart, cartSubtotal, cartDeliveryFee, cartDiscount, cartTotal, createOrder, deliveryArea } = useStore();
   const t = translations[lang];
 
   const [orderType, setOrderType] = useState<'delivery' | 'pickup' | 'dine_in'>('delivery');
   const [customerName, setCustomerName] = useState('');
   const [phone, setPhone] = useState('');
-  const [address, setAddress] = useState('');
+  const [address, setAddress] = useState(deliveryArea || '');
   const [notes, setNotes] = useState('');
   const [paymentMethod, setPaymentMethod] = useState<'cod' | 'bkash' | 'nagad'>('cod');
   const [errorMsg, setErrorMsg] = useState('');
   const [placedOrder, setPlacedOrder] = useState<Order | null>(null);
+
+  React.useEffect(() => {
+    if (deliveryArea && (!address || address === 'ধানমন্ডি / কলাবাগান')) {
+      setAddress(deliveryArea);
+    }
+  }, [deliveryArea, isOpen]);
 
   if (!isOpen) return null;
 

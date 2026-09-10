@@ -55,9 +55,17 @@ interface StoreContextType {
   createReservation: (data: Omit<Reservation, 'id' | 'createdAt' | 'status'>) => Reservation;
   updateReservationStatus: (id: string, status: Reservation['status']) => void;
 
+  // Delivery Location & Fees
+  deliveryArea: string;
+  setDeliveryArea: (area: string) => void;
+  deliveryFee: number;
+  setDeliveryFee: (fee: number) => void;
+
   // Modals & UI States
   isCartOpen: boolean;
   setIsCartOpen: (open: boolean) => void;
+  isCheckoutOpen: boolean;
+  setIsCheckoutOpen: (open: boolean) => void;
   detailItem: MenuItem | null;
   setDetailItem: (item: MenuItem | null) => void;
   isReservationOpen: boolean;
@@ -276,8 +284,18 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     ];
   });
 
+  // Delivery Location & Fee State
+  const [deliveryArea, setDeliveryArea] = useState<string>(() => {
+    return localStorage.getItem('sarinda_delivery_area') || 'ধানমন্ডি / কলাবাগান';
+  });
+  const [deliveryFee, setDeliveryFee] = useState<number>(() => {
+    const saved = localStorage.getItem('sarinda_delivery_fee');
+    return saved ? Number(saved) : 40;
+  });
+
   // UI Modal States
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [detailItem, setDetailItem] = useState<MenuItem | null>(null);
   const [isReservationOpen, setIsReservationOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -323,6 +341,11 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     }
   }, [appliedOffer]);
 
+  useEffect(() => {
+    localStorage.setItem('sarinda_delivery_area', deliveryArea);
+    localStorage.setItem('sarinda_delivery_fee', deliveryFee.toString());
+  }, [deliveryArea, deliveryFee]);
+
   // Cart Calculations
   const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
 
@@ -332,7 +355,7 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     return sum + (itemPrice + addonsTotal) * item.quantity;
   }, 0);
 
-  const cartDeliveryFee = cart.length > 0 ? 60 : 0;
+  const cartDeliveryFee = cart.length > 0 ? deliveryFee : 0;
 
   const cartDiscount = appliedOffer && cartSubtotal >= appliedOffer.minOrder
     ? Math.min(Math.round((cartSubtotal * appliedOffer.discountPercent) / 100), appliedOffer.maxDiscount)
@@ -551,8 +574,14 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         reservations,
         createReservation,
         updateReservationStatus,
+        deliveryArea,
+        setDeliveryArea,
+        deliveryFee,
+        setDeliveryFee,
         isCartOpen,
         setIsCartOpen,
+        isCheckoutOpen,
+        setIsCheckoutOpen,
         detailItem,
         setDetailItem,
         isReservationOpen,

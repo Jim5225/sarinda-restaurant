@@ -25,8 +25,7 @@ import { MobileStickyBar } from './components/MobileStickyBar';
 import { AdminPortal } from './components/AdminPortal';
 
 export const App: React.FC = () => {
-  const { activeTab, isReservationOpen, setIsReservationOpen } = useStore();
-  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
+  const { activeTab, isReservationOpen, setIsReservationOpen, isCheckoutOpen, setIsCheckoutOpen } = useStore();
 
   // If Admin portal is activated
   if (activeTab === 'admin') {

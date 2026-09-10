@@ -70,6 +70,14 @@ AUTHENTIC SARINDA MENU & PRICE LIST (BDT ৳):
   - Zafrani Shahi Firni (Earthen Pot): ৳70
   - Falooda Royal: ৳160
 
+6. NATURAL HUMAN WAITER ORDERING & UPSELLING (আসল খাদ্য পরিবেশক ও আতিথেয়তা):
+When a guest states they want to order dishes (e.g. "2 ta biriyani", "১টা কাচ্চি", "kacchi order korbo", "amar 2 ta biriyani lagbe"):
+- Act like an attentive, hospitable waiter at Sarinda Restaurant.
+- Acknowledge their dish warmly (e.g. "জি অবশ্যই! আপনার জন্য ২ প্লেট সুস্বাদু স্পেশাল কাচ্চি বিরিয়ানি রেডি করছি।").
+- If Biryani/Tehari/Polao is ordered without drinks, ask naturally whether they want cold digestive Shahi Borhani:
+  "কাচ্চির সাথে কি শাহী বোরহানি নিবেন? কাচ্চির পর ঠান্ডা বোরহানি খেলে ভারী খাবার সহজে হজম হয় আর স্বাদটাও পুরো জমে যায়! সাথে দিয়ে দেব কি?"
+- When Borhani is decided (or already included), politely confirm and invite them to select their delivery location below to see their automatic delivery fee and total bill.
+
 RESTAURANT DETAILS:
 - Address: Road 16, Dhanmondi 27 (Old), Dhaka.
 - Phone & WhatsApp: +880 1712-121434.
@@ -140,10 +148,12 @@ RESTAURANT DETAILS:
         const replyText = geminiResponse?.candidates?.[0]?.content?.parts?.[0]?.text;
 
         if (replyText) {
+          const orderDecision = detectOrderIntent(prompt, history);
           const action = detectAction(prompt, replyText, lang);
           return res.status(200).json({
             text: replyText.trim(),
             action,
+            orderData: orderDecision ? orderDecision.orderData : undefined,
             source: 'gemini'
           });
         }
@@ -153,10 +163,11 @@ RESTAURANT DETAILS:
     }
 
     // Graceful Dynamic Advisor Engine (if API quota depleted or offline)
-    const fallbackReply = generateAdvisorDecision(prompt, lang);
+    const fallbackReply = generateAdvisorDecision(prompt, lang, history);
     return res.status(200).json({
       text: fallbackReply.text,
       action: fallbackReply.action,
+      orderData: fallbackReply.orderData,
       source: 'fallback'
     });
 
@@ -270,8 +281,217 @@ function detectPartySize(q: string): number {
   return 0;
 }
 
+interface OrderItem {
+  id: string;
+  name: string;
+  banglaName: string;
+  price: number;
+  quantity: number;
+}
+
+interface OrderData {
+  stage: 'upsell' | 'ready';
+  items: OrderItem[];
+  suggestAddon?: {
+    id: string;
+    name: string;
+    banglaName: string;
+    price: number;
+    defaultQty: number;
+  };
+  selectedArea?: string;
+  deliveryFee?: number;
+}
+
+function detectOrderIntent(userQuery: string, history: any[] = []): { text: string; action: any; orderData: OrderData } | null {
+  const q = userQuery.toLowerCase().trim();
+
+  // Check last message to see if AI previously asked about Borhani
+  const lastAiMessage = Array.isArray(history) && history.length > 0
+    ? (history.slice().reverse().find(m => m.sender === 'ai' || m.role === 'model')?.text || '').toLowerCase()
+    : '';
+  const isAfterBorhaniUpsell = lastAiMessage.includes('বোরহানি') && (lastAiMessage.includes('নিবেন') || lastAiMessage.includes('দেব') || lastAiMessage.includes('borhani'));
+
+  // 1. Borhani affirmative response
+  const isYesBorhani =
+    isAfterBorhaniUpsell &&
+    (q === 'ha' || q === 'হ্যাঁ' || q === 'yes' || q.includes('ha dao') || q.includes('হ্যাঁ দাও') || q.includes('borhani dao') || q.includes('বোরহানি দিন') || q.includes('dao') || q.includes('দাও') || q.includes('din') || q.includes('দিন'));
+
+  // 2. Borhani negative response
+  const isNoBorhani =
+    isAfterBorhaniUpsell &&
+    (q === 'na' || q === 'না' || q === 'no' || q.includes('lagbe na') || q.includes('লাগবে না') || q.includes('shudhu') || q.includes('শুধু'));
+
+  if (isYesBorhani) {
+    return {
+      text: "চমৎকার! আপনার জন্য ২ প্লেট স্পেশাল কাচ্চি বিরিয়ানি ও ২টা ঠান্ডা শাহী বোরহানি প্রস্তুত করেছি।\n\nনিচে আপনার ডেলিভারি এলাকা নির্বাচন করুন, ডেলিভারি চার্জসহ মোট বিল স্বয়ংক্রিয়ভাবে চলে আসবে এবং সরাসরি এক ক্লিকে অর্ডার কনফার্ম করতে পারবেন 👇",
+      action: { label: 'অর্ডার চেকআউট করুন', type: 'menu' },
+      orderData: {
+        stage: 'ready',
+        items: [
+          { id: 'special-kacchi-biryani', name: 'Special Kacchi Biryani', banglaName: 'স্পেশাল কাচ্চি বিরিয়ানি (হাফ)', price: 340, quantity: 2 },
+          { id: 'shahi-borhani', name: 'Traditional Shahi Borhani', banglaName: 'শাহী বোরহানি (গ্লাস)', price: 75, quantity: 2 }
+        ],
+        selectedArea: 'ধানমন্ডি / কলাবাগান',
+        deliveryFee: 40
+      }
+    };
+  }
+
+  if (isNoBorhani) {
+    return {
+      text: "ঠিক আছে! আপনার জন্য ২ প্লেট স্পেশাল কাচ্চি বিরিয়ানি প্রস্তুত করেছি।\n\nনিচে আপনার ডেলিভারি এলাকা নির্বাচন করুন, ডেলিভারি চার্জসহ মোট বিল স্বয়ংক্রিয়ভাবে চলে আসবে এবং সরাসরি এক ক্লিকে অর্ডার কনফার্ম করতে পারবেন 👇",
+      action: { label: 'অর্ডার চেকআউট করুন', type: 'menu' },
+      orderData: {
+        stage: 'ready',
+        items: [
+          { id: 'special-kacchi-biryani', name: 'Special Kacchi Biryani', banglaName: 'স্পেশাল কাচ্চি বিরিয়ানি (হাফ)', price: 340, quantity: 2 }
+        ],
+        selectedArea: 'ধানমন্ডি / কলাবাগান',
+        deliveryFee: 40
+      }
+    };
+  }
+
+  // Detect Dish Intent
+  const isBiryani = q.includes('biryani') || q.includes('biriyani') || q.includes('kacchi') || q.includes('বিরিয়ানি') || q.includes('কাচ্চি');
+  const isTehari = q.includes('tehari') || q.includes('তেহারি') || q.includes('তেহারী');
+  const isPolao = q.includes('morog') || q.includes('মোরগ') || q.includes('polao') || q.includes('পোলাও');
+  const hasBorhani = q.includes('borhani') || q.includes('বোরহানি');
+
+  if (!isBiryani && !isTehari && !isPolao) {
+    return null;
+  }
+
+  // Skip if asking about recipe or ingredients
+  if (q.includes('moddhe ki ki') || q.includes('ki ki ache') || q.includes('ingredients') || q.includes('recipe') || q.includes('banay') || q.includes('উপাদান') || q.includes('উপকরণ')) {
+    return null;
+  }
+
+  // Determine quantity
+  let qty = 1;
+  const numMatch = q.match(/(\d+)\s*(ta|plate|টি|টা|পিস|প্লেট)?/);
+  const bnNumMatch = q.match(/([১-৯])\s*(টা|টি|প্লেট)?/);
+  if (numMatch) {
+    qty = parseInt(numMatch[1], 10);
+  } else if (bnNumMatch) {
+    const bnMap: { [k: string]: number } = { '১': 1, '২': 2, '৩': 3, '৪': 4, '৫': 5, '৬': 6, '৭': 7, '৮': 8, '৯': 9 };
+    qty = bnMap[bnNumMatch[1]] || 1;
+  } else if (q.includes('dui') || q.includes('দুই') || q.includes('two')) {
+    qty = 2;
+  } else if (q.includes('tin') || q.includes('তিন') || q.includes('three')) {
+    qty = 3;
+  } else if (q.includes('char') || q.includes('চার') || q.includes('four')) {
+    qty = 4;
+  }
+  if (isNaN(qty) || qty < 1) qty = 1;
+  const bnQty = String(qty).replace(/\d/g, d => '০১২৩৪৫৬৭৮৯'[+d]);
+
+  // Case A: Biryani with Borhani requested together
+  if (isBiryani && hasBorhani) {
+    return {
+      text: `জি নিশ্চয়ই! আপনার জন্য ${bnQty} প্লেট স্পেশাল কাচ্চি বিরিয়ানি এবং ${bnQty}টা ঠান্ডা শাহী বোরহানি প্রস্তুত করেছি।\n\nনিচে আপনার ডেলিভারি এলাকা নির্বাচন করুন, ডেলিভারি চার্জসহ মোট বিল স্বয়ংক্রিয়ভাবে চলে আসবে এবং সরাসরি এক ক্লিকে অর্ডার কনফার্ম করতে পারবেন 👇`,
+      action: { label: 'অর্ডার চেকআউট করুন', type: 'menu' },
+      orderData: {
+        stage: 'ready',
+        items: [
+          { id: 'special-kacchi-biryani', name: 'Special Kacchi Biryani', banglaName: 'স্পেশাল কাচ্চি বিরিয়ানি (হাফ)', price: 340, quantity: qty },
+          { id: 'shahi-borhani', name: 'Traditional Shahi Borhani', banglaName: 'শাহী বোরহানি (গ্লাস)', price: 75, quantity: qty }
+        ],
+        selectedArea: 'ধানমন্ডি / কলাবাগান',
+        deliveryFee: 40
+      }
+    };
+  }
+
+  // Case B: Biryani ordered alone -> Natural Waiter Upsell Question
+  if (isBiryani) {
+    return {
+      text: `জি অবশ্যই! আপনার জন্য ${bnQty} প্লেট সুস্বাদু স্পেশাল কাচ্চি বিরিয়ানি রেডি করছি।\n\nকাচ্চির সাথে কি শাহী বোরহানি নিবেন? কাচ্চির পর ঠান্ডা বোরহানি খেলে ভারী খাবার সহজে হজম হয় আর স্বাদটাও পুরো জমে যায়! সাথে দিয়ে দেব কি?`,
+      action: { label: 'বোরহানি যোগ করুন', type: 'menu' },
+      orderData: {
+        stage: 'upsell',
+        items: [
+          { id: 'special-kacchi-biryani', name: 'Special Kacchi Biryani', banglaName: 'স্পেশাল কাচ্চি বিরিয়ানি (হাফ)', price: 340, quantity: qty }
+        ],
+        suggestAddon: {
+          id: 'shahi-borhani',
+          name: 'Traditional Shahi Borhani',
+          banglaName: 'শাহী বোরহানি (গ্লাস)',
+          price: 75,
+          defaultQty: qty
+        }
+      }
+    };
+  }
+
+  // Case C: Beef Tehari
+  if (isTehari) {
+    if (hasBorhani) {
+      return {
+        text: `জি নিশ্চয়ই! আপনার জন্য ${bnQty} প্লেট খাঁটি সরিষার তেলের বিফ তেহারী এবং ${bnQty}টা শাহী বোরহানি প্রস্তুত করেছি। নিচে আপনার এলাকা নির্বাচন করে সরাসরি অর্ডার করুন 👇`,
+        action: { label: 'অর্ডার চেকআউট করুন', type: 'menu' },
+        orderData: {
+          stage: 'ready',
+          items: [
+            { id: 'beef-tehari', name: 'Beef Tehari', banglaName: 'সরিষার তেলের বিফ তেহারী', price: 290, quantity: qty },
+            { id: 'shahi-borhani', name: 'Traditional Shahi Borhani', banglaName: 'শাহী বোরহানি (গ্লাস)', price: 75, quantity: qty }
+          ],
+          selectedArea: 'ধানমন্ডি / কলাবাগান',
+          deliveryFee: 40
+        }
+      };
+    }
+    return {
+      text: `জি অবশ্যই! আপনার জন্য ${bnQty} প্লেট সরিষার তেলের বিফ তেহারী রেডি করছি।\n\nতেহারীর সাথে কি ঠান্ডা শাহী বোরহানি নিবেন? তেহারীর পর ঠান্ডা বোরহানি জমে দারুণ! সাথে দিয়ে দেব কি?`,
+      action: { label: 'বোরহানি যোগ করুন', type: 'menu' },
+      orderData: {
+        stage: 'upsell',
+        items: [
+          { id: 'beef-tehari', name: 'Beef Tehari', banglaName: 'সরিষার তেলের বিফ তেহারী', price: 290, quantity: qty }
+        ],
+        suggestAddon: {
+          id: 'shahi-borhani',
+          name: 'Traditional Shahi Borhani',
+          banglaName: 'শাহী বোরহানি (গ্লাস)',
+          price: 75,
+          defaultQty: qty
+        }
+      }
+    };
+  }
+
+  // Case D: Morog Polao
+  if (isPolao) {
+    return {
+      text: `জি অবশ্যই! আপনার জন্য ${bnQty} প্লেট ঐতিহ্যবাহী শাহী মোরগ পোলাও রেডি করছি।\n\nপোলাওয়ের সাথে কি শাহী বোরহানি নিবেন? সাথে দিয়ে দেব কি?`,
+      action: { label: 'বোরহানি যোগ করুন', type: 'menu' },
+      orderData: {
+        stage: 'upsell',
+        items: [
+          { id: 'morog-polao', name: 'Morog Polao', banglaName: 'ঐতিহ্যবাহী শাহী মোরগ পোলাও', price: 240, quantity: qty }
+        ],
+        suggestAddon: {
+          id: 'shahi-borhani',
+          name: 'Traditional Shahi Borhani',
+          banglaName: 'শাহী বোরহানি (গ্লাস)',
+          price: 75,
+          defaultQty: qty
+        }
+      }
+    };
+  }
+
+  return null;
+}
+
 // Dynamic Intelligent Advisor Decision Engine (Always replies in rich Bengali as requested)
-function generateAdvisorDecision(userQuery: string, lang: string) {
+function generateAdvisorDecision(userQuery: string, lang: string, history: any[] = []): { text: string; action: any; orderData?: OrderData } {
+  const orderDecision = detectOrderIntent(userQuery, history);
+  if (orderDecision) {
+    return orderDecision;
+  }
+
   const q = userQuery.toLowerCase();
 
   // 1. Budget Query: Under 1000 Tk / Budget Friendly ("1000 tk", "1000 taka", "kom taka", "budget")
