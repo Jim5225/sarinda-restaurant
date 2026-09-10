@@ -107,7 +107,7 @@ RESTAURANT DETAILS:
           parts: [{ text: prompt }]
         });
 
-        const modelNames = ['gemini-3.6-flash', 'gemini-flash-latest', 'gemini-3.5-flash'];
+        const modelNames = ['gemini-2.5-flash', 'gemini-flash-latest', 'gemini-flash-lite-latest'];
         let geminiResponse: any = null;
 
         for (const model of modelNames) {
