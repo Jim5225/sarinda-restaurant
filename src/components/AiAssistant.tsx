@@ -61,9 +61,23 @@ export const AiAssistant: React.FC = () => {
   const generateAiReply = (userQuery: string): ChatMessage => {
     const q = userQuery.toLowerCase();
 
-    // 1. Ingredients / What's inside (e.g. "biriyani r moddhe ki ki ache ?", "kacchi te ki ache")
+    // 1. Kacchi Pairings & Sides (e.g. "kacchi r sathe ki khabo", "biryani r sathe ki nebo")
+    if (q.includes('sathe') || q.includes('সাথে') || q.includes('side') || q.includes('pairing')) {
+      return {
+        id: `ai-${Date.now()}`,
+        sender: 'ai',
+        text: "কাচ্চি বিরিয়ানির সাথে পুরান ঢাকার আসল শাহী তৃপ্তি পেতে আমাদের প্রধান খাদ্য উপদেষ্টার সেরা কম্বিনেশন:\n\n" +
+          "• **বিয়ে বাড়ির চিকেন রোস্ট (৳১৮০):** কাচ্চির ভাতের সাথে রোস্টের মিষ্টি-ঝাল বাদাম বাটা গ্রেভির মাখামাখি মুখে অমৃতের মতো লাগে!\n" +
+          "• **শাহী মাটন রেজালা (৳৩২০):** দই, পোস্তদানা ও কাজুবাদামের ক্রিমি গ্রেভি কাচ্চির স্বাদকে দ্বিগুণ করে দেয়।\n" +
+          "• **ঠান্ডা শাহী বোরহানি (৳৭৫/৳১৫৫):** পুদিনা ও টক দইয়ের তৈরি ঐতিহ্যবাহী বোরহানি যা ভারী খাবার সহজে হজমে সাহায্য করে।\n" +
+          "• **জাফরানী শাহী ফিরনি (৳৭০):** মাটির পাত্রে জমানো খাঁটি দুধের ফিরনি ভোজনের শেষে মিষ্টি সমাপ্তি এনে দেবে!",
+        action: { label: lang === 'en' ? 'View Kacchi & Sides' : 'কাচ্চি ও সাইড ডিশ অর্ডার করুন', type: 'menu' }
+      };
+    }
+
+    // 2. Ingredients / What's inside (e.g. "biriyani r moddhe ki ki ache ?", "kacchi te ki ache")
     const isIngredientQuery =
-      (q.includes('moddhe') && (q.includes('ki') || q.includes('ache') || q.includes('thake'))) ||
+      q.includes('moddhe') ||
       q.includes('ki ki ache') ||
       q.includes('ki thake') ||
       q.includes('ki ache') ||
@@ -74,8 +88,7 @@ export const AiAssistant: React.FC = () => {
       q.includes('ingredients') ||
       q.includes('inside') ||
       q.includes('recipe') ||
-      (q.includes('kacchi') && q.includes('ki')) ||
-      (q.includes('biryani') && q.includes('ki'));
+      ((q.includes('kacchi') || q.includes('biryani')) && (q.includes('banay') || q.includes('ranna') || q.includes('banano')));
 
     if (isIngredientQuery) {
       return {
@@ -90,20 +103,6 @@ export const AiAssistant: React.FC = () => {
           "• **ডিম ও চাটনি:** ডিমসহ ভ্যারিয়েন্টে সিদ্ধ ডিম, সাথে থাকে ফ্রেশ শসা-লেবুর শাহী সালাদ ও পুদিনা-টমেটোর চাটনি!\n\n" +
           "💡 সারিন্দায় কোনো ক্ষতিকর কৃত্রিম রঙ বা ফ্লেভার দেওয়া হয় না—প্রতিটি লোকমা শতভাগ স্বাস্থ্যসম্মত ও খাঁটি স্বাদে ভরপুর!",
         action: { label: lang === 'en' ? 'Order Special Kacchi' : 'কাচ্চি বিরিয়ানি অর্ডার করুন', type: 'menu' }
-      };
-    }
-
-    // 2. Kacchi Pairings & Sides
-    if (q.includes('sathe') || q.includes('সাথে') || q.includes('side') || q.includes('pairing')) {
-      return {
-        id: `ai-${Date.now()}`,
-        sender: 'ai',
-        text: "কাচ্চি বিরিয়ানির সাথে পুরান ঢাকার আসল শাহী তৃপ্তি পেতে আমাদের প্রধান খাদ্য উপদেষ্টার সেরা কম্বিনেশন:\n\n" +
-          "• **বিয়ে বাড়ির চিকেন রোস্ট (৳১৮০):** কাচ্চির ভাতের সাথে রোস্টের মিষ্টি-ঝাল বাদাম বাটা গ্রেভির মাখামাখি মুখে অমৃতের মতো লাগে!\n" +
-          "• **শাহী মাটন রেজালা (৳৩২০):** দই, পোস্তদানা ও কাজুবাদামের ক্রিমি গ্রেভি কাচ্চির স্বাদকে দ্বিগুণ করে দেয়।\n" +
-          "• **ঠান্ডা শাহী বোরহানি (৳৭৫/৳১৫৫):** পুদিনা ও টক দইয়ের তৈরি ঐতিহ্যবাহী বোরহানি যা ভারী খাবার সহজে হজমে সাহায্য করে।\n" +
-          "• **জাফরানী শাহী ফিরনি (৳৭০):** মাটির পাত্রে জমানো খাঁটি দুধের ফিরনি ভোজনের শেষে মিষ্টি সমাপ্তি এনে দেবে!",
-        action: { label: lang === 'en' ? 'View Kacchi & Sides' : 'কাচ্চি ও সাইড ডিশ অর্ডার করুন', type: 'menu' }
       };
     }
 
