@@ -112,32 +112,62 @@ export const AiAssistant: React.FC = () => {
     const lastAiMsg = messages.slice().reverse().find(m => m.sender === 'ai')?.text?.toLowerCase() || '';
     const isAfterBorhaniUpsell = lastAiMsg.includes('বোরহানি') && (lastAiMsg.includes('নিবেন') || lastAiMsg.includes('দেব') || lastAiMsg.includes('borhani'));
 
+    // Detect previous biryani quantity from history
+    let prevQty = 2;
+    const prevMatch = lastAiMsg.match(/(\d+|[১-৯])\s*প্লেট/);
+    if (prevMatch) {
+      const digitMap: { [k: string]: number } = { '১': 1, '২': 2, '৩': 3, '৪': 4, '৫': 5 };
+      prevQty = digitMap[prevMatch[1]] || parseInt(prevMatch[1], 10) || 2;
+    }
+
     if (isAfterBorhaniUpsell) {
-      if (q === 'ha' || q === 'হ্যাঁ' || q === 'yes' || q.includes('ha dao') || q.includes('borhani dao') || q.includes('বোরহানি দিন') || q.includes('dao') || q.includes('din')) {
+      const isYes =
+        (
+          q.includes('ha') || q.includes('হ্যাঁ') || q.includes('yes') ||
+          q.includes('dao') || q.includes('দাও') || q.includes('din') || q.includes('দিন') ||
+          q.includes('borhani') || q.includes('বোরহানি')
+        ) &&
+        !q.includes('na') && !q.includes('না') && !q.includes('lagbe na') && !q.includes('লাগবে না') && !q.includes('shudhu') && !q.includes('শুধু');
+
+      const isNo =
+        q === 'na' || q === 'না' || q === 'no' || q.includes('lagbe na') || q.includes('লাগবে না') || q.includes('shudhu') || q.includes('শুধু') || q.includes('na lagbe na');
+
+      if (isYes) {
+        let borhaniQty = prevQty;
+        const numMatch = q.match(/(\d+|[১-৯])\s*(ta|টা)?/);
+        if (numMatch) {
+          const digitMap: { [k: string]: number } = { '১': 1, '২': 2, '৩': 3, '৪': 4, '৫': 5 };
+          borhaniQty = digitMap[numMatch[1]] || parseInt(numMatch[1], 10) || prevQty;
+        }
+
+        const bnPrev = String(prevQty).replace(/\d/g, d => '০১২৩৪৫৬৭৮৯'[+d]);
+        const bnBorhani = String(borhaniQty).replace(/\d/g, d => '০১২৩৪৫৬৭৮৯'[+d]);
+
         return {
           id: `ai-${Date.now()}`,
           sender: 'ai',
-          text: "চমৎকার! আপনার জন্য ২ প্লেট স্পেশাল কাচ্চি বিরিয়ানি ও ২টা ঠান্ডা শাহী বোরহানি প্রস্তুত করেছি।\n\nনিচে আপনার ডেলিভারি এলাকা নির্বাচন করুন, ডেলিভারি চার্জসহ মোট বিল স্বয়ংক্রিয়ভাবে চলে আসবে এবং সরাসরি এক ক্লিকে অর্ডার কনফার্ম করতে পারবেন 👇",
+          text: `চমৎকার! আপনার জন্য ${bnPrev} প্লেট স্পেশাল কাচ্চি বিরিয়ানি ও ${bnBorhani}টা ঠান্ডা শাহী বোরহানি প্রস্তুত করেছি।\n\nনিচে আপনার ডেলিভারি এলাকা নির্বাচন করুন, ডেলিভারি চার্জসহ মোট বিল স্বয়ংক্রিয়ভাবে চলে আসবে এবং সরাসরি এক ক্লিকে অর্ডার কনফার্ম করতে পারবেন 👇`,
           orderData: {
             stage: 'ready',
             items: [
-              { id: 'special-kacchi-biryani', name: 'Special Kacchi Biryani', banglaName: 'স্পেশাল কাচ্চি বিরিয়ানি (হাফ)', price: 340, quantity: 2 },
-              { id: 'shahi-borhani', name: 'Traditional Shahi Borhani', banglaName: 'শাহী বোরহানি (গ্লাস)', price: 75, quantity: 2 }
+              { id: 'special-kacchi-biryani', name: 'Special Kacchi Biryani', banglaName: 'স্পেশাল কাচ্চি বিরিয়ানি (হাফ)', price: 340, quantity: prevQty },
+              { id: 'shahi-borhani', name: 'Traditional Shahi Borhani', banglaName: 'শাহী বোরহানি (গ্লাস)', price: 75, quantity: borhaniQty }
             ],
             selectedArea: 'ধানমন্ডি / কলাবাগান',
             deliveryFee: 40
           }
         };
       }
-      if (q === 'na' || q === 'না' || q === 'no' || q.includes('lagbe na') || q.includes('shudhu') || q.includes('শুধু')) {
+      if (isNo) {
+        const bnPrev = String(prevQty).replace(/\d/g, d => '০১২৩৪৫৬৭৮৯'[+d]);
         return {
           id: `ai-${Date.now()}`,
           sender: 'ai',
-          text: "ঠিক আছে! আপনার জন্য ২ প্লেট স্পেশাল কাচ্চি বিরিয়ানি প্রস্তুত করেছি।\n\nনিচে আপনার ডেলিভারি এলাকা নির্বাচন করুন, ডেলিভারি চার্জসহ মোট বিল স্বয়ংক্রিয়ভাবে চলে আসবে এবং সরাসরি এক ক্লিকে অর্ডার কনফার্ম করতে পারবেন 👇",
+          text: `ঠিক আছে! আপনার জন্য ${bnPrev} প্লেট স্পেশাল কাচ্চি বিরিয়ানি প্রস্তুত করেছি।\n\nনিচে আপনার ডেলিভারি এলাকা নির্বাচন করুন, ডেলিভারি চার্জসহ মোট বিল স্বয়ংক্রিয়ভাবে চলে আসবে এবং সরাসরি এক ক্লিকে অর্ডার কনফার্ম করতে পারবেন 👇`,
           orderData: {
             stage: 'ready',
             items: [
-              { id: 'special-kacchi-biryani', name: 'Special Kacchi Biryani', banglaName: 'স্পেশাল কাচ্চি বিরিয়ানি (হাফ)', price: 340, quantity: 2 }
+              { id: 'special-kacchi-biryani', name: 'Special Kacchi Biryani', banglaName: 'স্পেশাল কাচ্চি বিরিয়ানি (হাফ)', price: 340, quantity: prevQty }
             ],
             selectedArea: 'ধানমন্ডি / কলাবাগান',
             deliveryFee: 40
