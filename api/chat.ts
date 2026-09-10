@@ -37,24 +37,16 @@ export default async function handler(req: any, res: any) {
     const systemInstruction = `
 You are "Sarinda Foodie AI" (সারিন্দা এআই সহকারী), the official Chief Culinary Advisor & Dining Concierge for "Sarinda Restaurant & Catering" (সারিন্দা রেস্তোরাঁ ও ক্যাটারিং) in Dhanmondi, Dhaka, Bangladesh.
 
-YOUR ROLE:
-You act like a polite, deeply knowledgeable, warm, and wise culinary advisor. Guests will often ask customized questions in their own words, such as:
-- "আমি ৪ জনের জন্য কী কী অর্ডার করব?" (What should I order for 4 people?)
-- "আমার বাজেট ১০০০ টাকা, কী কী ভালো কম্বো হবে?" (My budget is 1000 Tk, what's a good combo?)
-- "বাচ্চাদের জন্য কম ঝালের কী খাবার আছে?" (What mild food is good for kids?)
-- "কাচ্চির সাথে কী কী সাইড ডিশ নিলে সেরা কম্বিনেশন হবে?" (What sides go best with Kacchi?)
-- "৬ জনের ফ্যামিলি নিয়ে এলে কেবিনে টেবিল কীভাবে বুক করব?" (How to book a cabin for a family of 6?)
+CRITICAL MANDATORY LANGUAGE RULE:
+YOU MUST ALWAYS REPLY IN BENGALI (বাংলা ভাষা) WITHOUT EXCEPTION!
+Even if the guest types in Banglish (English letters phonetically spelling Bengali, such as "biriyani r moddhe ki ki ache ?", "4 jon er jonno ki nebo", "kacchi r sathe ki khabo", "table booking kivabe korbo") or in plain English ("What are the ingredients in Biryani?"), YOUR RESPONSE MUST ALWAYS BE IN WARM, ELEGANT, MOUTH-WATERING BENGALI (বাংলা).
 
-When guests ask such open-ended questions:
-1. Intelligent Menu Decision-Making: Examine Sarinda's authentic menu and portions, select the most complementary dishes, and recommend a balanced feast (main biryani/polao + rich meat gravy + digestive borhani + sweet dessert).
-2. Portion Accuracy: Make sure the portions match the party size so guests are fully satisfied without over-ordering.
-3. Cost & Savings Calculation: Show the itemized prices, sum up the total cost in BDT (৳), and explicitly advise them on how to save money using our promo codes!
-   - Promo 'SARINDA15' = 15% discount on first-time online orders.
-   - Promo 'FAMILY20' = 20% discount on family feast orders over ৳1,200.
-4. Tone & Language:
-   - If the guest speaks in Bengali (or Romanized Bangla / Banglish), reply in polite, warm, appetizing Bengali (e.g. "আসসালামু আলাইকুম! ৪ জনের জন্য আমাদের খাঁটি পুরান ঢাকার শাহী ভোজের পারফেক্ট কম্বিনেশন...").
-   - If in English, reply in courteous, mouth-watering English.
-   - Keep answers clean, well-formatted, and concise (3 to 5 lines with bullet points for easy reading).
+YOUR ROLE AS CHIEF CULINARY ADVISOR:
+1. When asked what is inside a dish (e.g. "biriyani r moddhe ki ki ache ?", "কাচ্চিতে কী কী থাকে?"): Explain with mouth-watering detail the authentic ingredients: premium aged Chinigura rice, tender juicy mutton cuts, pure Gawa Ghee & mustard oil, golden dum aloo, egg, zafraan, mace, nutmeg, alu bukhara, fresh salad and mint chutney. Mention that no artificial food color or essence is used.
+2. When asked what to order for a party (e.g. 4 people, 2 people, 6-10 people): Compute the exact meal plan (main biryani + chicken roast/rezala + digestive borhani + firni dessert), calculate the total price in BDT (৳), and explicitly advise them on how much they save using our discount codes ('FAMILY20' for 20% off over ৳1200, 'SARINDA15' for 15% off).
+3. When asked for budget meals (e.g. 1000 Tk): Provide value combinations like the 'Sarinda Royal Grand Platter' (৳990) or 2 Kacchi + Borhani combo.
+4. When asked for kids / mild food: Recommend Shahi Morog Polao (৳290), Biye Bari Chicken Roast (৳180), and Firni (৳70).
+5. Always be polite, warm, and hospitable ("আসসালামু আলাইকুম!", "সারিন্দায় আপনাকে স্বাগত!").
 
 AUTHENTIC SARINDA MENU & PRICE LIST (BDT ৳):
 • Biryani & Polao:
@@ -97,7 +89,7 @@ RESTAURANT DETAILS:
         });
         contents.push({
           role: 'model',
-          parts: [{ text: lang === 'en' ? 'Understood! I am ready to advise guests as Sarinda Chief Culinary Advisor.' : 'বুঝতে পেরেছি! আমি সারিন্দার প্রধান ফুড অ্যাডভাইজর হিসেবে প্রতিটি অতিথির প্রশ্নের নিখুঁত ও বুদ্ধিদীপ্ত সমাধান দিতে প্রস্তুত।' }]
+          parts: [{ text: 'বুঝেছি! আমি সারিন্দার চিফ ফুড অ্যাডভাইজর হিসেবে প্রতিটি প্রশ্নের উত্তর সর্বদা শুদ্ধ ও রসালো বাংলা ভাষায় দেব।' }]
         });
 
         if (Array.isArray(history)) {
@@ -183,101 +175,189 @@ function detectAction(prompt: string, reply: string, lang: string) {
   if (combined.includes('offer') || combined.includes('discount') || combined.includes('promo') || combined.includes('code') || combined.includes('অফার') || combined.includes('ছাড়') || combined.includes('কুপন')) {
     return { label: lang === 'en' ? 'View All Offers' : 'সকল অফার দেখুন', type: 'offers' };
   }
-  if (combined.includes('address') || combined.includes('location') || combined.includes('ঠিকানা') || combined.includes('কোথায়') || combined.includes('contact') || combined.includes('phone') || combined.includes('নাম্বার')) {
+  if (combined.includes('address') || combined.includes('location') || combined.includes('ঠিকানা') || combined.includes('কোথায়') || combined.includes('contact') || combined.includes('phone') || combined.includes('নাম্বার') || combined.includes('thikana')) {
     return { label: lang === 'en' ? 'Location & Map' : 'ম্যাপ ও ঠিকানা দেখুন', type: 'contact' };
   }
   return { label: lang === 'en' ? 'Open Menu to Order' : 'মেনু দেখুন ও অর্ডার করুন', type: 'menu' };
 }
 
-// Dynamic Intelligent Advisor Decision Engine (Calculates combinations, portions & pricing)
+// Dynamic Intelligent Advisor Decision Engine (Always replies in rich Bengali as requested)
 function generateAdvisorDecision(userQuery: string, lang: string) {
   const q = userQuery.toLowerCase();
 
-  // 1. Party Size Decision: 4 People ("আমি ৪ জনের জন্য কী অর্ডার করব?")
+  // 1. Biryani / Kacchi Ingredients & What's inside (e.g. "biriyani r moddhe ki ki ache ?", "kacchi te ki ache", "উপাদান কী কী")
+  const isIngredientQuery =
+    (q.includes('moddhe') && (q.includes('ki') || q.includes('ache') || q.includes('thake'))) ||
+    q.includes('ki ki ache') ||
+    q.includes('ki thake') ||
+    q.includes('ki ache') ||
+    q.includes('কী কী আছে') ||
+    q.includes('কী থাকে') ||
+    q.includes('উপাদান') ||
+    q.includes('উপকরণ') ||
+    q.includes('ingredients') ||
+    q.includes('inside') ||
+    q.includes('recipe') ||
+    (q.includes('kacchi') && q.includes('ki')) ||
+    (q.includes('biryani') && q.includes('ki'));
+
+  if (isIngredientQuery) {
+    return {
+      text: "সারিন্দার ঐতিহ্যবাহী 'স্পেশাল কাচ্চি বিরিয়ানি' তৈরি হয় আসল পুরান ঢাকার রাজকীয় খাস রেসিপিতে। এর মধ্যে থাকে:\n\n" +
+        "• **সুগন্ধি পোলাও চাল:** প্রিমিয়াম গ্রেডের সুবাসিত চিনিগুঁড়া চাল (বাসমতী ভ্যারিয়েন্টে লং-গ্রেইন বাসমতী চাল)।\n" +
+        "• **রসালো দেশি খাসির মাংস:** স্পেশাল শাহী মশলায় ম্যারিনেট করা টাটকা দেশি খাসির বড় ও তুলতুলে সাইজের মাংসের পিস।\n" +
+        "• **গাওয়া ঘি ও সরিষার তেল:** খাঁটি গাওয়া ঘি ও ঘানিভাঙা খাঁটি সরিষার তেলে মাটির হাঁড়িতে খাঁটি দমে রান্না।\n" +
+        "• **শাহী মশলাপাতি:** আসল জাফরান, জয়ত্রী, জয়ফল, আলুবোখারা, দারুচিনি, ছোট এলাচ ও তেজপাতা।\n" +
+        "• **রসালো স্পেশাল আলু:** ঘিয়ে ভাজা সোনালী রঙের রসালো ও তুলতুলে স্পেশাল দম আলু।\n" +
+        "• **ডিম ও চাটনি:** ডিমসহ ভ্যারিয়েন্টে সিদ্ধ ডিম, সাথে থাকে ফ্রেশ শসা-লেবুর শাহী সালাদ ও পুদিনা-টমেটোর চাটনি!\n\n" +
+        "💡 সারিন্দায় কোনো ক্ষতিকর কৃত্রিম রঙ বা ফ্লেভার দেওয়া হয় না—প্রতিটি লোকমা শতভাগ স্বাস্থ্যসম্মত ও খাঁটি স্বাদে ভরপুর!",
+      action: { label: lang === 'en' ? 'Order Special Kacchi' : 'কাচ্চি বিরিয়ানি অর্ডার করুন', type: 'menu' }
+    };
+  }
+
+  // 2. Pairings & Sides with Kacchi (e.g. "kacchi r sathe ki khabo", "biryani r sathe ki nebo", "side dish")
+  if (q.includes('sathe') || q.includes('সাথে') || q.includes('side') || q.includes('pairing')) {
+    return {
+      text: "কাচ্চি বিরিয়ানির সাথে পুরান ঢাকার আসল শাহী তৃপ্তি পেতে আমাদের প্রধান খাদ্য উপদেষ্টার সেরা কম্বিনেশন:\n\n" +
+        "• **বিয়ে বাড়ির চিকেন রোস্ট (৳১৮০):** কাচ্চির ভাতের সাথে রোস্টের মিষ্টি-ঝাল বাদাম বাটা গ্রেভির মাখামাখি মুখে অমৃতের মতো লাগে!\n" +
+        "• **শাহী মাটন রেজালা (৳৩২০):** দই, পোস্তদানা ও কাজুবাদামের ক্রিমি গ্রেভি কাচ্চির স্বাদকে দ্বিগুণ করে দেয়।\n" +
+        "• **ঠান্ডা শাহী বোরহানি (৳৭৫/৳১৫৫):** পুদিনা ও টক দইয়ের তৈরি ঐতিহ্যবাহী বোরহানি যা ভারী খাবার সহজে হজমে সাহায্য করে।\n" +
+        "• **জাফরানী শাহী ফিরনি (৳৭০):** মাটির পাত্রে জমানো খাঁটি দুধের ফিরনি ভোজনের শেষে মিষ্টি সমাপ্তি এনে দেবে!",
+      action: { label: lang === 'en' ? 'View Kacchi & Sides' : 'কাচ্চি ও সাইড ডিশ অর্ডার করুন', type: 'menu' }
+    };
+  }
+
+  // 3. Party Size Decision: 4 People ("আমি ৪ জনের জন্য কী অর্ডার করব?", "4 jon er jonno ki nebo")
   if (q.includes('4') || q.includes('৪') || q.includes('চার') || q.includes('four')) {
     return {
-      text: lang === 'en'
-        ? "For 4 people, here is our Chief Advisor's Perfect Feast Plan:\n\n• 2x Special Kacchi Biryani (Full) — ৳1,180\n• 2x Biye Bari Chicken Roast — ৳360\n• 1x Shahi Borhani (1 Litre Bottle) — ৳325\n• 4x Zafrani Shahi Firni — ৳280\n\nTotal: ৳2,145. Tip: Use promo code 'FAMILY20' at checkout to get flat 20% OFF (save ৳429!), bringing your grand feast down to just ৳1,716!"
-        : "৪ জনের জন্য আমাদের প্রধান খাদ্য উপদেষ্টার সেরা শাহী ভোজ প্ল্যান:\n\n• ২x স্পেশাল কাচ্চি বিরিয়ানি (ফুল সাইজ) — ৳১,১৮০\n• ২x বিয়ে বাড়ির চিকেন রোস্ট — ৳৩৬০\n• ১x ঐতিহ্যবাহী শাহী বোরহানি (১ লিটার বোতল) — ৳৩২৫\n• ৪x জাফরানী শাহী ফিরনি — ৳২৮০\n\nমোট খরচ: ৳২,১৪৫। বিশেষ টিপস: চেকআউটে 'FAMILY20' কোড ব্যবহার করলে সরাসরি ২০% ছাড় (৳৪২৯ সাশ্রয়!) পেয়ে মাত্র ৳১,৭১৬-তে পুরো ফ্যামিলি তৃপ্তি সহকারে খেতে পারবেন!",
+      text: "৪ জনের জন্য আমাদের প্রধান খাদ্য উপদেষ্টার সেরা শাহী ভোজ প্ল্যান:\n\n" +
+        "• ২x স্পেশাল কাচ্চি বিরিয়ানি (ফুল সাইজ) — ৳১,১৮০\n" +
+        "• ২x বিয়ে বাড়ির চিকেন রোস্ট — ৳৩৬০\n" +
+        "• ১x ঐতিহ্যবাহী শাহী বোরহানি (১ লিটার শেয়ারিং বোতল) — ৳৩২৫\n" +
+        "• ৪x জাফরানী শাহী ফিরনি — ৳২৮০\n\n" +
+        "মোট খরচ: ৳২,১৪৫।\n" +
+        "💡 সাশ্রয়ী টিপস: চেকআউটে প্রোমোকোড 'FAMILY20' বসালে সরাসরি ২০% ছাড় (৳৪২৯ সাশ্রয়!) পাবেন, অর্থাৎ মাত্র ৳১,৭১৬ টাকায় ৪ জন মিলে তৃপ্তি সহকারে রাজকীয় ভোজ উপভোগ করতে পারবেন!",
       action: { label: lang === 'en' ? 'Order 4-Person Feast' : '৪ জনের খাবার অর্ডার করুন', type: 'menu' }
     };
   }
 
-  // 2. Party Size Decision: 2 People / Couple ("২ জনের জন্য কী নেব?")
+  // 4. Party Size Decision: 2 People / Couple ("২ জনের জন্য কী নেব?", "2 jon")
   if (q.includes('2') || q.includes('২') || q.includes('দুই') || q.includes('two') || q.includes('couple') || q.includes('কাপল')) {
     return {
-      text: lang === 'en'
-        ? "For 2 people, the recommended pairing is:\n• 2x Special Kacchi Biryani (Half with Egg) — ৳700\n• 1x Shahi Chicken Roast — ৳180\n• 1x Shahi Borhani (500ml) — ৳155\n• 2x Firni — ৳140\n\nTotal: ৳1,175. Use code 'SARINDA15' to get 15% discount on your first online order!"
-        : "২ জনের জন্য আমাদের পারফেক্ট রোমান্টিক/ফ্রেন্ডস কম্বো:\n• ২x স্পেশাল কাচ্চি বিরিয়ানি (ডিমসহ হাফ) — ৳৭০০\n• ১x বিয়ে বাড়ির চিকেন রোস্ট — ৳১৮০\n• ১x শাহী বোরহানি (৫০০ মি.লি.) — ৳১৫৫\n• ২x জাফরানী ফিরনি — ৳১৪০\n\nমোট: ৳১,১৭৫। প্রথম অর্ডারে 'SARINDA15' প্রোমোকোডে পাচ্ছেন ১৫% বিশেষ ছাড়!",
-      action: { label: lang === 'en' ? 'View 2-Person Menu' : 'মেনু দেখুন ও অর্ডার করুন', type: 'menu' }
+      text: "২ জনের জন্য আমাদের পারফেক্ট রোমান্টিক/ফ্রেন্ডস কম্বিনেশন:\n\n" +
+        "• ২x স্পেশাল কাচ্চি বিরিয়ানি (ডিমসহ হাফ) — ৳৭০০\n" +
+        "• ১x বিয়ে বাড়ির চিকেন রোস্ট — ৳১৮০\n" +
+        "• ১x শাহী বোরহানি (৫০০ মি.লি. বোতল) — ৳১৫৫\n" +
+        "• ২x জাফরানী শাহী ফিরনি — ৳১৪০\n\n" +
+        "মোট খরচ: ৳১,১৭৫।\n" +
+        "💡 প্রথম অনলাইন অর্ডারে 'SARINDA15' প্রোমোকোড ব্যবহারে সরাসরি ১৫% ছাড় (৳১৭৬ সাশ্রয়) পেয়ে যাবেন মাত্র ৳৯৯৯ টাকায়!",
+      action: { label: lang === 'en' ? 'View 2-Person Menu' : '২ জনের মেনু দেখুন ও অর্ডার করুন', type: 'menu' }
     };
   }
 
-  // 3. Party Size Decision: 6 to 10 People / Large Gathering
-  if (q.includes('6') || q.includes('৬') || q.includes('10') || q.includes('১০') || q.includes('দাওয়াত') || q.includes('party')) {
+  // 5. Party Size Decision: 6 to 10 People / Large Gathering
+  if (q.includes('6') || q.includes('৬') || q.includes('10') || q.includes('১০') || q.includes('দাওয়াত') || q.includes('dawat') || q.includes('party') || q.includes('gathering')) {
     return {
-      text: lang === 'en'
-        ? "For a group of 6–10 guests, we recommend ordering 2x 'Sarinda Royal Grand Platters' (৳990 each) along with an assortment of Kebab Platters (৳650) and 2 Litres of Shahi Borhani. You'll easily qualify for code 'FAMILY20' (20% flat discount)!"
-        : "৬ থেকে ১০ জনের বড় আড্ডা বা পারিবারিক ভোজের জন্য আমাদের পরামর্শ: ২x 'সারিন্দা রয়্যাল গ্র্যান্ড প্ল্যাটার' (৳৯৯০ করে) সাথে ১টি কাবাব প্ল্যাটার (৳৬৫০) এবং ২ লিটার শাহী বোরহানি। এতে 'FAMILY20' ব্যবহারে সরাসরি ২০% ছাড় উপভোগ করতে পারবেন!",
+      text: "৬ থেকে ১০ জনের বড় আড্ডা বা পারিবারিক দাওয়াতের জন্য আমাদের স্পেশাল পরামর্শ:\n\n" +
+        "• ২x 'সারিন্দা রয়্যাল গ্র্যান্ড প্ল্যাটার' (৳৯৯০ করে) — ৳১,৯৮০ (এতে কাচ্চি, মোরগ পোলাও, রোস্ট, কাবাব ও ফিরনি অন্তর্ভুক্ত)\n" +
+        "• ১x স্পেশাল কাবাব প্ল্যাটার — ৳৬৫০\n" +
+        "• ২ লিটার ঠান্ডা শাহী বোরহানি — ৳৬৫০\n\n" +
+        "মোট খরচ: ৳৩,২৮০।\n" +
+        "💡 ১২০০ টাকার বেশি অর্ডারে 'FAMILY20' কোড ব্যবহারে সরাসরি ২০% ছাড় (৳৬৫৬ সাশ্রয়!) পেয়ে যাবেন মাত্র ৳২,৬২৪ টাকায়!",
       action: { label: lang === 'en' ? 'Explore Family Platters' : 'গ্র্যান্ড প্ল্যাটার দেখুন', type: 'menu' }
     };
   }
 
-  // 4. Budget Query: Under 1000 Tk / Budget Friendly
-  if (q.includes('1000') || q.includes('১০০০') || q.includes('500') || q.includes('৫০০') || q.includes('budget') || q.includes('বাজেট') || q.includes('কম টাকা')) {
+  // 6. Budget Query: Under 1000 Tk / Budget Friendly ("1000 tk", "1000 taka", "kom taka", "budget")
+  if (q.includes('1000') || q.includes('১০০০') || q.includes('500') || q.includes('৫০০') || q.includes('budget') || q.includes('বাজেট') || q.includes('kom taka') || q.includes('kom dame') || q.includes('taka')) {
     return {
-      text: lang === 'en'
-        ? "Best value under ৳1,000:\n• Option 1: 'Sarinda Royal Grand Platter' (৳990) — feeds up to 4 persons!\n• Option 2: 2x Special Kacchi Biryani (৳680) + 2x Shahi Borhani (৳150) + 2x Jali Kebab (৳100) = Total ৳930."
-        : "৳১,০০০ বাজেটের মধ্যে সেরা কম্বিনেশন:\n• অপশন ১: 'সারিন্দা রয়্যাল গ্র্যান্ড প্ল্যাটার' (৳৯৯০) — যাতে কাচ্চি, মোরগ পোলাও, রোস্ট, কাবাব ও বোরহানি একসাথে থাকে (৪ জন পর্যন্ত খাওয়া যায়)!\n• অপশন ২: ২x স্পেশাল কাচ্চি বিরিয়ানি (৳৬৮০) + ২x বোরহানি গ্লাস (৳১৫০) + ২x জালি কাবাব (৳১০০) = মোট মাত্র ৳৯৩০!",
+      text: "১,০০০ টাকা বাজেটের মধ্যে আমাদের সেরা ২টি ভ্যালু কম্বো:\n\n" +
+        "• **অপশন ১ (গ্র্যান্ড প্ল্যাটার):** 'সারিন্দা রয়্যাল গ্র্যান্ড প্ল্যাটার' (৳৯৯০) — যাতে কাচ্চি, মোরগ পোলাও, রোস্ট, কাবাব ও বোরহানি একসাথে থাকে (৩-৪ জনের জন্য পারফেক্ট)!\n" +
+        "• **অপশন ২ (কাচ্চি লাভার কম্বো):** ২x স্পেশাল কাচ্চি বিরিয়ানি (৳৬৮০) + ২x শাহী বোরহানি গ্লাস (৳১৫০) + ২x জালি কাবাব (৳১০০) = মোট মাত্র ৳৯৩০!",
       action: { label: lang === 'en' ? 'Order Budget Feast' : 'বাজেট ভোজ অর্ডার করুন', type: 'menu' }
     };
   }
 
-  // 5. Mild / Kids / Non-Spicy ("বাচ্চাদের জন্য কম ঝাল")
-  if (q.includes('ঝাল') || q.includes('বাচ্চা') || q.includes('mild') || q.includes('kid') || q.includes('spicy') || q.includes('non-spicy')) {
+  // 7. Mild / Kids / Non-Spicy ("বাচ্চাদের জন্য কম ঝাল", "bachader", "bacha", "kom jhal")
+  if (q.includes('ঝাল') || q.includes('বাচ্চা') || q.includes('bacha') || q.includes('bachader') || q.includes('mild') || q.includes('kid') || q.includes('spicy') || q.includes('non-spicy') || q.includes('jhal')) {
     return {
-      text: lang === 'en'
-        ? "For kids or guests who prefer mild/non-spicy food, we strongly recommend:\n• Shahi Morog Polao (৳290) — cooked with sweet ghee and tender chicken.\n• Biye Bari Chicken Roast (৳180) — mildly spiced with sweet caramelized onions and raisins.\n• Plain Shahi Polao (৳130) paired with Shahi Mutton Rezala (৳320) — rich cashew-poppy gravy without harsh chillies."
-        : "বাচ্চা বা যারা কম ঝাল পছন্দ করেন তাদের জন্য সেরা খাবার:\n• শাহী মোরগ পোলাও (৳২৯০) — মিষ্টি ঘিয়ে রান্না সুগন্ধি পোলাও ও তুলতুলে চিকেন রোস্ট।\n• বিয়ে বাড়ির চিকেন রোস্ট (৳১৮০) — বাদাম বাটা, কিশমিশ ও শাহী মশলায় রান্না মিষ্টি-ঝাল স্বাদ যা বাচ্চারা দারুণ পছন্দ করে।\n• শাহী মাটন রেজালা (৳৩২০) — দই ও কাজুবাদামের ঘন ঝোল, যাতে লাল মরিচের তীব্র ঝাল নেই।",
+      text: "বাচ্চা বা যারা মিষ্টি-সুস্বাদু ও কম ঝালের খাবার পছন্দ করেন তাদের জন্য সেরা খাবার:\n\n" +
+        "• **শাহী মোরগ পোলাও (৳২৯০):** মিষ্টি ঘিয়ে রান্না সুগন্ধি পোলাও ও তুলতুলে চিকেন রোস্ট লেগ পিস—ঝালহীন ও অত্যন্ত মুখরোচক।\n" +
+        "• **বিয়ে বাড়ির চিকেন রোস্ট (৳১৮০):** পেঁয়াজ বেরেস্তা, বাদাম বাটা ও কিশমিশের গ্রেভিতে তৈরি মিষ্টি-ঝাল স্বাদ যা বাচ্চারা দারুণ পছন্দ করে।\n" +
+        "• **শাহী মাটন রেজালা (৳৩২০):** দই ও কাজুবাদামের ক্রিমি ঝোল, যাতে লাল মরিচের কোনো তীব্র ঝাল নেই।\n" +
+        "• **জাফরানী শাহী ফিরনি (৳৭০):** মিষ্টি ডেজার্ট হিসেবে বাচ্চাদের অসম্ভব প্রিয়!",
       action: { label: lang === 'en' ? 'Browse Mild Dishes' : 'কম ঝালের মেনু দেখুন', type: 'menu' }
     };
   }
 
-  // 6. Signature Kacchi Pairings ("কাচ্চির সাথে কী নেব?")
-  if (q.includes('kacchi') || q.includes('কাচ্চি') || q.includes('biryani') || q.includes('বিরিয়ানি') || q.includes('জনপ্রিয়')) {
+  // 8. Beef Tehari ("beef tehari", "tehari")
+  if (q.includes('tehari') || q.includes('তেহারী') || q.includes('তেহারি')) {
     return {
-      text: lang === 'en'
-        ? "Our #1 Signature Masterpiece is the 'Special Kacchi Biryani' (৳340 / Full ৳590) cooked in authentic handi dum with pure mustard oil and ghee. For the ultimate Old Dhaka experience, pair it with a Shahi Chicken Roast (৳180) and chilled digestif Shahi Borhani (৳75/৳155)!"
-        : "আমাদের ১ নম্বর সিগনেচার পদ হলো 'স্পেশাল কাচ্চি বিরিয়ানি' (৳৩৪০ / ফুল ৳৫৯০), যা খাঁটি সরিষার তেল ও গাওয়া ঘিয়ে মাটির হাঁড়িতে খাঁটি দমে রান্না। এর সাথে একটি বিয়ে বাড়ির চিকেন রোস্ট (৳১৮০) ও ঠান্ডা শাহী বোরহানি (৳৭৫/৳১৫৫) নিলে পাবেন আসল শাহী তৃপ্তি!",
-      action: { label: lang === 'en' ? 'Order Signature Kacchi' : 'কাচ্চি বিরিয়ানি অর্ডার করুন', type: 'menu' }
+      text: "আমাদের খাঁটি পুরান ঢাকার 'বিফ তেহারী' (৳২৯০):\n\n" +
+        "ঘানিভাঙা খাঁটি সরিষার তেলে ছোট এলাচ, দারুচিনি ও কাঁচামরিচ দিয়ে সুগন্ধি চিনিগুঁড়া চাল ও নরম তুলতুলে গরুর মাংসের টুকরো একসাথে রান্না করা হয়। তেল-মশলার ভারসাম্য নিখুঁত হওয়ায় খাওয়ার পর কোনো ভারী ভাব থাকে না! সাথে দেওয়া হয় শসা-লেবুর ফ্রেশ সালাদ।",
+      action: { label: lang === 'en' ? 'Order Beef Tehari' : 'বিফ তেহারী অর্ডার করুন', type: 'menu' }
     };
   }
 
-  // 7. Table Reservation & Cabin Booking
+  // 9. Morog Polao ("morog polao", "chicken polao", "পোলাও")
+  if (q.includes('polao') || q.includes('মোরগ') || q.includes('পোলাও') || q.includes('morog')) {
+    return {
+      text: "আমাদের 'শাহী মোরগ পোলাও' (৳২৯০):\n\n" +
+        "ঐতিহ্যবাহী পুরান ঢাকার বিয়ের বাড়ির রন্ধনশৈলীতে খাঁটি গাওয়া ঘিয়ে রান্না সুগন্ধি চিনিগুঁড়া পোলাও, তার ওপর বড় সাইজের আস্ত রোস্ট চিকেন লেগ পিস এবং ডিম। মিষ্টি বাদাম-বেরেস্তার শাহী গ্রেভি দিয়ে পরিবেশন করা হয়।",
+      action: { label: lang === 'en' ? 'Order Morog Polao' : 'মোরগ পোলাও অর্ডার করুন', type: 'menu' }
+    };
+  }
+
+  // 10. Table Reservation & Cabin Booking ("table", "cabin", "book", "reserve", "বুকিং", "টেবিল", "কেবিন")
   if (q.includes('book') || q.includes('table') || q.includes('reserve') || q.includes('বুকিং') || q.includes('টেবিল') || q.includes('কেবিন') || q.includes('cabin')) {
     return {
-      text: lang === 'en'
-        ? "We would be delighted to host you! We have comfortable Standard Family Hall seating and soundproof VIP Private Cabins for intimate gatherings. Click below to choose your date, time, and cabin online instantly."
-        : "সারিন্দায় আপনাকে স্বাগত! আমাদের এখানে সুপরিসর ফ্যামিলি হল ছাড়াও রয়েছে পারিবারিক ও ব্যক্তিগত অনুষ্ঠানের জন্য ভিআইপি প্রাইভেট কেবিন। আপনার পছন্দের তারিখ, সময় ও টেবিল বেছে নিতে নিচের বাটনে ক্লিক করুন।",
+      text: "সারিন্দায় আপনাকে স্বাগত! আমাদের ধানমন্ডি শাখায় রয়েছে সুপরিসর ফ্যামিলি ডাইনিং হল এবং একান্ত পারিবারিক বা ব্যবসায়িক আড্ডার জন্য সাউন্ডপ্রুফ ভিআইপি প্রাইভেট কেবিন। কোনো বুকিং ফি ছাড়াই আপনি অনলাইন থেকে সরাসরি তারিখ, সময় ও সিট বেছে নিতে পারবেন!",
       action: { label: lang === 'en' ? 'Book a Table Now' : 'টেবিল বুকিং ফর্ম খুলুন', type: 'reservation' }
     };
   }
 
-  // 8. Offers & Discounts
-  if (q.includes('offer') || q.includes('discount') || q.includes('promo') || q.includes('code') || q.includes('অফার') || q.includes('ছাড়') || q.includes('কুপন')) {
+  // 11. Delivery Info ("delivery", "home delivery", "deli", "koto somoy", "somoy")
+  if (q.includes('delivery') || q.includes('ডেলিভারি') || q.includes('home') || q.includes('somoy') || q.includes('time')) {
     return {
-      text: lang === 'en'
-        ? "Today's Active Discount Codes:\n• 'SARINDA15' — Flat 15% OFF on your first online order.\n• 'FAMILY20' — Flat 20% OFF on grand orders over ৳1,200.\nEnter the code in your cart drawer or checkout modal to save immediately!"
-        : "আজকের সচল ডিসকাউন্ট কোড:\n• 'SARINDA15' — প্রথম অনলাইন অর্ডারে ফ্ল্যাট ১৫% ছাড়!\n• 'FAMILY20' — ১২০০ টাকার বেশি ফ্যামিলি অর্ডারে ফ্ল্যাট ২০% ছাড়!\nঅর্ডার করার সময় কার্ট বা চেকআউটে কোডটি বসালেই স্বয়ংক্রিয়ভাবে ডিসকাউন্ট প্রযোজ্য হবে।",
+      text: "সারিন্দার দ্রুত হোম ডেলিভারি সেবা:\n\n" +
+        "ধানমন্ডি, লালমাটিয়া, মোহাম্মদপুর ও সংলগ্ন এলাকায় মাত্র ৩০ থেকে ৪০ মিনিটের মধ্যে গরম গরম খাবার ডেলিভারি করা হয়। খাবার একদম ফ্রেশ ও স্পেশাল হট-বক্সে প্যাক করে পাঠানো হয় যাতে স্বাদ ও তাপমাত্রা একদম ঠিক থাকে!",
+      action: { label: lang === 'en' ? 'Order for Delivery' : 'ডেলিভারির জন্য মেনু দেখুন', type: 'menu' }
+    };
+  }
+
+  // 12. Offers & Discounts ("offer", "discount", "promo", "code", "coupon", "char", "অফার", "ছাড়")
+  if (q.includes('offer') || q.includes('discount') || q.includes('promo') || q.includes('code') || q.includes('অফার') || q.includes('ছাড়') || q.includes('কুপন') || q.includes('coupon')) {
+    return {
+      text: "আজকের সচল স্পেশাল ডিসকাউন্ট কোড:\n\n" +
+        "• 'SARINDA15' — প্রথম অনলাইন অর্ডারে ফ্ল্যাট ১৫% ছাড়!\n" +
+        "• 'FAMILY20' — ১২০০ টাকার বেশি ফ্যামিলি অর্ডারে ফ্ল্যাট ২০% সুপার ছাড়!\n\n" +
+        "অর্ডার করার সময় কার্ট (Cart) বা চেকআউটে এই কোড বসালেই স্বয়ংক্রিয়ভাবে ডিসকাউন্ট প্রযোজ্য হবে।",
       action: { label: lang === 'en' ? 'View All Offers' : 'সকল অফার দেখুন', type: 'offers' }
+    };
+  }
+
+  // 13. Location & Contact ("thikana", "kothay", "location", "address", "phone", "number", "ঠিকানা", "কোথায়")
+  if (q.includes('address') || q.includes('location') || q.includes('thikana') || q.includes('kothay') || q.includes('ঠিকানা') || q.includes('কোথায়') || q.includes('phone') || q.includes('number') || q.includes('যোগাযোগ')) {
+    return {
+      text: "সারিন্দা রেস্তোরাঁর অবস্থান ও যোগাযোগের তথ্য:\n\n" +
+        "• ঠিকানা: রোড ১৬, ধানমন্ডি ২৭ (পুরাতন), ঢাকা - ১২০৯।\n" +
+        "• ফোন ও হোয়াটসঅ্যাপ: +৮৮০ ১৭১২-১২১৪৩৪\n" +
+        "• সময়সূচি: প্রতিদিন সকাল ১১:০০ থেকে রাত ১১:৩০ পর্যন্ত উন্মুক্ত।",
+      action: { label: lang === 'en' ? 'Location & Map' : 'ম্যাপ ও ঠিকানা দেখুন', type: 'contact' }
+    };
+  }
+
+  // 14. Signature Kacchi Pairings & General Kacchi
+  if (q.includes('kacchi') || q.includes('কাচ্চি') || q.includes('biryani') || q.includes('বিরিয়ানি') || q.includes('জনপ্রিয়') || q.includes('popular') || q.includes('best')) {
+    return {
+      text: "আমাদের ১ নম্বর সিগনেচার মাস্টারপিস হলো 'স্পেশাল কাচ্চি বিরিয়ানি' (৳৩৪০ / ফুল ৳৫৯০), যা খাঁটি সরিষার তেল ও গাওয়া ঘিয়ে মাটির হাঁড়িতে খাঁটি দমে রান্না। এর সাথে একটি বিয়ে বাড়ির চিকেন রোস্ট (৳১৮০) ও ঠান্ডা শাহী বোরহানি (৳৭৫/৳১৫৫) নিলে পাবেন আসল শাহী তৃপ্তি!",
+      action: { label: lang === 'en' ? 'Order Signature Kacchi' : 'কাচ্চি বিরিয়ানি অর্ডার করুন', type: 'menu' }
     };
   }
 
   // Default Fallback
   return {
-    text: lang === 'en'
-      ? "I am your Sarinda Foodie Advisor! Tell me your party size (e.g. 'Feast for 4 people'), budget (e.g. 'Under 1000 Tk'), or dietary preference, and I will calculate the perfect feast and discount for you!"
-      : "আমি আপনার সারিন্দা ফুডি অ্যাডভাইজর! আপনি কতজনের জন্য অর্ডার করবেন (যেমন: '৪ জনের জন্য কী নেব?'), আপনার বাজেট কত (যেমন: '১০০০ টাকার মধ্যে কী হবে?'), বা কেমন খাবার পছন্দ—বলুন, আমি মেনু দেখে নিখুঁত কম্বিনেশন তৈরি করে দেব!",
+    text: "আমি আপনার সারিন্দা চিফ ফুড অ্যাডভাইজর! আপনি কতজনের জন্য খাবার খুঁজছেন (যেমন: '৪ জনের খাবার' বা 'biriyani r moddhe ki ki ache?'), আপনার বাজেট কত, বা কেমন খাবার পছন্দ—বলুন, আমি মেনু দেখে নিখুঁত কম্বিনেশন ও ডিসকাউন্ট হিসেব করে দেব!",
     action: { label: lang === 'en' ? 'View Full Menu' : 'সম্পূর্ণ মেনু দেখুন', type: 'menu' }
   };
 }
