@@ -181,6 +181,95 @@ function detectAction(prompt: string, reply: string, lang: string) {
   return { label: lang === 'en' ? 'Open Menu to Order' : 'মেনু দেখুন ও অর্ডার করুন', type: 'menu' };
 }
 
+// Helper to accurately detect party size without confusing prices/budgets
+function detectPartySize(q: string): number {
+  const clean = q.replace(/1000|500|1200|1500|2000|৳|tk|taka/g, '');
+
+  // 1 Person
+  if (
+    /\b(1|১|one)\b/i.test(clean) ||
+    clean.includes('ekjon') ||
+    clean.includes('একজন') ||
+    clean.includes('এক জন') ||
+    clean.includes('single') ||
+    clean.includes('solo') ||
+    clean.includes('1 jon') ||
+    clean.includes('১ জন') ||
+    clean.includes('1jon') ||
+    clean.includes('১জন') ||
+    clean.includes('1 person')
+  ) {
+    return 1;
+  }
+
+  // 2 People
+  if (
+    /\b(2|২|two)\b/i.test(clean) ||
+    clean.includes('duijon') ||
+    clean.includes('দুইজন') ||
+    clean.includes('দুই জন') ||
+    clean.includes('couple') ||
+    clean.includes('কাপল') ||
+    clean.includes('2 jon') ||
+    clean.includes('২ জন') ||
+    clean.includes('2jon')
+  ) {
+    return 2;
+  }
+
+  // 3 People
+  if (
+    /\b(3|৩|three)\b/i.test(clean) ||
+    clean.includes('tinjon') ||
+    clean.includes('তিনজন') ||
+    clean.includes('তিন জন') ||
+    clean.includes('3 jon') ||
+    clean.includes('৩ জন') ||
+    clean.includes('3jon')
+  ) {
+    return 3;
+  }
+
+  // 4 People
+  if (
+    /\b(4|৪|four)\b/i.test(clean) ||
+    clean.includes('charjon') ||
+    clean.includes('চারজন') ||
+    clean.includes('চার জন') ||
+    clean.includes('4 jon') ||
+    clean.includes('৪ জন') ||
+    clean.includes('4jon')
+  ) {
+    return 4;
+  }
+
+  // 5 People
+  if (
+    /\b(5|৫|five)\b/i.test(clean) ||
+    clean.includes('pachjon') ||
+    clean.includes('পাঁচজন') ||
+    clean.includes('পাঁচ জন') ||
+    clean.includes('5 jon') ||
+    clean.includes('৫ জন') ||
+    clean.includes('5jon')
+  ) {
+    return 5;
+  }
+
+  // 6-10 People
+  if (
+    /\b(6|৬|7|৭|8|৮|9|৯|10|১০)\b/i.test(clean) ||
+    clean.includes('dawat') ||
+    clean.includes('দাওয়াত') ||
+    clean.includes('party') ||
+    clean.includes('gathering')
+  ) {
+    return 6;
+  }
+
+  return 0;
+}
+
 // Dynamic Intelligent Advisor Decision Engine (Always replies in rich Bengali as requested)
 function generateAdvisorDecision(userQuery: string, lang: string) {
   const q = userQuery.toLowerCase();
@@ -195,22 +284,30 @@ function generateAdvisorDecision(userQuery: string, lang: string) {
     };
   }
 
-  // 2. Party Size Decision: 4 People ("আমি ৪ জনের জন্য কী অর্ডার করব?", "4 jon er jonno ki nebo")
-  if (q.includes('4') || q.includes('৪') || q.includes('চার') || q.includes('four')) {
+  // 2. Party Size Routing
+  const partySize = detectPartySize(q);
+
+  if (partySize === 1) {
     return {
-      text: "৪ জনের জন্য আমাদের প্রধান খাদ্য উপদেষ্টার সেরা শাহী ভোজ প্ল্যান:\n\n" +
-        "• ২x স্পেশাল কাচ্চি বিরিয়ানি (ফুল সাইজ) — ৳১,১৮০\n" +
-        "• ২x বিয়ে বাড়ির চিকেন রোস্ট — ৳৩৬০\n" +
-        "• ১x ঐতিহ্যবাহী শাহী বোরহানি (১ লিটার শেয়ারিং বোতল) — ৳৩২৫\n" +
-        "• ৪x জাফরানী শাহী ফিরনি — ৳২৮০\n\n" +
-        "মোট খরচ: ৳২,১৪৫।\n" +
-        "💡 সাশ্রয়ী টিপস: চেকআউটে প্রোমোকোড 'FAMILY20' বসালে সরাসরি ২০% ছাড় (৳৪২৯ সাশ্রয়!) পাবেন, অর্থাৎ মাত্র ৳১,৭১৬ টাকায় ৪ জন মিলে তৃপ্তি সহকারে রাজকীয় ভোজ উপভোগ করতে পারবেন!",
-      action: { label: lang === 'en' ? 'Order 4-Person Feast' : '৪ জনের খাবার অর্ডার করুন', type: 'menu' }
+      text: "১ জনের জন্য আমাদের প্রধান খাদ্য উপদেষ্টার সেরা শাহী মিল প্ল্যান:\n\n" +
+        "• **অপশন ১ (সিগনেচার কাচ্চি থালি):**\n" +
+        "  - ১x স্পেশাল কাচ্চি বিরিয়ানি (হাফ সাইজ, ডিমসহ) — ৳৩৫০\n" +
+        "  - ১x ঠান্ডা শাহী বোরহানি (ছোট গ্লাস) — ৳৭৫\n" +
+        "  - ১x জাফরানী শাহী ফিরনি — ৳৭০\n" +
+        "  **সর্বমোট: ৳৪৯৫** (১ জনের জন্য একদম রাজকীয় ও তৃপ্তিদায়ক মিল!)\n\n" +
+        "• **অপশন ২ (মোরগ পোলাও কম্বো):**\n" +
+        "  - ১x ঐতিহ্যবাহী শাহী মোরগ পোলাও (আস্ত রোস্ট চিকেন লেগ ও ডিমসহ) — ৳২৯০\n" +
+        "  - ১x স্পেশাল জালি কাবাব — ৳৫০\n" +
+        "  - ১x শাহী বোরহানি — ৳৭৫\n" +
+        "  **সর্বমোট: মাত্র ৳৪১৫!**\n\n" +
+        "• **অপশন ৩ (সরিষার তেলের বিফ তেহারী):**\n" +
+        "  - ১x বিফ তেহারী (৳২৯০) + ১x শাহী বোরহানি (৳৭৫) = **মোট মাত্র ৳৩৬৫!**\n\n" +
+        "💡 প্রথম অনলাইন অর্ডারে প্রোমোকোড 'SARINDA15' ব্যবহার করে পেয়ে যান সরাসরি ১৫% বিশেষ ছাড়!",
+      action: { label: lang === 'en' ? 'Order Solo Feast' : '১ জনের খাবার অর্ডার করুন', type: 'menu' }
     };
   }
 
-  // 3. Party Size Decision: 2 People / Couple ("২ জনের জন্য কী নেব?", "2 jon")
-  if (q.includes('2') || q.includes('২') || q.includes('দুই') || q.includes('two') || q.includes('couple') || q.includes('কাপল')) {
+  if (partySize === 2) {
     return {
       text: "২ জনের জন্য আমাদের পারফেক্ট রোমান্টিক/ফ্রেন্ডস কম্বিনেশন:\n\n" +
         "• ২x স্পেশাল কাচ্চি বিরিয়ানি (ডিমসহ হাফ) — ৳৭০০\n" +
@@ -223,8 +320,47 @@ function generateAdvisorDecision(userQuery: string, lang: string) {
     };
   }
 
-  // 4. Party Size Decision: 6 to 10 People / Large Gathering
-  if (q.includes('6') || q.includes('৬') || q.includes('10') || q.includes('১০') || q.includes('দাওয়াত') || q.includes('dawat') || q.includes('party') || q.includes('gathering')) {
+  if (partySize === 3) {
+    return {
+      text: "৩ জনের জন্য আমাদের প্রধান খাদ্য উপদেষ্টার সেরা ভোজ প্ল্যান:\n\n" +
+        "• ৩x স্পেশাল কাচ্চি বিরিয়ানি (হাফ সাইজ) — ৳১,০২০\n" +
+        "• ২x বিয়ে বাড়ির চিকেন রোস্ট — ৳৩৬০\n" +
+        "• ১x শাহী বোরহানি (১ লিটার শেয়ারিং বোতল) — ৳৩২৫\n" +
+        "• ৩x জাফরানী শাহী ফিরনি — ৳২১০\n\n" +
+        "মোট খরচ: ৳১,৯১৫।\n" +
+        "💡 সাশ্রয়ী টিপস: চেকআউটে প্রোমোকোড 'FAMILY20' বসালে সরাসরি ২০% ছাড় (৳৩৮৩ সাশ্রয়!) পাবেন, অর্থাৎ মাত্র ৳১,৫৩২ টাকায় ৩ জন মিলে জমিয়ে শাহী খাবার উপভোগ করতে পারবেন!",
+      action: { label: lang === 'en' ? 'Order 3-Person Feast' : '৩ জনের খাবার অর্ডার করুন', type: 'menu' }
+    };
+  }
+
+  if (partySize === 4) {
+    return {
+      text: "৪ জনের জন্য আমাদের প্রধান খাদ্য উপদেষ্টার সেরা শাহী ভোজ প্ল্যান:\n\n" +
+        "• ২x স্পেশাল কাচ্চি বিরিয়ানি (ফুল সাইজ) — ৳১,১৮০\n" +
+        "• ২x বিয়ে বাড়ির চিকেন রোস্ট — ৳৩৬০\n" +
+        "• ১x ঐতিহ্যবাহী শাহী বোরহানি (১ লিটার শেয়ারিং বোতল) — ৳৩২৫\n" +
+        "• ৪x জাফরানী শাহী ফিরনি — ৳২৮০\n\n" +
+        "মোট খরচ: ৳২,১৪৫।\n" +
+        "💡 সাশ্রয়ী টিপস: চেকআউটে প্রোমোকোড 'FAMILY20' বসালে সরাসরি ২০% ছাড় (৳৪২৯ সাশ্রয়!) পাবেন, অর্থাৎ মাত্র ৳১,৭১৬ টাকায় ৪ জন মিলে তৃপ্তি সহকারে রাজকীয় ভোজ উপভোগ করতে পারবেন!",
+      action: { label: lang === 'en' ? 'Order 4-Person Feast' : '৪ জনের খাবার অর্ডার করুন', type: 'menu' }
+    };
+  }
+
+  if (partySize === 5) {
+    return {
+      text: "৫ জনের জন্য আমাদের প্রধান খাদ্য উপদেষ্টার সেরা ভোজ প্ল্যান:\n\n" +
+        "• ২x স্পেশাল কাচ্চি বিরিয়ানি (ফুল সাইজ) — ৳১,১৮০\n" +
+        "• ১x বাসমতী মাটন দম বিরিয়ানি — ৳৪৫০\n" +
+        "• ৩x বিয়ে বাড়ির চিকেন রোস্ট — ৳৫৪০\n" +
+        "• ১x শাহী বোরহানি (১ লিটার শেয়ারিং বোতল) — ৳৩২৫\n" +
+        "• ৫x জাফরানী শাহী ফিরনি — ৳৩৫০\n\n" +
+        "মোট খরচ: ৳২,৮৪৫।\n" +
+        "💡 সাশ্রয়ী টিপস: প্রোমোকোড 'FAMILY20' দিয়ে সরাসরি ২০% ছাড় (৳৫৬৯ সাশ্রয়!) পেয়ে পুরো ৫ জনের রাজকীয় আয়োজন পাবেন মাত্র ৳২,২৭৬ টাকায়!",
+      action: { label: lang === 'en' ? 'Order 5-Person Feast' : '৫ জনের খাবার অর্ডার করুন', type: 'menu' }
+    };
+  }
+
+  if (partySize === 6) {
     return {
       text: "৬ থেকে ১০ জনের বড় আড্ডা বা পারিবারিক দাওয়াতের জন্য আমাদের স্পেশাল পরামর্শ:\n\n" +
         "• ২x 'সারিন্দা রয়্যাল গ্র্যান্ড প্ল্যাটার' (৳৯৯০ করে) — ৳১,৯৮০ (এতে কাচ্চি, মোরগ পোলাও, রোস্ট, কাবাব ও ফিরনি অন্তর্ভুক্ত)\n" +
@@ -236,7 +372,7 @@ function generateAdvisorDecision(userQuery: string, lang: string) {
     };
   }
 
-  // 5. Pairings & Sides with Kacchi (e.g. "kacchi r sathe ki khabo", "biryani r sathe ki nebo", "side dish")
+  // 3. Pairings & Sides with Kacchi (e.g. "kacchi r sathe ki khabo", "biryani r sathe ki nebo", "side dish")
   if (q.includes('sathe') || q.includes('সাথে') || q.includes('side') || q.includes('pairing')) {
     return {
       text: "কাচ্চি বিরিয়ানির সাথে পুরান ঢাকার আসল শাহী তৃপ্তি পেতে আমাদের প্রধান খাদ্য উপদেষ্টার সেরা কম্বিনেশন:\n\n" +
