@@ -1,6 +1,8 @@
 // Vercel Serverless Function: /api/chat
 // Securely proxies Gemini API calls on the backend without exposing keys to clients or GitHub.
 
+declare const process: any;
+
 export default async function handler(req: any, res: any) {
   // CORS Headers
   res.setHeader('Access-Control-Allow-Credentials', 'true');
