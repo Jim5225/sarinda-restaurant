@@ -21,10 +21,12 @@ export default async function handler(req: any, res: any) {
     return res.status(405).json({ error: 'Method Not Allowed' });
   }
 
-  try {
-    const { prompt, lang = 'bn', history = [] } = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
+    const body = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
+    const prompt = (body?.prompt || body?.message || '').toString().trim();
+    const lang = body?.lang || 'bn';
+    const history = body?.history || [];
 
-    if (!prompt || typeof prompt !== 'string') {
+    if (!prompt) {
       return res.status(400).json({ error: 'Prompt is required' });
     }
 
@@ -132,6 +134,9 @@ RESTAURANT DETAILS:
 
             if (resp.ok) {
               geminiResponse = await resp.json();
+              break;
+            } else if (resp.status === 429 || resp.status === 402 || resp.status === 403) {
+              // Quota depleted on account level, failover immediately without waiting
               break;
             }
           } catch (e) {
