@@ -7,6 +7,7 @@ import {
   Star,
   Flame,
   Sparkles,
+  Bot,
   Clock,
   CheckCircle2,
   ShoppingBag
@@ -17,6 +18,7 @@ export const Hero: React.FC = () => {
     lang,
     setActiveTab,
     setIsReservationOpen,
+    openAiWithPrompt,
     setDetailItem,
     menu,
     addToCart,
@@ -81,19 +83,48 @@ export const Hero: React.FC = () => {
 
             {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3.5 pt-2">
+              {/* Ultra Eye-Catching Sarinda AI Recommendation Button */}
+              <button
+                onClick={() =>
+                  openAiWithPrompt(
+                    lang === 'en'
+                      ? "What are your best dishes and recommendations?"
+                      : "আমাদের জন্য কোন খাবারটা সবচেয়ে ভালো হবে পরামর্শ দিন"
+                  )
+                }
+                className="relative group w-full sm:w-auto px-6 py-3.5 sm:py-4 rounded-2xl text-sm sm:text-base font-black text-brand-dark bg-gradient-to-r from-amber-400 via-brand-gold to-yellow-400 hover:from-amber-300 hover:to-yellow-300 transition-all duration-300 shadow-elevated hover:shadow-float flex items-center justify-center gap-2.5 cursor-pointer border-2 border-white/90 hover:scale-105 active:scale-95 overflow-hidden animate-pulse hover:animate-none"
+              >
+                {/* Shimmer Light Bar */}
+                <span className="absolute top-0 -left-[100%] w-1/2 h-full bg-gradient-to-r from-transparent via-white/50 to-transparent skew-x-12 group-hover:left-[200%] transition-all duration-1000 ease-in-out" />
+
+                {/* Animated Pulsing Live Beacon */}
+                <span className="relative flex h-2.5 w-2.5 shrink-0">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-primary opacity-75" />
+                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-brand-primary" />
+                </span>
+
+                <Bot className="w-5 h-5 text-brand-dark shrink-0" />
+                <span className="tracking-tight text-brand-dark font-extrabold">
+                  {lang === 'en'
+                    ? "Ask Sarinda AI: What's best?"
+                    : 'সারিন্দা AI-কে জিজ্ঞেস করুন কোনটা ভালো হবে'}
+                </span>
+                <Sparkles className="w-4 h-4 text-brand-primary shrink-0 animate-spin [animation-duration:4s]" />
+              </button>
+
               <button
                 onClick={handleOrderClick}
-                className="w-full sm:w-auto px-8 py-4 rounded-2xl text-base font-black text-white bg-brand-primary hover:bg-brand-dark transition-all duration-200 shadow-elevated hover:shadow-float flex items-center justify-center gap-2.5 group cursor-pointer"
+                className="w-full sm:w-auto px-7 py-3.5 sm:py-4 rounded-2xl text-sm sm:text-base font-black text-white bg-brand-primary hover:bg-brand-dark transition-all duration-200 shadow-elevated hover:shadow-float flex items-center justify-center gap-2 group cursor-pointer"
               >
                 <span>{t.orderNow}</span>
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-1.5 transition duration-200" />
+                <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1.5 transition duration-200" />
               </button>
 
               <button
                 onClick={() => setIsReservationOpen(true)}
-                className="w-full sm:w-auto px-7 py-4 rounded-2xl text-base font-black text-brand-primary bg-white hover:bg-brand-cream border-2 border-brand-primary/30 hover:border-brand-primary transition-all duration-200 shadow-soft flex items-center justify-center gap-2 cursor-pointer"
+                className="w-full sm:w-auto px-6 py-3.5 sm:py-4 rounded-2xl text-sm sm:text-base font-black text-brand-primary bg-white hover:bg-brand-cream border-2 border-brand-primary/30 hover:border-brand-primary transition-all duration-200 shadow-soft flex items-center justify-center gap-2 cursor-pointer"
               >
-                <CalendarDays className="w-5 h-5 text-brand-leaf" />
+                <CalendarDays className="w-4 h-4 sm:w-5 sm:h-5 text-brand-leaf" />
                 <span>{t.bookTable}</span>
               </button>
             </div>

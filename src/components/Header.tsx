@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { useStore } from '../context/StoreContext';
 import { translations } from '../data/translations';
-import { ShoppingBag, Phone, Menu as MenuIcon, X, Search, UtensilsCrossed, ShieldCheck } from 'lucide-react';
+import { ShoppingBag, Phone, Menu as MenuIcon, X, Search, UtensilsCrossed, ShieldCheck, Bot, Sparkles } from 'lucide-react';
 
 export const Header: React.FC = () => {
-  const { lang, setLang, activeTab, setActiveTab, cartCount, setIsCartOpen, setIsSearchOpen, setIsReservationOpen } = useStore();
+  const { lang, setLang, activeTab, setActiveTab, cartCount, setIsCartOpen, setIsSearchOpen, setIsReservationOpen, openAiWithPrompt } = useStore();
   const t = translations[lang];
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -140,6 +140,22 @@ export const Header: React.FC = () => {
                   {cartCount}
                 </span>
               )}
+            </button>
+
+            {/* Eye-catching Header Sarinda AI Ask Button */}
+            <button
+              onClick={() =>
+                openAiWithPrompt(
+                  lang === 'en'
+                    ? "What are your best dishes and recommendations?"
+                    : "আমাদের জন্য কোন খাবারটা সবচেয়ে ভালো হবে পরামর্শ দিন"
+                )
+              }
+              className="hidden lg:inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-extrabold text-brand-dark bg-gradient-to-r from-amber-400 via-brand-gold to-yellow-400 hover:from-amber-300 hover:to-yellow-300 transition duration-300 shadow-md hover:shadow-lg cursor-pointer border border-white/80 transform hover:scale-105 active:scale-95 group"
+            >
+              <Bot className="w-4 h-4 text-brand-primary animate-bounce duration-1000 shrink-0" />
+              <span>{lang === 'en' ? 'Ask AI: What to order?' : 'সারিন্দা AI-কে জিজ্ঞেস করুন'}</span>
+              <Sparkles className="w-3.5 h-3.5 text-brand-primary shrink-0 animate-spin [animation-duration:3s]" />
             </button>
 
             {/* Primary CTA - Order Now */}
