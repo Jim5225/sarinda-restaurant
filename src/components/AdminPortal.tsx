@@ -604,105 +604,160 @@ export const AdminPortal: React.FC = () => {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
         
         {/* KPI Cards Row - Executive Financial & Operational Snapshot */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           
-          {/* 1. Total Sales */}
+          {/* 1. Total Sales Card */}
           <div 
             onClick={() => setActiveAdminTab('finance')}
-            className="bg-white p-5 sm:p-6 rounded-3xl border border-slate-200 shadow-sm hover:shadow-md hover:border-emerald-400 transition cursor-pointer relative overflow-hidden group"
+            className="bg-gradient-to-br from-emerald-50/70 via-white to-white p-6 rounded-3xl border border-emerald-200/80 shadow-soft hover:shadow-xl hover:border-emerald-400 transition-all duration-300 cursor-pointer relative overflow-hidden group"
           >
-            <div className="absolute top-0 left-0 right-0 h-1.5 bg-emerald-500" />
-            <div className="flex items-start justify-between">
-              <div>
-                <p className="text-xs font-extrabold text-slate-500 uppercase tracking-wider">
-                  Today's Sales • মোট বিক্রি
-                </p>
-                <h3 className="font-serif text-3xl sm:text-4xl font-black text-slate-900 mt-1.5 tracking-tight">
-                  ৳{totalRevenue.toLocaleString()}
-                </h3>
-                <span className="text-xs text-emerald-700 font-extrabold flex items-center gap-1 mt-2">
-                  <ArrowUpRight className="w-4 h-4 text-emerald-600 shrink-0" />
-                  <span>{validOrders.length}টি সফল অর্ডার (ডেলিভারি + ডাইন-ইন)</span>
-                </span>
+            <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-emerald-400 to-emerald-600" />
+            
+            <div className="flex items-start justify-between gap-3">
+              <div className="space-y-2">
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-100/90 text-emerald-900 text-xs font-black tracking-wide border border-emerald-200">
+                  <TrendingUp className="w-3.5 h-3.5 text-emerald-700" />
+                  <span>আজকের মোট বিক্রি • Today's Sales</span>
+                </div>
+
+                <div className="flex items-baseline mt-1">
+                  <span className="font-sans text-2xl sm:text-3xl font-bold text-emerald-600 mr-1">৳</span>
+                  <h3 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-black text-slate-950 tracking-tight">
+                    {totalRevenue.toLocaleString()}
+                  </h3>
+                </div>
               </div>
-              <div className="w-13 h-13 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0 group-hover:scale-110 transition">
-                <DollarSign className="w-6 h-6" />
+
+              <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-emerald-600 to-emerald-500 text-white shadow-md flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 ring-4 ring-emerald-50">
+                <DollarSign className="w-7 h-7" />
               </div>
+            </div>
+
+            <div className="mt-4 pt-3.5 border-t border-emerald-100 flex items-center justify-between text-xs">
+              <span className="font-extrabold text-emerald-800 flex items-center gap-1">
+                <ArrowUpRight className="w-4 h-4 text-emerald-600 shrink-0" />
+                <span>{validOrders.length}টি সম্পন্ন ও অ্যাক্টিভ অর্ডার</span>
+              </span>
+              <span className="text-[11px] font-black text-emerald-900 bg-emerald-100/80 px-2.5 py-0.5 rounded-lg">
+                ডেলিভারি ৳{deliverySales.toLocaleString()}
+              </span>
             </div>
           </div>
 
-          {/* 2. Total Expenses */}
+          {/* 2. Total Expenses Card */}
           <div 
             onClick={() => setActiveAdminTab('finance')}
-            className="bg-white p-5 sm:p-6 rounded-3xl border border-slate-200 shadow-sm hover:shadow-md hover:border-rose-400 transition cursor-pointer relative overflow-hidden group"
+            className="bg-gradient-to-br from-rose-50/70 via-white to-white p-6 rounded-3xl border border-rose-200/80 shadow-soft hover:shadow-xl hover:border-rose-400 transition-all duration-300 cursor-pointer relative overflow-hidden group"
           >
-            <div className="absolute top-0 left-0 right-0 h-1.5 bg-rose-500" />
-            <div className="flex items-start justify-between">
-              <div>
-                <p className="text-xs font-extrabold text-slate-500 uppercase tracking-wider">
-                  Today's Expenses • মোট খরচ
-                </p>
-                <h3 className="font-serif text-3xl sm:text-4xl font-black text-rose-600 mt-1.5 tracking-tight">
-                  ৳{totalExpenses.toLocaleString()}
-                </h3>
-                <span className="text-xs text-rose-600 font-extrabold flex items-center gap-1 mt-2">
-                  <ArrowDownRight className="w-4 h-4 text-rose-500 shrink-0" />
-                  <span>{expenses.length}টি বাজার ও ভাউচার রেকর্ড</span>
-                </span>
+            <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-rose-400 to-rose-600" />
+            
+            <div className="flex items-start justify-between gap-3">
+              <div className="space-y-2">
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-rose-100/90 text-rose-900 text-xs font-black tracking-wide border border-rose-200">
+                  <Receipt className="w-3.5 h-3.5 text-rose-700" />
+                  <span>আজকের মোট খরচ • Daily Expenses</span>
+                </div>
+
+                <div className="flex items-baseline mt-1">
+                  <span className="font-sans text-2xl sm:text-3xl font-bold text-rose-500 mr-1">৳</span>
+                  <h3 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-black text-rose-600 tracking-tight">
+                    {totalExpenses.toLocaleString()}
+                  </h3>
+                </div>
               </div>
-              <div className="w-13 h-13 rounded-2xl bg-rose-100 text-rose-700 flex items-center justify-center shrink-0 group-hover:scale-110 transition">
-                <Receipt className="w-6 h-6" />
+
+              <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-rose-600 to-rose-500 text-white shadow-md flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:-rotate-3 transition-transform duration-300 ring-4 ring-rose-50">
+                <Receipt className="w-7 h-7" />
               </div>
+            </div>
+
+            <div className="mt-4 pt-3.5 border-t border-rose-100 flex items-center justify-between text-xs">
+              <span className="font-extrabold text-rose-700 flex items-center gap-1">
+                <ArrowDownRight className="w-4 h-4 text-rose-600 shrink-0" />
+                <span>{expenses.length}টি বাজার ও ভাউচার এন্ট্রি</span>
+              </span>
+              <span className="text-[11px] font-black text-rose-900 bg-rose-100/80 px-2.5 py-0.5 rounded-lg">
+                + খরচ এন্ট্রি
+              </span>
             </div>
           </div>
 
-          {/* 3. Net Profit */}
+          {/* 3. Net Profit Card */}
           <div 
             onClick={() => setActiveAdminTab('finance')}
-            className="bg-white p-5 sm:p-6 rounded-3xl border border-slate-200 shadow-sm hover:shadow-md hover:border-emerald-500 transition cursor-pointer relative overflow-hidden group"
+            className="bg-gradient-to-br from-teal-50/70 via-white to-white p-6 rounded-3xl border border-teal-200/80 shadow-soft hover:shadow-xl hover:border-teal-400 transition-all duration-300 cursor-pointer relative overflow-hidden group"
           >
-            <div className={`absolute top-0 left-0 right-0 h-1.5 ${netProfit >= 0 ? 'bg-emerald-600' : 'bg-red-500'}`} />
-            <div className="flex items-start justify-between">
-              <div>
-                <p className="text-xs font-extrabold text-slate-500 uppercase tracking-wider">
-                  Net Profit • আজকের নিট লাভ
-                </p>
-                <h3 className={`font-serif text-3xl sm:text-4xl font-black mt-1.5 tracking-tight ${netProfit >= 0 ? 'text-emerald-700' : 'text-red-600'}`}>
-                  ৳{netProfit.toLocaleString()}
-                </h3>
-                <span className="text-xs text-emerald-700 font-extrabold flex items-center gap-1 mt-2">
-                  <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
-                  <span>{netProfit >= 0 ? 'পজিটিভ ক্যাশ ফ্লো উদ্বৃত্ত' : 'খরচ বেশি / পর্যালোচনা প্রয়োজন'}</span>
-                </span>
+            <div className={`absolute top-0 left-0 right-0 h-1.5 ${netProfit >= 0 ? 'bg-gradient-to-r from-teal-400 to-emerald-600' : 'bg-red-500'}`} />
+            
+            <div className="flex items-start justify-between gap-3">
+              <div className="space-y-2">
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-teal-100/90 text-teal-900 text-xs font-black tracking-wide border border-teal-200">
+                  <ShieldCheck className="w-3.5 h-3.5 text-teal-700" />
+                  <span>নিট লাভ / মুনাফা • Net Daily Profit</span>
+                </div>
+
+                <div className="flex items-baseline mt-1">
+                  <span className={`font-sans text-2xl sm:text-3xl font-bold mr-1 ${netProfit >= 0 ? 'text-teal-600' : 'text-red-500'}`}>৳</span>
+                  <h3 className={`font-serif text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight ${netProfit >= 0 ? 'text-teal-950' : 'text-red-600'}`}>
+                    {netProfit.toLocaleString()}
+                  </h3>
+                </div>
               </div>
-              <div className={`w-13 h-13 rounded-2xl flex items-center justify-center shrink-0 group-hover:scale-110 transition ${netProfit >= 0 ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700'}`}>
-                <TrendingUp className="w-6 h-6" />
+
+              <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 shadow-md ring-4 ring-teal-50 ${
+                netProfit >= 0
+                  ? 'bg-gradient-to-tr from-teal-700 to-emerald-600 text-white'
+                  : 'bg-red-500 text-white'
+              }`}>
+                <TrendingUp className="w-7 h-7" />
               </div>
+            </div>
+
+            <div className="mt-4 pt-3.5 border-t border-teal-100 flex items-center justify-between text-xs">
+              <span className="font-extrabold text-teal-800 flex items-center gap-1">
+                <CheckCircle2 className="w-4 h-4 text-teal-600 shrink-0" />
+                <span>{netProfit >= 0 ? 'নিট ক্যাশ উদ্বৃত্ত' : 'ঘাটতি পর্যালোচনা'}</span>
+              </span>
+              <span className="text-[11px] font-black text-teal-900 bg-teal-100/80 px-2.5 py-0.5 rounded-lg">
+                বিক্রি - মোট খরচ
+              </span>
             </div>
           </div>
 
-          {/* 4. Profit Margin % */}
+          {/* 4. Profit Margin Card */}
           <div 
             onClick={() => setActiveAdminTab('finance')}
-            className="bg-white p-5 sm:p-6 rounded-3xl border border-slate-200 shadow-sm hover:shadow-md hover:border-amber-400 transition cursor-pointer relative overflow-hidden group"
+            className="bg-gradient-to-br from-amber-50/70 via-white to-white p-6 rounded-3xl border border-amber-200/80 shadow-soft hover:shadow-xl hover:border-amber-400 transition-all duration-300 cursor-pointer relative overflow-hidden group"
           >
-            <div className="absolute top-0 left-0 right-0 h-1.5 bg-amber-500" />
-            <div className="flex items-start justify-between">
-              <div>
-                <p className="text-xs font-extrabold text-slate-500 uppercase tracking-wider">
-                  Profit Margin • নিট মার্জিন
-                </p>
-                <h3 className="font-serif text-3xl sm:text-4xl font-black text-amber-600 mt-1.5 tracking-tight">
-                  {profitMargin.toFixed(1)}%
-                </h3>
-                <span className="text-xs text-amber-700 font-extrabold flex items-center gap-1 mt-2">
-                  <Percent className="w-4 h-4 text-amber-600 shrink-0" />
-                  <span>{profitMargin >= 25 ? '★ স্ট্যান্ডার্ড রেস্তোরাঁ মার্জিন' : 'ন্যায্য মার্জিন'}</span>
-                </span>
+            <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-amber-400 to-yellow-500" />
+            
+            <div className="flex items-start justify-between gap-3">
+              <div className="space-y-2">
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-100/90 text-amber-900 text-xs font-black tracking-wide border border-amber-200">
+                  <Percent className="w-3.5 h-3.5 text-amber-700" />
+                  <span>মুনাফার হার • Profit Margin %</span>
+                </div>
+
+                <div className="flex items-baseline mt-1">
+                  <h3 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-black text-amber-600 tracking-tight">
+                    {profitMargin.toFixed(1)}
+                  </h3>
+                  <span className="font-sans text-2xl sm:text-3xl font-black text-amber-500 ml-1">%</span>
+                </div>
               </div>
-              <div className="w-13 h-13 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center shrink-0 group-hover:scale-110 transition">
-                <PieChart className="w-6 h-6" />
+
+              <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-amber-600 to-yellow-500 text-slate-950 shadow-md flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:-rotate-3 transition-transform duration-300 ring-4 ring-amber-50">
+                <PieChart className="w-7 h-7" />
               </div>
+            </div>
+
+            <div className="mt-4 pt-3.5 border-t border-amber-100 flex items-center justify-between text-xs">
+              <span className="font-extrabold text-amber-900 flex items-center gap-1">
+                <span>★ {profitMargin >= 25 ? 'প্রিমিয়াম রেস্তোরাঁ মার্জিন' : 'ন্যায্য মার্জিন'}</span>
+              </span>
+              <span className="text-[11px] font-black text-amber-950 bg-amber-100/80 px-2.5 py-0.5 rounded-lg">
+                টার্গেট ২৫%+
+              </span>
             </div>
           </div>
 
