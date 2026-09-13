@@ -89,7 +89,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose })
       `Total Payable: ৳${placedOrder.total}\n` +
       `Payment: ${placedOrder.paymentMethod.toUpperCase()}`;
 
-    window.open(`https://wa.me/8801711234567?text=${encodeURIComponent(msg)}`, '_blank');
+    window.open(`https://wa.me/8801712121434?text=${encodeURIComponent(msg)}`, '_blank');
   };
 
   const resetAndClose = () => {

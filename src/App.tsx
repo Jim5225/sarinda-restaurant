@@ -21,6 +21,7 @@ import { ProductDetailModal } from './components/ProductDetailModal';
 import { ReservationModal } from './components/ReservationModal';
 import { SearchModal } from './components/SearchModal';
 import { AiAssistant } from './components/AiAssistant';
+import { WhatsAppButton } from './components/WhatsAppButton';
 import { MobileStickyBar } from './components/MobileStickyBar';
 import { AdminPortal } from './components/AdminPortal';
 
@@ -63,6 +64,7 @@ export const App: React.FC = () => {
       <ReservationModal isOpen={isReservationOpen} onClose={() => setIsReservationOpen(false)} />
       <SearchModal />
       <AiAssistant />
+      <WhatsAppButton />
       <MobileStickyBar />
 
     </div>

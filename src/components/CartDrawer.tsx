@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useStore } from '../context/StoreContext';
 import { translations } from '../data/translations';
-import { X, Plus, Minus, Trash2, ShoppingBag, ArrowRight, Tag, Sparkles } from 'lucide-react';
+import { X, Plus, Minus, Trash2, ShoppingBag, ArrowRight, Tag, Sparkles, MessageCircle } from 'lucide-react';
 
 interface CartDrawerProps {
   onProceedCheckout: () => void;
@@ -19,6 +19,8 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onProceedCheckout }) => 
     cartDeliveryFee,
     cartDiscount,
     cartTotal,
+    cartCount,
+    deliveryArea,
     appliedOffer,
     applyOffer,
     removeOffer,
@@ -30,6 +32,33 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onProceedCheckout }) => 
 
   const [promoInput, setPromoInput] = useState('');
   const [promoMessage, setPromoMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+
+  const handleWhatsAppOrder = () => {
+    if (cart.length === 0) return;
+    const itemsList = cart
+      .map((item) => {
+        const name = lang === 'en' ? item.menuItem.name : item.menuItem.banglaName;
+        const basePrice = item.selectedPortion ? item.selectedPortion.price : item.menuItem.price;
+        const addonSum = item.selectedAddons.reduce((s, a) => s + a.price, 0);
+        const lineTotal = (basePrice + addonSum) * item.quantity;
+        return `• ${item.quantity}x ${name} — ৳${lineTotal}`;
+      })
+      .join('\n');
+
+    const msg =
+      `*আসসালামু আলাইকুম সারিন্দা রেস্তোরাঁ!* 🍽️\n` +
+      `আমি ওয়েবসাইট থেকে সরাসরি নিচের খাবারগুলো অর্ডার করতে চাই:\n\n` +
+      `*খাবারের তালিকা:*\n${itemsList}\n\n` +
+      `-------------------------\n` +
+      `• মোট আইটেম: ${cartCount}টি\n` +
+      `• ডেলিভারি এলাকা: ${deliveryArea || 'ধানমন্ডি'}\n` +
+      `• ডেলিভারি ফি: ৳${cartDeliveryFee}\n` +
+      `• *সর্বমোট প্রদেয়:* ৳${cartTotal}\n` +
+      `-------------------------\n\n` +
+      `দয়া করে আমার অর্ডারটি কনফার্ম করুন ও ডেলিভারির সময় জানিয়ে দিন। ধন্যবাদ!`;
+
+    window.open(`https://wa.me/8801712121434?text=${encodeURIComponent(msg)}`, '_blank', 'noopener,noreferrer');
+  };
 
   if (!isCartOpen) return null;
 
@@ -316,10 +345,18 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onProceedCheckout }) => 
                   setIsCartOpen(false);
                   onProceedCheckout();
                 }}
-                className="w-full py-4 rounded-2xl bg-brand-primary hover:bg-brand-dark text-white font-bold text-sm shadow-elevated hover:shadow-float flex items-center justify-center gap-2 transition duration-200 cursor-pointer"
+                className="w-full py-3.5 rounded-2xl bg-brand-primary hover:bg-brand-dark text-white font-bold text-sm shadow-elevated hover:shadow-float flex items-center justify-center gap-2 transition duration-200 cursor-pointer"
               >
                 <span>{t.proceedCheckout}</span>
                 <ArrowRight className="w-4 h-4" />
+              </button>
+
+              <button
+                onClick={handleWhatsAppOrder}
+                className="w-full py-3 rounded-2xl bg-[#25D366] hover:bg-[#20ba59] text-white font-bold text-xs shadow-md flex items-center justify-center gap-2 transition duration-200 cursor-pointer"
+              >
+                <MessageCircle className="w-4 h-4" />
+                <span>{lang === 'en' ? 'Order via WhatsApp' : 'হোয়াটসঅ্যাপে সরাসরি অর্ডার পাঠান'}</span>
               </button>
             </div>
           )}
