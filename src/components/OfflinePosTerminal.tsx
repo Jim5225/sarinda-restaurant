@@ -852,7 +852,7 @@ export const OfflinePosTerminal: React.FC = () => {
             <div className="p-4 bg-slate-50 border border-slate-200 rounded-2xl font-mono text-xs text-slate-800 space-y-2">
               <div className="text-center pb-2 border-b border-dashed border-slate-300">
                 <p className="font-black text-sm uppercase tracking-wider">SARINDA RESTAURANT</p>
-                <p className="text-[10px] text-slate-500">Road 16, Dhanmondi 27 (Old), Dhaka</p>
+                <p className="text-[10px] text-slate-500">CK Ghosh Road, Mymensingh</p>
                 <p className="text-[10px] text-slate-500">Hotline: +880 1712-121434</p>
                 {printModalData.isKOT ? (
                   <p className="mt-1 font-bold text-xs bg-amber-200 text-amber-900 py-0.5 rounded">

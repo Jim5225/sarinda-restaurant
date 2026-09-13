@@ -24,7 +24,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose })
   const [placedOrder, setPlacedOrder] = useState<Order | null>(null);
 
   React.useEffect(() => {
-    if (deliveryArea && (!address || address === 'ধানমন্ডি / কলাবাগান')) {
+    if (deliveryArea && (!address || address === 'ধানমন্ডি / কলাবাগান' || address === 'সি কে ঘোষ রোড / টাউন হল')) {
       setAddress(deliveryArea);
     }
   }, [deliveryArea, isOpen]);
@@ -267,7 +267,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose })
                     required
                     value={address}
                     onChange={(e) => setAddress(e.target.value)}
-                    placeholder="House, Road, Area, Dhaka (e.g. House 24, Road 4, Dhanmondi)"
+                    placeholder={lang === 'en' ? "House, Road, Area, Mymensingh (e.g. CK Ghosh Road, Charpara, Ganginarpar)" : "বাসা, রোড, এলাকা, ময়মনসিংহ (যেমন: সি কে ঘোষ রোড, চরপাড়া, গাঙ্গিনারপাড়)"}
                     className="w-full px-3.5 py-2 rounded-xl bg-brand-cream/40 border border-brand-border text-sm text-brand-charcoal focus:outline-none focus:ring-2 focus:ring-brand-primary/20"
                   />
                 </div>

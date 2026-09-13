@@ -4,7 +4,7 @@ export const translations = {
     tagline: 'Authentic Heritage Taste & Dining',
     heroTag: '⭐ 4.9 Rating from 1,200+ Foodies • 100% Halal',
     heroTitle: 'Good Food Brings People Together',
-    heroSub: 'Savor Dhaka’s legendary slow-cooked Kacchi Biryani, rich Mughlai gravies, and authentic Bangladeshi feasts prepared with fresh, premium ingredients.',
+    heroSub: 'Savor Mymensingh’s legendary slow-cooked Kacchi Biryani, rich Mughlai gravies, and authentic Bangladeshi feasts prepared with fresh, premium ingredients.',
     orderNow: 'Order Online',
     bookTable: 'Book a Table',
     viewMenu: 'Explore Menu',
@@ -13,7 +13,7 @@ export const translations = {
     facebookUrl: 'https://facebook.com/sarindabd',
     facebookText: 'facebook.com/sarindabd',
     openHours: 'Open Daily: 11:00 AM - 11:30 PM',
-    address: 'Dhanmondi 27 (Old), Road 16, Dhaka, Bangladesh',
+    address: 'CK Ghosh Road, Mymensingh, Bangladesh',
     
     // Category Names
     categoryNames: {
@@ -57,7 +57,7 @@ export const translations = {
 
     // Menu section
     popularDishes: 'Popular Favorites',
-    popularSub: 'Handcrafted with passion, loved by thousands across Dhaka',
+    popularSub: 'Handcrafted with passion, loved by thousands across Mymensingh',
     allCategories: 'All Dishes',
     signatureBadge: 'Chef Signature',
     bestsellerBadge: 'Bestseller',
@@ -115,7 +115,7 @@ export const translations = {
     ourStory: 'The Sarinda Culinary Story',
     storyP1: 'Founded with a deep love for Bengal’s royal culinary tradition, Sarinda Restaurant celebrates the art of slow-cooked perfection.',
     storyP2: 'From the fragrant aroma of Dum Biryani simmered over gentle charcoal embers to velvety rezalas and chilled heritage borhani, every dish is an experience in pure comfort and authentic taste.',
-    reviewsTitle: 'Loved by Dhaka’s Food Lovers',
+    reviewsTitle: 'Loved by Mymensingh’s Food Lovers',
     reviewsSub: 'Read what our guests say about our food, ambiance, and service.'
   },
   bn: {
@@ -123,7 +123,7 @@ export const translations = {
     tagline: 'ঐতিহ্যবাহী স্বাদ ও প্রিমিয়াম ডাইনিং',
     heroTag: '⭐ ৪.৯ রেটিং (১২০০+ রিভিউ) • ১০০% হালাল ও খাঁটি',
     heroTitle: 'খাঁটি খাবারের তৃপ্তি, প্রিয়জনদের সাথে এক টেবিলে',
-    heroSub: 'পুরান ঢাকার খাঁটি কাচ্চি বিরিয়ানি, শাহী রেজালা, আর বিয়ে বাড়ির স্বাদের রোস্টের অনন্য স্বাদ। সম্পূর্ণ নিজস্ব রেসিপিতে তৈরি টাটকা ও নিরাপদ খাবার।',
+    heroSub: 'ময়মনসিংহের বিখ্যাত ঐতিহ্যবাহী দম-রান্না কাচ্চি বিরিয়ানি, শাহী রেজালা, আর বিয়ে বাড়ির স্বাদের রোস্টের অনন্য স্বাদ। সম্পূর্ণ নিজস্ব রেসিপিতে তৈরি টাটকা ও নিরাপদ খাবার।',
     orderNow: 'অনলাইন অর্ডার করুন',
     bookTable: 'টেবিল বুকিং',
     viewMenu: 'মেনু দেখুন',
@@ -132,7 +132,7 @@ export const translations = {
     facebookUrl: 'https://facebook.com/sarindabd',
     facebookText: 'facebook.com/sarindabd',
     openHours: 'প্রতিদিন: সকাল ১১:০০ - রাত ১১:৩০',
-    address: 'ধানমন্ডি ২৭ (পুরাতন), রোড ১৬, ঢাকা, বাংলাদেশ',
+    address: 'সি কে ঘোষ রোড, ময়মনসিংহ, বাংলাদেশ',
     
     // Category Names
     categoryNames: {

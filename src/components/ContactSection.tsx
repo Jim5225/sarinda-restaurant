@@ -40,8 +40,8 @@ export const ContactSection: React.FC = () => {
           </h2>
           <p className="text-sm sm:text-base text-brand-muted mt-2">
             {lang === 'en'
-              ? 'Conveniently located in Dhanmondi. Reach out for direct delivery, table bookings, or event catering.'
-              : 'ধানমন্ডির প্রাণকেন্দ্রে আমাদের অবস্থান। হোম ডেলিভারি, টেবিল বুকিং বা ক্যাটারিং এর জন্য যোগাযোগ করুন।'}
+              ? 'Conveniently located in CK Ghosh Road, Mymensingh. Reach out for direct delivery, table bookings, or event catering.'
+              : 'ময়মনসিংহের সি কে ঘোষ রোডের প্রাণকেন্দ্রে আমাদের অবস্থান। হোম ডেলিভারি, টেবিল বুকিং বা ক্যাটারিং এর জন্য যোগাযোগ করুন।'}
           </p>
         </div>
 
@@ -64,7 +64,7 @@ export const ContactSection: React.FC = () => {
                   <div>
                     <h4 className="font-bold text-xs uppercase tracking-wider text-brand-muted">Address</h4>
                     <p className="font-semibold text-brand-charcoal mt-0.5">{t.address}</p>
-                    <p className="text-xs text-brand-muted">Near Satmasjid Road, Dhaka - 1209</p>
+                    <p className="text-xs text-brand-muted">CK Ghosh Road, Mymensingh - 2200</p>
                   </div>
                 </div>
 
@@ -144,14 +144,14 @@ export const ContactSection: React.FC = () => {
             <div className="bg-white rounded-3xl overflow-hidden border border-brand-border shadow-soft h-64 relative">
               <iframe
                 title="Sarinda Restaurant Map"
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14608.03694485078!2d90.3700726!3d23.7470487!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3755b8b33cff1333%3A0x6b01683bc486a6b3!2sDhanmondi%2C%20Dhaka!5e0!3m2!1sen!2sbd!4v1700000000000!5m2!1sen!2sbd"
+                src="https://maps.google.com/maps?q=CK%20Ghosh%20Road,%20Mymensingh&t=&z=15&ie=UTF8&iwloc=&output=embed"
                 className="w-full h-full border-0"
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
               />
               <div className="absolute top-3 left-3 bg-white/95 backdrop-blur-md px-3.5 py-1.5 rounded-xl shadow-md border border-brand-border text-xs font-bold text-brand-primary flex items-center gap-1.5">
                 <MapPin className="w-3.5 h-3.5 text-brand-accent" />
-                <span>Sarinda Restaurant • Dhanmondi 27</span>
+                <span>Sarinda Restaurant • CK Ghosh Road, Mymensingh</span>
               </div>
             </div>
 

@@ -32,8 +32,8 @@ export const Footer: React.FC = () => {
 
             <p className="text-sm sm:text-base text-brand-cream/90 max-w-sm leading-relaxed font-medium">
               {lang === 'en'
-                ? 'Dhaka’s beloved dining destination for authentic Royal Kacchi Biryani, Mughlai delicacies, and traditional Bangladeshi feasting.'
-                : 'খাঁটি কাচ্চি বিরিয়ানি, শাহী রেজালা ও বিয়ে বাড়ির রোস্টের আসল স্বাদে ঢাকার অন্যতম সেরা পারিবারিক রেস্তোরাঁ।'}
+                ? 'Mymensingh’s beloved dining destination for authentic Royal Kacchi Biryani, Mughlai delicacies, and traditional Bangladeshi feasting.'
+                : 'খাঁটি কাচ্চি বিরিয়ানি, শাহী রেজালা ও বিয়ে বাড়ির রোস্টের আসল স্বাদে ময়মনসিংহের অন্যতম সেরা পারিবারিক রেস্তোরাঁ।'}
             </p>
 
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs sm:text-sm font-bold text-brand-gold">
@@ -127,7 +127,7 @@ export const Footer: React.FC = () => {
             <div className="space-y-2.5 text-sm font-semibold text-brand-cream/90">
               <p className="flex items-start gap-2">
                 <MapPin className="w-4 h-4 text-brand-accent shrink-0 mt-0.5" />
-                <span>Road 16, Dhanmondi 27, Dhaka</span>
+                <span>CK Ghosh Road, Mymensingh</span>
               </p>
               <p className="flex items-center gap-2">
                 <Phone className="w-4 h-4 text-brand-accent shrink-0" />

@@ -124,7 +124,7 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         id: 'ORD-8924',
         customerName: 'Ashfaqul Karim',
         phone: '01711223344',
-        address: 'House 14, Road 7, Dhanmondi, Dhaka',
+        address: 'House 14, CK Ghosh Road, Mymensingh',
         orderType: 'delivery',
         items: [
           {
@@ -171,7 +171,7 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         id: 'ORD-8922',
         customerName: 'Samira Huq',
         phone: '01819556677',
-        address: 'Banani Block C, Road 11, Dhaka',
+        address: 'Charpara Medical Road, Mymensingh',
         orderType: 'delivery',
         items: [
           {
@@ -192,9 +192,9 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       },
       {
         id: 'ORD-8921',
-        customerName: 'Standard Chartered Corp Feasts',
+        customerName: 'Bangladesh Agricultural University Feast',
         phone: '01713009988',
-        address: 'Motijheel C/A, Dhaka (Floor 7)',
+        address: 'BAU Campus, Mymensingh',
         orderType: 'delivery',
         items: [
           {
@@ -291,11 +291,11 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   // Delivery Location & Fee State
   const [deliveryArea, setDeliveryArea] = useState<string>(() => {
-    return localStorage.getItem('sarinda_delivery_area') || 'ধানমন্ডি / কলাবাগান';
+    return localStorage.getItem('sarinda_delivery_area') || 'সি কে ঘোষ রোড / টাউন হল';
   });
   const [deliveryFee, setDeliveryFee] = useState<number>(() => {
     const saved = localStorage.getItem('sarinda_delivery_fee');
-    return saved ? Number(saved) : 40;
+    return saved ? Number(saved) : 30;
   });
 
   // Offline Restaurant Tables State

@@ -625,7 +625,7 @@ export const INITIAL_MENU_ITEMS: MenuItem[] = [
     banglaName: 'চিকেন রোস্ট',
     category: 'Meat',
     price: 150,
-    description: 'Dhaka wedding-style golden chicken leg roasted in ghee, yogurt, fried beresta, and sweet spices.',
+    description: 'Traditional wedding-style golden chicken leg roasted in ghee, yogurt, fried beresta, and sweet spices.',
     banglaDescription: 'বিয়ের বাড়ির খাঁটি শাহী স্বাদের ঘিয়ে ভাজা নরম তুলতুলে চিকেন রোস্ট ও বাদামী বেরেস্তা।',
     image: 'https://images.unsplash.com/photo-1598103442097-8b74394b95c6?auto=format&fit=crop&w=800&q=80',
     isPopular: true,

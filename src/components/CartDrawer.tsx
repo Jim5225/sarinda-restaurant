@@ -51,7 +51,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onProceedCheckout }) => 
       `*খাবারের তালিকা:*\n${itemsList}\n\n` +
       `-------------------------\n` +
       `• মোট আইটেম: ${cartCount}টি\n` +
-      `• ডেলিভারি এলাকা: ${deliveryArea || 'ধানমন্ডি'}\n` +
+      `• ডেলিভারি এলাকা: ${deliveryArea || 'সি কে ঘোষ রোড / টাউন হল'}\n` +
       `• ডেলিভারি ফি: ৳${cartDeliveryFee}\n` +
       `• *সর্বমোট প্রদেয়:* ৳${cartTotal}\n` +
       `-------------------------\n\n` +

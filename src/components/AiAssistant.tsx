@@ -26,15 +26,15 @@ export interface OrderData {
 }
 
 export const DELIVERY_ZONES = [
-  { id: 'dhanmondi', name: 'ধানমন্ডি / কলাবাগান', fee: 40, time: '২৫-৩৫ মিনিট' },
-  { id: 'lalmatia', name: 'লালমাটিয়া / শংকর', fee: 40, time: '২৫-৩৫ মিনিট' },
-  { id: 'mohammadpur', name: 'মোহাম্মদপুর / শ্যামলী', fee: 60, time: '৩০-৪০ মিনিট' },
-  { id: 'farmgate', name: 'ফার্মগেট / কারওয়ান বাজার', fee: 60, time: '৩৫-৪৫ মিনিট' },
-  { id: 'mirpur', name: 'মিরপুর / কল্যাণপুর', fee: 80, time: '৪০-৫০ মিনিট' },
-  { id: 'old_dhaka', name: 'পুরান ঢাকা / চকবাজার', fee: 80, time: '৪০-৫০ মিনিট' },
-  { id: 'gulshan', name: 'গুলশান / বনানী / তেজগাঁও', fee: 100, time: '৪৫-৫৫ মিনিট' },
-  { id: 'uttara', name: 'উত্তরা / বসুন্ধরা', fee: 120, time: '৫০-৬০ মিনিট' },
-  { id: 'other', name: 'ঢাকার অন্যান্য এলাকা', fee: 100, time: '৪৫-৬০ মিনিট' },
+  { id: 'ck_ghosh', name: 'সি কে ঘোষ রোড / টাউন হল', fee: 30, time: '২০-৩০ মিনিট' },
+  { id: 'ganginarpar', name: 'গাঙ্গিনারপাড় / দুর্গাবাড়ী', fee: 30, time: '২০-৩০ মিনিট' },
+  { id: 'charpara', name: 'চরপাড়া / মেডিকেল কলেজ রোড', fee: 40, time: '২৫-৩৫ মিনিট' },
+  { id: 'notun_bazar', name: 'নতুন বাজার / মহারাজা রোড', fee: 40, time: '২৫-৩৫ মিনিট' },
+  { id: 'baghmara', name: 'বাঘমারা / পন্ডিতপাড়া', fee: 40, time: '২৫-৩৫ মিনিট' },
+  { id: 'kewatkhali', name: 'কেওয়াটখালী / বাংলাদেশ কৃষি বিশ্ববিদ্যালয়', fee: 50, time: '৩০-৪০ মিনিট' },
+  { id: 'akua', name: 'আকুয়া / বাইপাস মোড়', fee: 50, time: '৩০-৪০ মিনিট' },
+  { id: 'khagdahar', name: 'খাগডহর / কাশর', fee: 60, time: '৩৫-৪৫ মিনিট' },
+  { id: 'other', name: 'ময়মনসিংহের অন্যান্য এলাকা', fee: 50, time: '৩০-৪৫ মিনিট' },
 ];
 
 interface ChatMessage {
