@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { MenuItem, CartItem, Order, Reservation, Offer, Addon, PortionVariant, DailyExpense } from '../types';
-import { INITIAL_MENU_ITEMS, INITIAL_OFFERS, INITIAL_EXPENSES } from '../data/initialData';
+import { MenuItem, CartItem, Order, Reservation, Offer, Addon, PortionVariant, DailyExpense, RestaurantTable } from '../types';
+import { INITIAL_MENU_ITEMS, INITIAL_OFFERS, INITIAL_EXPENSES, INITIAL_TABLES } from '../data/initialData';
 
 interface StoreContextType {
   lang: 'en' | 'bn';
@@ -33,17 +33,22 @@ interface StoreContextType {
   applyOffer: (code: string) => { success: boolean; message: string };
   removeOffer: () => void;
 
-  // Orders
+  // Orders & Offline POS
   orders: Order[];
   createOrder: (data: {
     customerName: string;
     phone: string;
     address: string;
     orderType: 'delivery' | 'pickup' | 'dine_in';
-    paymentMethod: 'cod' | 'bkash' | 'nagad';
+    paymentMethod: 'cod' | 'bkash' | 'nagad' | 'cash' | 'card';
     notes?: string;
   }) => Order;
+  createOfflineOrder: (orderData: Partial<Order>) => Order;
   updateOrderStatus: (id: string, status: Order['status']) => void;
+
+  // Tables Management (Offline Dine-in POS)
+  tables: RestaurantTable[];
+  updateTable: (id: string, updates: Partial<RestaurantTable>) => void;
 
   // Expenses & P&L
   expenses: DailyExpense[];
@@ -293,6 +298,12 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     return saved ? Number(saved) : 40;
   });
 
+  // Offline Restaurant Tables State
+  const [tables, setTables] = useState<RestaurantTable[]>(() => {
+    const saved = localStorage.getItem('sarinda_tables_v1');
+    return saved ? JSON.parse(saved) : INITIAL_TABLES;
+  });
+
   // UI Modal States
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
@@ -345,6 +356,10 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     localStorage.setItem('sarinda_delivery_area', deliveryArea);
     localStorage.setItem('sarinda_delivery_fee', deliveryFee.toString());
   }, [deliveryArea, deliveryFee]);
+
+  useEffect(() => {
+    localStorage.setItem('sarinda_tables_v1', JSON.stringify(tables));
+  }, [tables]);
 
   // Cart Calculations
   const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
@@ -450,7 +465,7 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     phone: string;
     address: string;
     orderType: 'delivery' | 'pickup' | 'dine_in';
-    paymentMethod: 'cod' | 'bkash' | 'nagad';
+    paymentMethod: 'cod' | 'bkash' | 'nagad' | 'cash' | 'card';
     notes?: string;
   }): Order => {
     const newOrder: Order = {
@@ -481,6 +496,39 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     setOrders((prev) =>
       prev.map((order) => (order.id === id ? { ...order, status } : order))
     );
+  };
+
+  // Offline POS Table Operations
+  const updateTable = (id: string, updates: Partial<RestaurantTable>) => {
+    setTables((prev) =>
+      prev.map((t) => (t.id === id ? { ...t, ...updates } : t))
+    );
+  };
+
+  const createOfflineOrder = (orderData: Partial<Order>): Order => {
+    const newOrder: Order = {
+      id: orderData.id || `POS-${Math.floor(1000 + Math.random() * 9000)}`,
+      customerName: orderData.customerName || (orderData.tableNumber ? `Dine-in (${orderData.tableNumber})` : 'Counter Takeaway'),
+      phone: orderData.phone || 'Walk-in',
+      address: orderData.address || (orderData.tableNumber ? `Dine-in Table: ${orderData.tableNumber}` : 'Counter Takeaway Hub'),
+      orderType: orderData.orderType || 'dine_in',
+      orderSource: orderData.orderSource || 'offline_pos',
+      tableNumber: orderData.tableNumber,
+      waiterName: orderData.waiterName || 'Cashier Desk',
+      items: orderData.items || [],
+      subtotal: orderData.subtotal || 0,
+      discount: orderData.discount || 0,
+      deliveryFee: 0,
+      total: orderData.total || 0,
+      paymentMethod: orderData.paymentMethod || 'cash',
+      paymentStatus: orderData.paymentStatus || 'paid',
+      status: orderData.status || 'delivered',
+      notes: orderData.notes,
+      createdAt: orderData.createdAt || new Date().toISOString()
+    };
+
+    setOrders((prev) => [newOrder, ...prev]);
+    return newOrder;
   };
 
   // Reservations
@@ -567,7 +615,10 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         removeOffer,
         orders,
         createOrder,
+        createOfflineOrder,
         updateOrderStatus,
+        tables,
+        updateTable,
         expenses,
         addExpense,
         deleteExpense,

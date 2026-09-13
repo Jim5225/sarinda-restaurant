@@ -1,4 +1,4 @@
-import { MenuItem, Offer, Review, DailyExpense } from '../types';
+import { MenuItem, Offer, Review, DailyExpense, RestaurantTable } from '../types';
 
 export const INITIAL_MENU_ITEMS: MenuItem[] = [
   // ==================== 1. BIRYANI (বিরিয়ানি) ====================
@@ -1631,4 +1631,96 @@ export const INITIAL_EXPENSES: DailyExpense[] = [
     notes: 'Daily shift wages disbursement'
   }
 ];
+
+export const INITIAL_TABLES: RestaurantTable[] = [
+  {
+    id: 'T-1',
+    name: 'Table 1 (Ground Floor)',
+    banglaName: 'টেবিল ১ (গ্রাউন্ড ফ্লোর)',
+    capacity: 4,
+    area: 'Standard Dining',
+    status: 'occupied',
+    activeOrderId: 'ord-dine-1',
+    guestCount: 3,
+    waiterName: 'রাকিব (Rakib)',
+    occupiedAt: '12:45 PM'
+  },
+  {
+    id: 'T-2',
+    name: 'Table 2 (Ground Floor)',
+    banglaName: 'টেবিল ২ (গ্রাউন্ড ফ্লোর)',
+    capacity: 4,
+    area: 'Standard Dining',
+    status: 'vacant'
+  },
+  {
+    id: 'T-3',
+    name: 'Table 3 (Couple Window)',
+    banglaName: 'টেবিল ৩ (উইন্ডো কাপল টেবিল)',
+    capacity: 2,
+    area: 'Standard Dining',
+    status: 'billing',
+    activeOrderId: 'ord-dine-2',
+    guestCount: 2,
+    waiterName: 'সুমন (Sumon)',
+    occupiedAt: '01:15 PM'
+  },
+  {
+    id: 'T-4',
+    name: 'Table 4 (Family Corner)',
+    banglaName: 'টেবিল ৪ (ফ্যামিলি কর্নার)',
+    capacity: 6,
+    area: 'Standard Dining',
+    status: 'vacant'
+  },
+  {
+    id: 'T-5',
+    name: 'Table 5 (Ground Floor)',
+    banglaName: 'টেবিল ৫ (গ্রাউন্ড ফ্লোর)',
+    capacity: 4,
+    area: 'Standard Dining',
+    status: 'occupied',
+    activeOrderId: 'ord-dine-3',
+    guestCount: 4,
+    waiterName: 'রাকিব (Rakib)',
+    occupiedAt: '01:30 PM'
+  },
+  {
+    id: 'VIP-1',
+    name: 'VIP Royal Cabin 1',
+    banglaName: 'ভিআইপি রয়্যাল কেবিন ১',
+    capacity: 8,
+    area: 'VIP Private Cabin',
+    status: 'occupied',
+    activeOrderId: 'ord-dine-4',
+    guestCount: 6,
+    waiterName: 'সাইফুল (Saiful - Head Waiter)',
+    occupiedAt: '01:00 PM'
+  },
+  {
+    id: 'VIP-2',
+    name: 'VIP Executive Cabin 2',
+    banglaName: 'ভিআইপি এক্সিকিউটিভ কেবিন ২',
+    capacity: 6,
+    area: 'VIP Private Cabin',
+    status: 'vacant'
+  },
+  {
+    id: 'HALL-1',
+    name: 'Grand Family Hall Table 1',
+    banglaName: 'ফ্যামিলি হল টেবিল ১',
+    capacity: 10,
+    area: 'Family Hall',
+    status: 'vacant'
+  },
+  {
+    id: 'HALL-2',
+    name: 'Grand Family Hall Table 2',
+    banglaName: 'ফ্যামিলি হল টেবিল ২',
+    capacity: 8,
+    area: 'Family Hall',
+    status: 'vacant'
+  }
+];
+
 

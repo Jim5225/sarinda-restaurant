@@ -59,18 +59,34 @@ export interface CartItem {
   notes?: string;
 }
 
+export interface RestaurantTable {
+  id: string; // 'T-1', 'T-2', 'VIP-1', 'VIP-2', 'HALL-1', 'TAKEAWAY'
+  name: string;
+  banglaName: string;
+  capacity: number;
+  area: 'Standard Dining' | 'VIP Private Cabin' | 'Family Hall' | 'Counter Takeaway';
+  status: 'vacant' | 'occupied' | 'billing';
+  activeOrderId?: string;
+  guestCount?: number;
+  waiterName?: string;
+  occupiedAt?: string;
+}
+
 export interface Order {
   id: string;
   customerName: string;
   phone: string;
   address: string;
   orderType: 'delivery' | 'pickup' | 'dine_in';
+  orderSource?: 'online' | 'offline_pos' | 'counter';
+  tableNumber?: string;
+  waiterName?: string;
   items: CartItem[];
   subtotal: number;
   discount: number;
   deliveryFee: number;
   total: number;
-  paymentMethod: 'cod' | 'bkash' | 'nagad';
+  paymentMethod: 'cod' | 'bkash' | 'nagad' | 'cash' | 'card';
   paymentStatus: 'pending' | 'paid';
   status: 'pending' | 'preparing' | 'on_delivery' | 'delivered' | 'cancelled';
   notes?: string;

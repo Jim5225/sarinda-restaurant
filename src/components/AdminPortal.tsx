@@ -27,9 +27,11 @@ import {
   ArrowDownRight,
   FileSpreadsheet,
   Smartphone,
-  Wallet
+  Wallet,
+  UtensilsCrossed
 } from 'lucide-react';
 import { MenuItem, Order, Reservation, DailyExpense, ExpenseCategory } from '../types';
+import { OfflinePosTerminal } from './OfflinePosTerminal';
 
 export const AdminPortal: React.FC = () => {
   const {
@@ -45,11 +47,13 @@ export const AdminPortal: React.FC = () => {
     offers,
     expenses,
     addExpense,
-    deleteExpense
+    deleteExpense,
+    tables
   } = useStore();
 
-  const [activeAdminTab, setActiveAdminTab] = useState<'overview' | 'finance' | 'orders' | 'reservations' | 'menu' | 'offers'>('finance');
+  const [activeAdminTab, setActiveAdminTab] = useState<'pos' | 'overview' | 'finance' | 'orders' | 'reservations' | 'menu' | 'offers'>('pos');
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const [orderSourceFilter, setOrderSourceFilter] = useState<'all' | 'delivery' | 'dine_in' | 'pickup'>('all');
 
   // Expense Management State
   const [isAddExpenseOpen, setIsAddExpenseOpen] = useState(false);
@@ -191,6 +195,7 @@ export const AdminPortal: React.FC = () => {
         {/* Admin Navigation Pills */}
         <div className="hidden md:flex items-center gap-1 bg-brand-dark/40 p-1 rounded-2xl border border-white/10">
           {[
+            { id: 'pos', label: `🍽️ Offline POS & Tables (${tables.filter(t => t.status === 'occupied').length} Active)` },
             { id: 'finance', label: `Daily P&L & Profit (${profitMargin.toFixed(0)}%)` },
             { id: 'overview', label: 'Store Overview' },
             { id: 'orders', label: `Orders (${pendingOrdersCount})` },
@@ -216,7 +221,8 @@ export const AdminPortal: React.FC = () => {
       {/* Mobile Tabs */}
       <div className="md:hidden flex overflow-x-auto p-2 bg-brand-primary/95 text-white gap-1.5 no-scrollbar">
         {[
-          { id: 'finance', label: `Daily P&L (${profitMargin.toFixed(0)}% Profit)` },
+          { id: 'pos', label: `🍽️ POS & Tables (${tables.filter(t => t.status === 'occupied').length})` },
+          { id: 'finance', label: `Daily P&L (${profitMargin.toFixed(0)}%)` },
           { id: 'overview', label: 'Overview' },
           { id: 'orders', label: 'Orders' },
           { id: 'reservations', label: 'Reservations' },
@@ -322,7 +328,16 @@ export const AdminPortal: React.FC = () => {
         </div>
 
         {/* ======================================================== */}
-        {/* 0. DAILY P&L, EXPENSES & PROFIT ANALYTICS TAB */}
+        {/* 0. OFFLINE RESTAURANT POS & TABLE MANAGEMENT TERMINAL */}
+        {/* ======================================================== */}
+        {activeAdminTab === 'pos' && (
+          <div className="space-y-8 animate-fadeIn">
+            <OfflinePosTerminal />
+          </div>
+        )}
+
+        {/* ======================================================== */}
+        {/* 1. DAILY P&L, EXPENSES & PROFIT ANALYTICS TAB */}
         {/* ======================================================== */}
         {activeAdminTab === 'finance' && (
           <div className="space-y-8 animate-fadeIn">
@@ -892,8 +907,30 @@ export const AdminPortal: React.FC = () => {
                   Customer Orders Pipeline
                 </h2>
                 <p className="text-xs text-slate-500">
-                  Manage incoming food orders, update cooking status, and view customer contacts.
+                  Manage online deliveries, dine-in table bills, and takeaway counter pickups in one place.
                 </p>
+              </div>
+
+              {/* Orders Source Filter Pills */}
+              <div className="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar">
+                {[
+                  { id: 'all', label: `সকল (${orders.length})` },
+                  { id: 'delivery', label: `🌐 অনলাইন (${orders.filter(o => o.orderType === 'delivery').length})` },
+                  { id: 'dine_in', label: `🍽️ ডাইন-ইন (${orders.filter(o => o.orderType === 'dine_in').length})` },
+                  { id: 'pickup', label: `🛍️ টেক-অ্যাওয়ে (${orders.filter(o => o.orderType === 'pickup').length})` }
+                ].map((f) => (
+                  <button
+                    key={f.id}
+                    onClick={() => setOrderSourceFilter(f.id as any)}
+                    className={`px-3 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer whitespace-nowrap ${
+                      orderSourceFilter === f.id
+                        ? 'bg-brand-primary text-white shadow-xs'
+                        : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                    }`}
+                  >
+                    {f.label}
+                  </button>
+                ))}
               </div>
             </div>
 
@@ -913,7 +950,9 @@ export const AdminPortal: React.FC = () => {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
-                  {orders.map((order) => (
+                  {orders
+                    .filter((o) => orderSourceFilter === 'all' || o.orderType === orderSourceFilter)
+                    .map((order) => (
                     <tr key={order.id} className="hover:bg-slate-50/60">
                       <td className="p-3 font-mono font-bold text-brand-primary">#{order.id}</td>
                       <td className="p-3">
