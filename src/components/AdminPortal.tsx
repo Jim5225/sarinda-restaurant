@@ -28,7 +28,15 @@ import {
   FileSpreadsheet,
   Smartphone,
   Wallet,
-  UtensilsCrossed
+  UtensilsCrossed,
+  Flame,
+  Zap,
+  Bell,
+  Check,
+  Printer,
+  ChevronRight,
+  PhoneCall,
+  RefreshCw
 } from 'lucide-react';
 import { MenuItem, Order, Reservation, DailyExpense, ExpenseCategory } from '../types';
 import { OfflinePosTerminal } from './OfflinePosTerminal';
@@ -54,6 +62,29 @@ export const AdminPortal: React.FC = () => {
   const [activeAdminTab, setActiveAdminTab] = useState<'pos' | 'overview' | 'finance' | 'orders' | 'reservations' | 'menu' | 'offers'>('pos');
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [orderSourceFilter, setOrderSourceFilter] = useState<'all' | 'delivery' | 'dine_in' | 'pickup'>('all');
+
+  // Peak Hour Rush State
+  const [isPeakHour, setIsPeakHour] = useState<boolean>(() => {
+    return localStorage.getItem('sarinda_peakhour_mode') === 'true';
+  });
+  const [kitchenDelay, setKitchenDelay] = useState<'normal' | 'busy' | 'full'>('normal');
+  const [globalQuickSearch, setGlobalQuickSearch] = useState<string>('');
+
+  const togglePeakHour = () => {
+    const next = !isPeakHour;
+    setIsPeakHour(next);
+    localStorage.setItem('sarinda_peakhour_mode', String(next));
+  };
+
+  const handleQuickAdvanceOrder = (orderId: string, currentStatus: Order['status']) => {
+    if (currentStatus === 'pending') {
+      updateOrderStatus(orderId, 'preparing');
+    } else if (currentStatus === 'preparing') {
+      updateOrderStatus(orderId, 'on_delivery');
+    } else if (currentStatus === 'on_delivery') {
+      updateOrderStatus(orderId, 'delivered');
+    }
+  };
 
   // Expense Management State
   const [isAddExpenseOpen, setIsAddExpenseOpen] = useState(false);
@@ -171,69 +202,217 @@ export const AdminPortal: React.FC = () => {
   return (
     <div className="min-h-screen bg-slate-50 text-slate-800">
       
-      {/* Admin Top Navbar */}
-      <header className="bg-brand-primary text-white border-b border-brand-dark px-4 sm:px-8 py-4 flex items-center justify-between shadow-md">
-        <div className="flex items-center gap-4">
-          <button
-            onClick={() => setActiveTab('home')}
-            className="flex items-center gap-1.5 text-xs font-bold bg-white/10 hover:bg-white/20 px-3 py-2 rounded-xl transition cursor-pointer"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            <span>Return to Storefront</span>
-          </button>
+      {/* Admin Top Navbar - High-Contrast Luxury Executive Design */}
+      <header className="bg-gradient-to-r from-[#071911] via-brand-primary to-[#0c2419] text-white border-b border-brand-leaf/30 px-4 sm:px-8 py-4 shadow-xl relative z-20">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+          
+          {/* Brand & Left Actions */}
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex items-center gap-3.5">
+              <button
+                onClick={() => setActiveTab('home')}
+                className="flex items-center gap-2 text-xs font-black bg-white/10 hover:bg-white/20 active:scale-95 px-3.5 py-2.5 rounded-2xl border border-white/15 transition cursor-pointer shadow-xs"
+                title="Return to Public Customer Storefront"
+              >
+                <ArrowLeft className="w-4 h-4 text-brand-gold" />
+                <span className="hidden sm:inline">স্টোরফ্রন্ট (Website)</span>
+              </button>
 
-          <div>
-            <h1 className="font-serif font-bold text-xl sm:text-2xl text-brand-gold flex items-center gap-2">
-              Sarinda Operations Hub
-            </h1>
-            <p className="text-[11px] text-brand-cream/70">
-              Kitchen & Restaurant Management System
-            </p>
+              <div>
+                <div className="flex items-center gap-2.5">
+                  <h1 className="font-serif font-black text-2xl sm:text-3xl text-brand-gold tracking-tight flex items-center gap-2">
+                    <span>Sarinda Operations Hub</span>
+                  </h1>
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-400/40 text-emerald-300 text-[11px] font-extrabold uppercase tracking-wide">
+                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                    Live Shift
+                  </span>
+                </div>
+                <p className="text-xs text-brand-cream/80 font-medium mt-0.5">
+                  সারিন্দা রেস্তোরাঁ ও ক্যাটারিং • সি কে ঘোষ রোড, ময়মনসিংহ
+                </p>
+              </div>
+            </div>
+
+            {/* Mobile Peak Hour Toggle */}
+            <div className="lg:hidden">
+              <button
+                onClick={togglePeakHour}
+                className={`px-3 py-2 rounded-2xl font-black text-xs flex items-center gap-1.5 transition shadow-md ${
+                  isPeakHour
+                    ? 'bg-gradient-to-r from-amber-500 to-orange-600 text-white animate-pulse'
+                    : 'bg-white/10 text-white/90'
+                }`}
+              >
+                <Flame className={`w-4 h-4 ${isPeakHour ? 'text-yellow-200' : 'text-slate-300'}`} />
+                <span>{isPeakHour ? 'পিক আওয়ার ON' : 'পিক আওয়ার OFF'}</span>
+              </button>
+            </div>
           </div>
+
+          {/* Right Controls: Peak Hour Mode & Kitchen Pace */}
+          <div className="flex flex-wrap items-center gap-3">
+            
+            {/* 1. Peak Hour Quick Switch (Large Desktop Pill) */}
+            <div className="hidden lg:flex items-center bg-black/40 p-1 rounded-2xl border border-white/15">
+              <button
+                onClick={togglePeakHour}
+                className={`px-4 py-2 rounded-xl text-xs font-black transition flex items-center gap-2 cursor-pointer ${
+                  isPeakHour
+                    ? 'bg-gradient-to-r from-amber-500 to-orange-600 text-white shadow-lg ring-2 ring-amber-400/60 scale-[1.02]'
+                    : 'text-white/80 hover:text-white hover:bg-white/10'
+                }`}
+                title="রাশ আওয়ার মোড চালু করলে বাটন বড় হয় এবং কিচেন অ্যালার্ট সক্রিয় হয়"
+              >
+                <Flame className={`w-4 h-4 ${isPeakHour ? 'text-yellow-200 animate-bounce' : 'text-amber-400'}`} />
+                <span>{isPeakHour ? '⚡ রাশ আওয়ার মোড সক্রিয় (PEAK HOUR ON)' : 'পিক আওয়ার মোড চালু করুন'}</span>
+              </button>
+            </div>
+
+            {/* 2. Kitchen Delay / Pace Indicator */}
+            <div className="flex items-center gap-1 bg-black/30 p-1 rounded-2xl border border-white/10 text-xs">
+              <span className="text-white/60 font-bold px-2 hidden sm:inline text-[11px] uppercase tracking-wider">কিচেন পেস:</span>
+              <button
+                onClick={() => setKitchenDelay('normal')}
+                className={`px-2.5 py-1.5 rounded-xl font-extrabold text-[11px] transition cursor-pointer ${
+                  kitchenDelay === 'normal'
+                    ? 'bg-emerald-500 text-slate-950 font-black shadow'
+                    : 'text-white/70 hover:text-white'
+                }`}
+              >
+                🟢 ১৫মি. (নরমাল)
+              </button>
+              <button
+                onClick={() => setKitchenDelay('busy')}
+                className={`px-2.5 py-1.5 rounded-xl font-extrabold text-[11px] transition cursor-pointer ${
+                  kitchenDelay === 'busy'
+                    ? 'bg-amber-500 text-slate-950 font-black shadow'
+                    : 'text-white/70 hover:text-white'
+                }`}
+              >
+                🟡 ২৫মি. (রাশ)
+              </button>
+              <button
+                onClick={() => setKitchenDelay('full')}
+                className={`px-2.5 py-1.5 rounded-xl font-extrabold text-[11px] transition cursor-pointer ${
+                  kitchenDelay === 'full'
+                    ? 'bg-rose-600 text-white font-black shadow animate-pulse'
+                    : 'text-white/70 hover:text-white'
+                }`}
+              >
+                🔴 ৪০মি. (ফুল)
+              </button>
+            </div>
+
+          </div>
+
         </div>
 
-        {/* Admin Navigation Pills */}
-        <div className="hidden md:flex items-center gap-1 bg-brand-dark/40 p-1 rounded-2xl border border-white/10">
+        {/* Admin Navigation Tabs - Large, Bold & High Legibility */}
+        <div className="mt-4 pt-3 border-t border-white/10 hidden md:flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar">
           {[
-            { id: 'pos', label: `🍽️ Offline POS & Tables (${tables.filter(t => t.status === 'occupied').length} Active)` },
-            { id: 'finance', label: `Daily P&L & Profit (${profitMargin.toFixed(0)}%)` },
-            { id: 'overview', label: 'Store Overview' },
-            { id: 'orders', label: `Orders (${pendingOrdersCount})` },
-            { id: 'reservations', label: `Reservations (${pendingResCount})` },
-            { id: 'menu', label: `Menu (${menu.length})` },
-            { id: 'offers', label: `Offers (${offers.length})` }
-          ].map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveAdminTab(tab.id as any)}
-              className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer ${
-                activeAdminTab === tab.id
-                  ? 'bg-brand-gold text-brand-dark shadow'
-                  : 'text-white/80 hover:text-white hover:bg-white/10'
-              }`}
-            >
-              {tab.label}
-            </button>
-          ))}
+            {
+              id: 'pos',
+              icon: UtensilsCrossed,
+              label: 'অফলাইন POS ও টেবিল',
+              sub: 'Offline POS & Tables',
+              badge: `${tables.filter(t => t.status === 'occupied').length} অকুপাইড`,
+              badgeColor: 'bg-emerald-400 text-slate-950'
+            },
+            {
+              id: 'orders',
+              icon: ShoppingBag,
+              label: 'অর্ডার পাইপলাইন',
+              sub: 'Live Orders',
+              badge: pendingOrdersCount > 0 ? `${pendingOrdersCount}টি পেন্ডিং` : `${orders.length}টি`,
+              badgeColor: pendingOrdersCount > 0 ? 'bg-amber-400 text-slate-950 animate-pulse font-black' : 'bg-white/20 text-white'
+            },
+            {
+              id: 'finance',
+              icon: DollarSign,
+              label: 'দৈনিক লাভ-ক্ষতি (P&L)',
+              sub: 'Daily Financials',
+              badge: `মার্জিন ${profitMargin.toFixed(0)}%`,
+              badgeColor: 'bg-brand-gold text-slate-950 font-black'
+            },
+            {
+              id: 'reservations',
+              icon: Calendar,
+              label: 'টেবিল বুকিং',
+              sub: 'Reservations',
+              badge: pendingResCount > 0 ? `${pendingResCount} পেন্ডিং` : `${reservations.length}টি`,
+              badgeColor: pendingResCount > 0 ? 'bg-amber-300 text-slate-950' : 'bg-white/20 text-white'
+            },
+            {
+              id: 'menu',
+              icon: Layers,
+              label: 'মেনু ও প্রাইসিং',
+              sub: 'Menu Items',
+              badge: `${menu.length} পদ`,
+              badgeColor: 'bg-white/20 text-white'
+            },
+            {
+              id: 'offers',
+              icon: Percent,
+              label: 'ক্যাম্পেইন ও অফার',
+              sub: 'Promo Codes',
+              badge: `${offers.length}টি`,
+              badgeColor: 'bg-white/20 text-white'
+            },
+            {
+              id: 'overview',
+              icon: PieChart,
+              label: 'স্টোর সামারি',
+              sub: 'Overview',
+              badge: '',
+              badgeColor: ''
+            }
+          ].map((tab) => {
+            const Icon = tab.icon;
+            const isActive = activeAdminTab === tab.id;
+            return (
+              <button
+                key={tab.id}
+                onClick={() => setActiveAdminTab(tab.id as any)}
+                className={`px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-extrabold transition cursor-pointer flex items-center gap-2.5 whitespace-nowrap ${
+                  isActive
+                    ? 'bg-brand-gold text-slate-950 font-black shadow-lg ring-2 ring-brand-gold/60 scale-[1.02]'
+                    : 'bg-white/10 hover:bg-white/20 text-white/90 hover:text-white'
+                }`}
+              >
+                <Icon className={`w-4 h-4 ${isActive ? 'text-slate-950' : 'text-brand-gold'}`} />
+                <div className="text-left leading-tight">
+                  <div className="font-black">{tab.label}</div>
+                  <div className={`text-[10px] ${isActive ? 'text-slate-800' : 'text-white/60'} font-medium`}>{tab.sub}</div>
+                </div>
+                {tab.badge && (
+                  <span className={`ml-1 px-2 py-0.5 rounded-full text-[10px] font-black ${tab.badgeColor}`}>
+                    {tab.badge}
+                  </span>
+                )}
+              </button>
+            );
+          })}
         </div>
+
       </header>
 
-      {/* Mobile Tabs */}
-      <div className="md:hidden flex overflow-x-auto p-2 bg-brand-primary/95 text-white gap-1.5 no-scrollbar">
+      {/* Mobile Tabs Bar */}
+      <div className="md:hidden flex overflow-x-auto p-2.5 bg-[#0e241b] text-white gap-2 no-scrollbar border-b border-white/10">
         {[
-          { id: 'pos', label: `🍽️ POS & Tables (${tables.filter(t => t.status === 'occupied').length})` },
-          { id: 'finance', label: `Daily P&L (${profitMargin.toFixed(0)}%)` },
-          { id: 'overview', label: 'Overview' },
-          { id: 'orders', label: 'Orders' },
-          { id: 'reservations', label: 'Reservations' },
-          { id: 'menu', label: 'Menu' },
-          { id: 'offers', label: 'Offers' }
+          { id: 'pos', label: `🍽️ POS ও টেবিল (${tables.filter(t => t.status === 'occupied').length})` },
+          { id: 'orders', label: `⚡ অর্ডার (${pendingOrdersCount})` },
+          { id: 'finance', label: `📊 লাভ-ক্ষতি (${profitMargin.toFixed(0)}%)` },
+          { id: 'reservations', label: `📅 বুকিং (${pendingResCount})` },
+          { id: 'menu', label: `🍲 মেনু (${menu.length})` },
+          { id: 'offers', label: `🏷️ অফার (${offers.length})` },
+          { id: 'overview', label: '📈 ওভারভিউ' }
         ].map((tab) => (
           <button
             key={tab.id}
             onClick={() => setActiveAdminTab(tab.id as any)}
-            className={`px-3 py-1 rounded-lg text-xs font-bold whitespace-nowrap ${
-              activeAdminTab === tab.id ? 'bg-brand-gold text-brand-dark' : 'bg-white/10'
+            className={`px-3.5 py-2 rounded-xl text-xs font-black whitespace-nowrap transition cursor-pointer ${
+              activeAdminTab === tab.id ? 'bg-brand-gold text-slate-950 shadow' : 'bg-white/10 text-white/80'
             }`}
           >
             {tab.label}
@@ -241,90 +420,292 @@ export const AdminPortal: React.FC = () => {
         ))}
       </div>
 
+      {/* Peak Hour Instant Fast-Action Bar (পিক আওয়ার কুইক একশন বার) */}
+      <section className={`px-4 sm:px-8 py-3.5 border-b transition-colors duration-300 ${
+        isPeakHour
+          ? 'bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 text-white border-amber-400 shadow-md'
+          : 'bg-white text-slate-700 border-slate-200'
+      }`}>
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3.5">
+          
+          {/* Quick Search for Rush Hours */}
+          <div className="relative w-full md:w-96">
+            <Search className={`w-4 h-4 absolute left-3.5 top-3 ${isPeakHour ? 'text-slate-400' : 'text-slate-400'}`} />
+            <input
+              type="text"
+              value={globalQuickSearch}
+              onChange={(e) => setGlobalQuickSearch(e.target.value)}
+              placeholder="কাস্টমার ফোন (017...), নাম বা অর্ডার ID (#8924)..."
+              className={`w-full pl-10 pr-8 py-2.5 rounded-2xl text-xs sm:text-sm font-bold transition focus:outline-none focus:ring-2 ${
+                isPeakHour
+                  ? 'bg-white text-slate-900 placeholder:text-slate-400 focus:ring-amber-300 shadow-inner'
+                  : 'bg-slate-50 text-slate-900 placeholder:text-slate-400 border border-slate-200 focus:bg-white focus:ring-brand-primary/20'
+              }`}
+            />
+            {globalQuickSearch && (
+              <button
+                onClick={() => setGlobalQuickSearch('')}
+                className="absolute right-3 top-2.5 text-slate-400 hover:text-slate-600 text-xs font-bold"
+              >
+                ✕
+              </button>
+            )}
+          </div>
+
+          {/* Quick Rush Action Buttons */}
+          <div className="flex flex-wrap items-center gap-2 w-full md:w-auto justify-start md:justify-end">
+            <button
+              onClick={() => setActiveAdminTab('pos')}
+              className={`px-3.5 py-2 rounded-xl text-xs font-extrabold flex items-center gap-1.5 transition cursor-pointer shadow-xs ${
+                isPeakHour
+                  ? 'bg-slate-950 text-brand-gold hover:bg-slate-900'
+                  : 'bg-brand-primary text-white hover:bg-brand-dark'
+              }`}
+            >
+              <UtensilsCrossed className="w-3.5 h-3.5 text-brand-gold" />
+              <span>+ নতুন টেবিল বিল (POS)</span>
+            </button>
+
+            <button
+              onClick={() => {
+                setActiveAdminTab('orders');
+                setOrderSourceFilter('all');
+              }}
+              className={`px-3.5 py-2 rounded-xl text-xs font-extrabold flex items-center gap-1.5 transition cursor-pointer shadow-xs ${
+                isPeakHour
+                  ? 'bg-white text-slate-950 hover:bg-amber-100'
+                  : 'bg-slate-100 text-slate-800 hover:bg-slate-200 border border-slate-200'
+              }`}
+            >
+              <Bell className="w-3.5 h-3.5 text-rose-600" />
+              <span>পেন্ডিং কিচেন অর্ডার ({pendingOrdersCount}টি)</span>
+            </button>
+
+            <button
+              onClick={() => {
+                if (orders.length > 0) {
+                  setSelectedOrder(orders[0]);
+                }
+              }}
+              className={`px-3.5 py-2 rounded-xl text-xs font-extrabold flex items-center gap-1.5 transition cursor-pointer shadow-xs ${
+                isPeakHour
+                  ? 'bg-amber-900/40 text-white border border-white/20 hover:bg-amber-900/60'
+                  : 'bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200'
+              }`}
+              title="সর্বশেষ অর্ডারের ইনভয়েস প্রিভিউ ও প্রিন্ট"
+            >
+              <Printer className="w-3.5 h-3.5 text-emerald-600" />
+              <span>শেষ রসিদ প্রিন্ট</span>
+            </button>
+          </div>
+
+        </div>
+
+        {/* Instant Search Results Tray (Peak Hour Lookup) */}
+        {globalQuickSearch.trim() && (
+          <div className="max-w-7xl mx-auto mt-3 p-4 bg-white rounded-2xl shadow-xl border border-slate-200 text-slate-800 animate-in fade-in slide-in-from-top-2">
+            <div className="flex items-center justify-between pb-2 border-b border-slate-100 mb-3">
+              <span className="text-xs font-black text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
+                <Search className="w-3.5 h-3.5 text-brand-leaf" />
+                অনুসন্ধানের ফলাফল: "{globalQuickSearch}"
+              </span>
+              <button
+                onClick={() => setGlobalQuickSearch('')}
+                className="text-xs font-bold text-slate-400 hover:text-slate-700 cursor-pointer"
+              >
+                বন্ধ করুন ✕
+              </button>
+            </div>
+
+            {orders.filter(o => 
+              o.id.toLowerCase().includes(globalQuickSearch.toLowerCase()) ||
+              o.customerName.toLowerCase().includes(globalQuickSearch.toLowerCase()) ||
+              o.phone.includes(globalQuickSearch) ||
+              o.address.toLowerCase().includes(globalQuickSearch.toLowerCase())
+            ).length === 0 ? (
+              <p className="text-xs text-slate-500 py-2">কোনো ম্যাচিং অর্ডার পাওয়া যায়নি। সঠিক নাম, ফোন বা অর্ডার ID দিয়ে চেষ্টা করুন।</p>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                {orders.filter(o => 
+                  o.id.toLowerCase().includes(globalQuickSearch.toLowerCase()) ||
+                  o.customerName.toLowerCase().includes(globalQuickSearch.toLowerCase()) ||
+                  o.phone.includes(globalQuickSearch) ||
+                  o.address.toLowerCase().includes(globalQuickSearch.toLowerCase())
+                ).slice(0, 6).map((order) => (
+                  <div key={order.id} className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="font-mono font-black text-xs text-brand-primary">#{order.id}</span>
+                      <span className={`px-2 py-0.5 rounded-md text-[10px] font-black uppercase ${
+                        order.status === 'delivered' ? 'bg-emerald-100 text-emerald-800' :
+                        order.status === 'on_delivery' ? 'bg-blue-100 text-blue-800' :
+                        order.status === 'preparing' ? 'bg-amber-100 text-amber-800' : 'bg-rose-100 text-rose-800'
+                      }`}>
+                        {order.status}
+                      </span>
+                    </div>
+
+                    <div>
+                      <div className="font-extrabold text-sm text-slate-900">{order.customerName}</div>
+                      <a href={`tel:${order.phone}`} className="text-xs font-bold text-emerald-700 hover:underline flex items-center gap-1">
+                        <PhoneCall className="w-3 h-3" /> {order.phone}
+                      </a>
+                    </div>
+
+                    <div className="text-xs text-slate-600 truncate">
+                      {order.items.map(i => `${i.quantity}x ${i.menuItem.name}`).join(', ')}
+                    </div>
+
+                    <div className="flex items-center justify-between pt-2 border-t border-slate-200">
+                      <span className="font-black text-sm text-brand-primary">৳{order.total}</span>
+                      
+                      <div className="flex items-center gap-1.5">
+                        {order.status === 'pending' && (
+                          <button
+                            onClick={() => handleQuickAdvanceOrder(order.id, 'pending')}
+                            className="px-2.5 py-1 rounded-lg bg-amber-500 hover:bg-amber-600 text-white text-xs font-black cursor-pointer"
+                          >
+                            🔥 রান্না শুরু
+                          </button>
+                        )}
+                        {order.status === 'preparing' && (
+                          <button
+                            onClick={() => handleQuickAdvanceOrder(order.id, 'preparing')}
+                            className="px-2.5 py-1 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-black cursor-pointer"
+                          >
+                            🚀 ডেলিভারি
+                          </button>
+                        )}
+                        {order.status === 'on_delivery' && (
+                          <button
+                            onClick={() => handleQuickAdvanceOrder(order.id, 'on_delivery')}
+                            className="px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-black cursor-pointer"
+                          >
+                            ✅ সম্পন্ন
+                          </button>
+                        )}
+                        <button
+                          onClick={() => setSelectedOrder(order)}
+                          className="p-1.5 rounded-lg bg-white border border-slate-200 text-slate-600 hover:text-slate-900 cursor-pointer"
+                          title="View Invoice"
+                        >
+                          <Eye className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+      </section>
+
       {/* Main Dashboard Container */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
         
-        {/* KPI Cards Row - Executive Financial Snapshot */}
+        {/* KPI Cards Row - Executive Financial & Operational Snapshot */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          
           {/* 1. Total Sales */}
           <div 
             onClick={() => setActiveAdminTab('finance')}
-            className="bg-white p-5 rounded-3xl border border-slate-200 shadow-xs flex items-center justify-between cursor-pointer hover:border-emerald-300 transition"
+            className="bg-white p-5 sm:p-6 rounded-3xl border border-slate-200 shadow-sm hover:shadow-md hover:border-emerald-400 transition cursor-pointer relative overflow-hidden group"
           >
-            <div>
-              <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">Today's Sales (মোট বিক্রি)</p>
-              <h3 className="font-serif text-2xl sm:text-3xl font-black text-brand-primary mt-1">
-                ৳{totalRevenue.toLocaleString()}
-              </h3>
-              <span className="text-[11px] text-emerald-600 font-bold flex items-center gap-1 mt-0.5">
-                <ArrowUpRight className="w-3.5 h-3.5" />
-                {validOrders.length} Completed / Active Orders
-              </span>
-            </div>
-            <div className="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center">
-              <DollarSign className="w-6 h-6" />
+            <div className="absolute top-0 left-0 right-0 h-1.5 bg-emerald-500" />
+            <div className="flex items-start justify-between">
+              <div>
+                <p className="text-xs font-extrabold text-slate-500 uppercase tracking-wider">
+                  Today's Sales • মোট বিক্রি
+                </p>
+                <h3 className="font-serif text-3xl sm:text-4xl font-black text-slate-900 mt-1.5 tracking-tight">
+                  ৳{totalRevenue.toLocaleString()}
+                </h3>
+                <span className="text-xs text-emerald-700 font-extrabold flex items-center gap-1 mt-2">
+                  <ArrowUpRight className="w-4 h-4 text-emerald-600 shrink-0" />
+                  <span>{validOrders.length}টি সফল অর্ডার (ডেলিভারি + ডাইন-ইন)</span>
+                </span>
+              </div>
+              <div className="w-13 h-13 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0 group-hover:scale-110 transition">
+                <DollarSign className="w-6 h-6" />
+              </div>
             </div>
           </div>
 
           {/* 2. Total Expenses */}
           <div 
             onClick={() => setActiveAdminTab('finance')}
-            className="bg-white p-5 rounded-3xl border border-slate-200 shadow-xs flex items-center justify-between cursor-pointer hover:border-rose-300 transition"
+            className="bg-white p-5 sm:p-6 rounded-3xl border border-slate-200 shadow-sm hover:shadow-md hover:border-rose-400 transition cursor-pointer relative overflow-hidden group"
           >
-            <div>
-              <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">Today's Expenses (মোট খরচ)</p>
-              <h3 className="font-serif text-2xl sm:text-3xl font-black text-rose-600 mt-1">
-                ৳{totalExpenses.toLocaleString()}
-              </h3>
-              <span className="text-[11px] text-rose-500 font-bold flex items-center gap-1 mt-0.5">
-                <ArrowDownRight className="w-3.5 h-3.5" />
-                {expenses.length} Expense Vouchers Recorded
-              </span>
-            </div>
-            <div className="w-12 h-12 rounded-2xl bg-rose-100 text-rose-700 flex items-center justify-center">
-              <Receipt className="w-6 h-6" />
+            <div className="absolute top-0 left-0 right-0 h-1.5 bg-rose-500" />
+            <div className="flex items-start justify-between">
+              <div>
+                <p className="text-xs font-extrabold text-slate-500 uppercase tracking-wider">
+                  Today's Expenses • মোট খরচ
+                </p>
+                <h3 className="font-serif text-3xl sm:text-4xl font-black text-rose-600 mt-1.5 tracking-tight">
+                  ৳{totalExpenses.toLocaleString()}
+                </h3>
+                <span className="text-xs text-rose-600 font-extrabold flex items-center gap-1 mt-2">
+                  <ArrowDownRight className="w-4 h-4 text-rose-500 shrink-0" />
+                  <span>{expenses.length}টি বাজার ও ভাউচার রেকর্ড</span>
+                </span>
+              </div>
+              <div className="w-13 h-13 rounded-2xl bg-rose-100 text-rose-700 flex items-center justify-center shrink-0 group-hover:scale-110 transition">
+                <Receipt className="w-6 h-6" />
+              </div>
             </div>
           </div>
 
           {/* 3. Net Profit */}
           <div 
             onClick={() => setActiveAdminTab('finance')}
-            className="bg-white p-5 rounded-3xl border border-slate-200 shadow-xs flex items-center justify-between cursor-pointer hover:border-emerald-400 transition"
+            className="bg-white p-5 sm:p-6 rounded-3xl border border-slate-200 shadow-sm hover:shadow-md hover:border-emerald-500 transition cursor-pointer relative overflow-hidden group"
           >
-            <div>
-              <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">Net Profit (নিট লাভ)</p>
-              <h3 className={`font-serif text-2xl sm:text-3xl font-black mt-1 ${netProfit >= 0 ? 'text-emerald-700' : 'text-red-600'}`}>
-                ৳{netProfit.toLocaleString()}
-              </h3>
-              <span className="text-[11px] text-emerald-600 font-bold flex items-center gap-1 mt-0.5">
-                <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
-                {netProfit >= 0 ? 'Positive Daily Cash Flow' : 'Deficit / Attention Needed'}
-              </span>
-            </div>
-            <div className={`w-12 h-12 rounded-2xl flex items-center justify-center ${netProfit >= 0 ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700'}`}>
-              <TrendingUp className="w-6 h-6" />
+            <div className={`absolute top-0 left-0 right-0 h-1.5 ${netProfit >= 0 ? 'bg-emerald-600' : 'bg-red-500'}`} />
+            <div className="flex items-start justify-between">
+              <div>
+                <p className="text-xs font-extrabold text-slate-500 uppercase tracking-wider">
+                  Net Profit • আজকের নিট লাভ
+                </p>
+                <h3 className={`font-serif text-3xl sm:text-4xl font-black mt-1.5 tracking-tight ${netProfit >= 0 ? 'text-emerald-700' : 'text-red-600'}`}>
+                  ৳{netProfit.toLocaleString()}
+                </h3>
+                <span className="text-xs text-emerald-700 font-extrabold flex items-center gap-1 mt-2">
+                  <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
+                  <span>{netProfit >= 0 ? 'পজিটিভ ক্যাশ ফ্লো উদ্বৃত্ত' : 'খরচ বেশি / পর্যালোচনা প্রয়োজন'}</span>
+                </span>
+              </div>
+              <div className={`w-13 h-13 rounded-2xl flex items-center justify-center shrink-0 group-hover:scale-110 transition ${netProfit >= 0 ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700'}`}>
+                <TrendingUp className="w-6 h-6" />
+              </div>
             </div>
           </div>
 
           {/* 4. Profit Margin % */}
           <div 
             onClick={() => setActiveAdminTab('finance')}
-            className="bg-white p-5 rounded-3xl border border-slate-200 shadow-xs flex items-center justify-between cursor-pointer hover:border-amber-300 transition"
+            className="bg-white p-5 sm:p-6 rounded-3xl border border-slate-200 shadow-sm hover:shadow-md hover:border-amber-400 transition cursor-pointer relative overflow-hidden group"
           >
-            <div>
-              <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">Profit Margin % (লাভের হার)</p>
-              <h3 className="font-serif text-2xl sm:text-3xl font-black text-amber-600 mt-1">
-                {profitMargin.toFixed(1)}%
-              </h3>
-              <span className="text-[11px] text-amber-700 font-bold flex items-center gap-1 mt-0.5">
-                <Percent className="w-3.5 h-3.5" />
-                {profitMargin >= 25 ? '★ Optimal Restaurant Standard' : 'Fair Margin'}
-              </span>
-            </div>
-            <div className="w-12 h-12 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center">
-              <PieChart className="w-6 h-6" />
+            <div className="absolute top-0 left-0 right-0 h-1.5 bg-amber-500" />
+            <div className="flex items-start justify-between">
+              <div>
+                <p className="text-xs font-extrabold text-slate-500 uppercase tracking-wider">
+                  Profit Margin • নিট মার্জিন
+                </p>
+                <h3 className="font-serif text-3xl sm:text-4xl font-black text-amber-600 mt-1.5 tracking-tight">
+                  {profitMargin.toFixed(1)}%
+                </h3>
+                <span className="text-xs text-amber-700 font-extrabold flex items-center gap-1 mt-2">
+                  <Percent className="w-4 h-4 text-amber-600 shrink-0" />
+                  <span>{profitMargin >= 25 ? '★ স্ট্যান্ডার্ড রেস্তোরাঁ মার্জিন' : 'ন্যায্য মার্জিন'}</span>
+                </span>
+              </div>
+              <div className="w-13 h-13 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center shrink-0 group-hover:scale-110 transition">
+                <PieChart className="w-6 h-6" />
+              </div>
             </div>
           </div>
+
         </div>
 
         {/* ======================================================== */}
@@ -936,78 +1317,132 @@ export const AdminPortal: React.FC = () => {
 
             {/* Orders Table */}
             <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs text-slate-600">
-                <thead className="bg-slate-50 text-slate-700 uppercase font-bold border-b border-slate-200">
+              <table className="w-full text-left text-xs text-slate-700">
+                <thead className="bg-slate-100 text-slate-800 uppercase font-black tracking-wider text-[11px] border-b border-slate-200">
                   <tr>
-                    <th className="p-3">Order ID</th>
-                    <th className="p-3">Customer</th>
-                    <th className="p-3">Type & Address</th>
-                    <th className="p-3">Dishes Ordered</th>
-                    <th className="p-3">Total</th>
-                    <th className="p-3">Payment</th>
-                    <th className="p-3">Status</th>
-                    <th className="p-3">Action</th>
+                    <th className="p-3.5">Order ID</th>
+                    <th className="p-3.5">Customer & Phone</th>
+                    <th className="p-3.5">Type & Delivery Area</th>
+                    <th className="p-3.5">Dishes Ordered</th>
+                    <th className="p-3.5">Bill</th>
+                    <th className="p-3.5">Payment</th>
+                    <th className="p-3.5">Status & 1-Click Rush Action</th>
+                    <th className="p-3.5 text-right">Invoice</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
                   {orders
                     .filter((o) => orderSourceFilter === 'all' || o.orderType === orderSourceFilter)
                     .map((order) => (
-                    <tr key={order.id} className="hover:bg-slate-50/60">
-                      <td className="p-3 font-mono font-bold text-brand-primary">#{order.id}</td>
-                      <td className="p-3">
-                        <div className="font-bold text-slate-800">{order.customerName}</div>
-                        <div className="text-slate-400 text-[11px]">{order.phone}</div>
+                    <tr key={order.id} className="hover:bg-slate-50/80 transition">
+                      <td className="p-3.5 font-mono font-black text-brand-primary text-xs">#{order.id}</td>
+                      <td className="p-3.5">
+                        <div className="font-black text-slate-900 text-xs">{order.customerName}</div>
+                        <a href={`tel:${order.phone}`} className="text-slate-500 hover:text-emerald-700 text-[11px] font-bold flex items-center gap-1 mt-0.5">
+                          <PhoneCall className="w-3 h-3 text-emerald-600" />
+                          {order.phone}
+                        </a>
                       </td>
-                      <td className="p-3">
-                        <span className="inline-block px-2 py-0.5 rounded bg-slate-100 font-bold uppercase text-[10px] text-slate-700 mb-0.5">
-                          {order.orderType}
+                      <td className="p-3.5">
+                        <span className={`inline-block px-2.5 py-0.5 rounded-lg font-black uppercase text-[10px] mb-1 ${
+                          order.orderType === 'delivery' ? 'bg-blue-100 text-blue-800' :
+                          order.orderType === 'dine_in' ? 'bg-amber-100 text-amber-900' : 'bg-purple-100 text-purple-900'
+                        }`}>
+                          {order.orderType === 'delivery' ? '🌐 অনলাইন ডেলিভারি' :
+                           order.orderType === 'dine_in' ? '🍽️ ডাইন-ইন' : '🛍️ টেক-অ্যাওয়ে'}
                         </span>
-                        <div className="truncate max-w-xs text-[11px]">{order.address}</div>
+                        <div className="truncate max-w-xs text-[11px] text-slate-600 font-medium">{order.address}</div>
                       </td>
-                      <td className="p-3">
-                        <div className="max-w-xs space-y-0.5">
+                      <td className="p-3.5">
+                        <div className="max-w-xs space-y-1">
                           {order.items.map((i, idx) => (
-                            <div key={idx} className="text-[11px]">
-                              {i.quantity}x {i.menuItem.name}
+                            <div key={idx} className="text-[11px] font-semibold text-slate-800 flex items-center gap-1.5">
+                              <span className="w-4 h-4 rounded-full bg-slate-200 text-slate-700 text-[10px] font-black flex items-center justify-center shrink-0">
+                                {i.quantity}
+                              </span>
+                              <span className="truncate">{i.menuItem.name}</span>
                             </div>
                           ))}
                         </div>
                       </td>
-                      <td className="p-3 font-black text-sm text-slate-800">৳{order.total}</td>
-                      <td className="p-3">
-                        <span className="font-bold uppercase text-[11px] text-brand-leaf">
+                      <td className="p-3.5 font-mono font-black text-sm text-slate-900">৳{order.total}</td>
+                      <td className="p-3.5">
+                        <span className={`font-black uppercase text-[10px] px-2 py-0.5 rounded-md ${
+                          order.paymentMethod === 'bkash' ? 'bg-pink-100 text-pink-800' :
+                          order.paymentMethod === 'nagad' ? 'bg-orange-100 text-orange-800' : 'bg-slate-100 text-slate-800'
+                        }`}>
                           {order.paymentMethod}
                         </span>
                       </td>
-                      <td className="p-3">
-                        <select
-                          value={order.status}
-                          onChange={(e) => updateOrderStatus(order.id, e.target.value as any)}
-                          className={`text-xs font-bold px-2 py-1 rounded-xl border ${
-                            order.status === 'delivered'
-                              ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
-                              : order.status === 'on_delivery'
-                              ? 'bg-blue-50 text-blue-700 border-blue-200'
-                              : order.status === 'preparing'
-                              ? 'bg-amber-50 text-amber-700 border-amber-200'
-                              : order.status === 'cancelled'
-                              ? 'bg-red-50 text-red-700 border-red-200'
-                              : 'bg-slate-100 text-slate-700 border-slate-200'
-                          }`}
-                        >
-                          <option value="pending">Pending</option>
-                          <option value="preparing">Preparing</option>
-                          <option value="on_delivery">Out for Delivery</option>
-                          <option value="delivered">Delivered</option>
-                          <option value="cancelled">Cancelled</option>
-                        </select>
+                      <td className="p-3.5">
+                        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
+                          
+                          {/* 1-Click Fast Advancement Button for Peak Hours */}
+                          {order.status === 'pending' && (
+                            <button
+                              onClick={() => handleQuickAdvanceOrder(order.id, 'pending')}
+                              className="px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-600 active:scale-95 text-white font-black text-[11px] flex items-center gap-1 shadow-xs cursor-pointer whitespace-nowrap"
+                              title="রান্না শুরুর নোটিশ দিন"
+                            >
+                              <Flame className="w-3.5 h-3.5" />
+                              <span>🔥 রান্না শুরু (Start)</span>
+                            </button>
+                          )}
+                          {order.status === 'preparing' && (
+                            <button
+                              onClick={() => handleQuickAdvanceOrder(order.id, 'preparing')}
+                              className="px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-black text-[11px] flex items-center gap-1 shadow-xs cursor-pointer whitespace-nowrap"
+                              title="রাইডার বা ওয়েটারের কাছে পাঠান"
+                            >
+                              <Truck className="w-3.5 h-3.5" />
+                              <span>🚀 ডেলিভারি পাঠান</span>
+                            </button>
+                          )}
+                          {order.status === 'on_delivery' && (
+                            <button
+                              onClick={() => handleQuickAdvanceOrder(order.id, 'on_delivery')}
+                              className="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-black text-[11px] flex items-center gap-1 shadow-xs cursor-pointer whitespace-nowrap"
+                              title="অর্ডার ডেলিভার্ড হিসেবে সম্পন্ন করুন"
+                            >
+                              <CheckCircle2 className="w-3.5 h-3.5" />
+                              <span>✅ সম্পন্ন (Delivered)</span>
+                            </button>
+                          )}
+                          {order.status === 'delivered' && (
+                            <span className="px-2.5 py-1 rounded-xl bg-emerald-100 text-emerald-800 font-extrabold text-[11px] flex items-center gap-1">
+                              <Check className="w-3.5 h-3.5" /> ডেলিভার্ড
+                            </span>
+                          )}
+
+                          {/* Fallback Select Dropdown */}
+                          <select
+                            value={order.status}
+                            onChange={(e) => updateOrderStatus(order.id, e.target.value as any)}
+                            className={`text-[11px] font-extrabold px-2 py-1 rounded-xl border cursor-pointer ${
+                              order.status === 'delivered'
+                                ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
+                                : order.status === 'on_delivery'
+                                ? 'bg-blue-50 text-blue-800 border-blue-300'
+                                : order.status === 'preparing'
+                                ? 'bg-amber-50 text-amber-800 border-amber-300'
+                                : order.status === 'cancelled'
+                                ? 'bg-red-50 text-red-800 border-red-300'
+                                : 'bg-slate-100 text-slate-800 border-slate-300'
+                            }`}
+                          >
+                            <option value="pending">Pending</option>
+                            <option value="preparing">Preparing</option>
+                            <option value="on_delivery">Out for Delivery</option>
+                            <option value="delivered">Delivered</option>
+                            <option value="cancelled">Cancelled</option>
+                          </select>
+                        </div>
                       </td>
-                      <td className="p-3">
+                      <td className="p-3.5 text-right">
                         <button
                           onClick={() => setSelectedOrder(order)}
-                          className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700"
-                          title="View Invoice"
+                          className="p-2 rounded-xl bg-slate-100 hover:bg-brand-primary hover:text-white text-slate-700 transition cursor-pointer"
+                          title="ইনভয়েস দেখুন ও প্রিন্ট করুন"
                         >
                           <Eye className="w-4 h-4" />
                         </button>
