@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { useStore } from '../context/StoreContext';
 import { translations } from '../data/translations';
-import { ShoppingBag, Phone, Menu as MenuIcon, X, Search, UtensilsCrossed, ShieldCheck, Bot, Sparkles } from 'lucide-react';
+import { ShoppingBag, Phone, Menu as MenuIcon, X, Search, UtensilsCrossed, ShieldCheck, Bot, Sparkles, Building2 } from 'lucide-react';
 
 export const Header: React.FC = () => {
-  const { lang, setLang, activeTab, setActiveTab, cartCount, setIsCartOpen, setIsSearchOpen, setIsReservationOpen, openAiWithPrompt } = useStore();
+  const { lang, setLang, activeTab, setActiveTab, setCurrentView, cartCount, setIsCartOpen, setIsSearchOpen, setIsReservationOpen, openAiWithPrompt } = useStore();
   const t = translations[lang];
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -29,19 +29,29 @@ export const Header: React.FC = () => {
   return (
     <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-brand-border shadow-sm transition-all">
       {/* Top Banner Notice */}
-      <div className="bg-brand-primary text-white text-xs sm:text-sm py-2 px-4 hidden md:block">
+      <div className="bg-brand-primary text-white text-xs sm:text-sm py-2 px-4">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <div className="flex items-center space-x-3">
-            <span className="bg-brand-accent px-2.5 py-0.5 rounded text-[11px] font-black tracking-wide uppercase">
+            <button
+              onClick={() => {
+                setCurrentView('group');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              className="bg-brand-gold text-brand-dark px-2.5 py-0.5 rounded-lg text-xs font-black flex items-center gap-1.5 shadow-xs hover:bg-white transition cursor-pointer"
+            >
+              <Building2 className="w-3.5 h-3.5" />
+              <span>{lang === 'en' ? '← Sarinda Group Hub' : '← সারিন্দা গ্রুপ পোর্টাল'}</span>
+            </button>
+            <span className="hidden sm:inline bg-brand-accent px-2 py-0.5 rounded text-[10px] font-black tracking-wide uppercase">
               Special
             </span>
-            <span className="text-brand-cream font-bold">
-              {lang === 'en' ? 'Use code SARINDA15 for 15% off your first order!' : 'কোড SARINDA15 ব্যবহারে প্রথম অর্ডারে পাচ্ছেন ১৫% ছাড়!'}
+            <span className="text-brand-cream font-bold hidden md:inline">
+              {lang === 'en' ? 'Use code SARINDA15 for 15% off your order!' : 'কোড SARINDA15 ব্যবহারে ১৫% ছাড়!'}
             </span>
           </div>
-          <div className="flex items-center space-x-6 text-brand-cream text-xs font-bold">
-            <span>{t.openHours}</span>
-            <span>•</span>
+          <div className="flex items-center space-x-4 text-brand-cream text-xs font-bold">
+            <span className="hidden lg:inline">{t.openHours}</span>
+            <span className="hidden lg:inline">•</span>
             <a href="tel:+8801712121434" className="hover:text-brand-gold transition flex items-center gap-1.5 font-extrabold">
               <Phone className="w-3.5 h-3.5 text-brand-gold" /> +880 1712-121434
             </a>

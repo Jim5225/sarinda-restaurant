@@ -84,6 +84,15 @@ interface StoreContextType {
   initialAiPrompt: string;
   setInitialAiPrompt: (prompt: string) => void;
   openAiWithPrompt: (prompt: string) => void;
+
+  // Sarinda Group Multi-Concern Navigation & Inquiry
+  currentView: 'group' | 'restaurant' | 'resort' | 'bakery' | 'sorgorom' | 'lights';
+  setCurrentView: (view: 'group' | 'restaurant' | 'resort' | 'bakery' | 'sorgorom' | 'lights') => void;
+  isGroupInquiryOpen: boolean;
+  setIsGroupInquiryOpen: (open: boolean) => void;
+  inquiryTargetConcern: string;
+  setInquiryTargetConcern: (concernId: string) => void;
+  openGroupInquiry: (concernId?: string) => void;
 }
 
 const StoreContext = createContext<StoreContextType | undefined>(undefined);
@@ -94,6 +103,24 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   });
 
   const [activeTab, setActiveTab] = useState<string>('home');
+
+  // Group Multi-Brand View
+  const [currentView, setCurrentView] = useState<'group' | 'restaurant' | 'resort' | 'bakery' | 'sorgorom' | 'lights'>(() => {
+    const saved = localStorage.getItem('sarinda_current_view');
+    return (saved as any) || 'group';
+  });
+
+  const [isGroupInquiryOpen, setIsGroupInquiryOpen] = useState(false);
+  const [inquiryTargetConcern, setInquiryTargetConcern] = useState<string>('sobari-resort');
+
+  const openGroupInquiry = (concernId?: string) => {
+    if (concernId) setInquiryTargetConcern(concernId);
+    setIsGroupInquiryOpen(true);
+  };
+
+  useEffect(() => {
+    localStorage.setItem('sarinda_current_view', currentView);
+  }, [currentView]);
 
   // Menu State
   const [menu, setMenu] = useState<MenuItem[]>(() => {
@@ -645,7 +672,14 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         setIsAiChatOpen,
         initialAiPrompt,
         setInitialAiPrompt,
-        openAiWithPrompt
+        openAiWithPrompt,
+        currentView,
+        setCurrentView,
+        isGroupInquiryOpen,
+        setIsGroupInquiryOpen,
+        inquiryTargetConcern,
+        setInquiryTargetConcern,
+        openGroupInquiry
       }}
     >
       {children}
