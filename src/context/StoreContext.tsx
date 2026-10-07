@@ -99,7 +99,7 @@ const StoreContext = createContext<StoreContextType | undefined>(undefined);
 
 export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [lang, setLang] = useState<'en' | 'bn'>(() => {
-    return (localStorage.getItem('sarinda_lang') as 'en' | 'bn') || 'en';
+    return (localStorage.getItem('sarinda_lang') as 'en' | 'bn') || 'bn';
   });
 
   const [activeTab, setActiveTab] = useState<string>('home');

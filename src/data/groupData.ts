@@ -101,20 +101,20 @@ export interface GroupData {
 export const SARINDA_GROUP_DATA: GroupData = {
   companyName: 'Sarinda Group',
   banglaCompanyName: 'সারিন্দা গ্রুপ',
-  slogan: 'Crafting Experiences in Hospitality, Living & Culinary Heritage',
-  banglaSlogan: 'আতিথেয়তা, প্রাকৃতিক অবকাশ ও স্বাদের মেলবন্ধনে ময়মনসিংহের শীর্ষ শিল্পগোষ্ঠী',
+  slogan: 'Excellence in Hospitality, Leisure & Modern Living',
+  banglaSlogan: 'আতিথেয়তা, প্রাকৃতিক অবকাশ ও স্বাদের অনন্য মেলবন্ধন',
   establishedYear: 2008,
-  hqAddress: '11 C.K. Ghosh Road, Mymensingh-2200, Bangladesh',
-  banglaHqAddress: '১১ সি.কে. ঘোষ রোড, ময়মনসিংহ-২২০০, বাংলাদেশ',
+  hqAddress: '11 C.K. Ghosh Road, Mymensingh, Bangladesh',
+  banglaHqAddress: '১১ সি.কে. ঘোষ রোড, ময়মনসিংহ',
   hotline: '+880 1712-121434',
   altHotline: '+880 1979-121434',
   email: 'contact@sarindagroup.com',
   stats: {
-    experienceYears: '18+',
-    sisterBrands: '7',
-    activeOutlets: '15+',
-    teamMembers: '500+',
-    annualGuests: '1.5M+'
+    experienceYears: '১৮+',
+    sisterBrands: '৭টি',
+    activeOutlets: '১৫+',
+    teamMembers: '৫০০+',
+    annualGuests: '১৫ লাখ+'
   },
   ventures: [
     {
@@ -124,133 +124,110 @@ export const SARINDA_GROUP_DATA: GroupData = {
       category: 'Culinary & Fine Dining',
       banglaCategory: 'ঐতিহ্যবাহী রেস্তোরাঁ ও রাজকীয় ক্যাটারিং',
       established: '2008',
-      tagline: 'The Legendary Taste of Shahi Kacchi Biryani & Mughlai Feasts',
-      banglaTagline: 'ময়মনসিংহের বিখ্যাত শাহী কাচ্চি ও মুঘলাই খাবারের বিশ্বস্ত ঠিকানা',
-      address: '11 C.K. Ghosh Road, Mymensingh, Bangladesh',
+      tagline: 'Mymensingh’s Legendary Shahi Kacchi Biryani',
+      banglaTagline: 'ময়মনসিংহের বিখ্যাত শাহী দম কাচ্চি ও খাঁটি স্বাদ',
+      address: '11 C.K. Ghosh Road, Mymensingh',
       banglaAddress: '১১ সি.কে. ঘোষ রোড, ময়মনসিংহ',
       phone: '+880 1712-121434',
       altPhone: '+880 1979-121434',
-      hours: '11:00 AM - 11:30 PM (Daily)',
-      banglaHours: 'সকাল ১১:০০ - রাত ১১:৩০ (প্রতিদিন)',
+      hours: '11:00 AM - 11:30 PM',
+      banglaHours: 'সকাল ১১:০০ - রাত ১১:৩০',
       rating: 4.9,
       reviewsCount: 2450,
       heroImage: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1200&q=80',
       galleryImages: [
-        'https://images.unsplash.com/photo-1589302168068-964664d93dc0?auto=format&fit=crop&w=800&q=80', // biryani
-        'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=800&q=80', // interior
-        'https://images.unsplash.com/photo-1599488615731-7e5c2823ff28?auto=format&fit=crop&w=800&q=80', // kebab
-        'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80'  // steak/meat
+        'https://images.unsplash.com/photo-1589302168068-964664d93dc0?auto=format&fit=crop&w=800&q=80',
+        'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=800&q=80',
+        'https://images.unsplash.com/photo-1599488615731-7e5c2823ff28?auto=format&fit=crop&w=800&q=80',
+        'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80'
       ],
-      description: 'The foundation of Sarinda Group. Renowned across Greater Mymensingh for legendary slow-cooked Kacchi Biryani, tender mutton rezala, authentic Bangladeshi feasts, and grand wedding catering.',
-      banglaDescription: 'সারিন্দা গ্রুপের মূল ভিত্তি। ময়মনসিংহের সবচেয়ে জনপ্রিয় খাদ্যপ্রেমীদের তীর্থস্থান — খাঁটি ঘি ও মশলায় রান্না করা দম কাচ্চি বিরিয়ানি, খাসির রেজালা, তন্দুরি কাবাব এবং হাজার অতিথির রাজকীয় ক্যাটারিং সেবা।',
+      description: 'Slow-cooked Shahi Dam Kacchi Biryani, Mughlai delicacies, VIP private cabins, and grand banquet catering for up to 5,000 guests.',
+      banglaDescription: 'খাঁটি ঘি ও গোপন মসলায় তামার ডেকে ঐতিহ্যবাহী দম কাচ্চি, খাসির রেজালা, ভিআইপি ফ্যামিলি কেবিন ও ৫০০০+ অতিথির রাজকীয় ক্যাটারিং।',
       highlights: [
-        'Signature Slow-cooked Dam Kacchi Biryani with farm-fresh Mutton',
-        'VIP Family Dining Cabins & Air-conditioned Banquet Space',
-        'Full-scale Corporate, Wedding & Social Event Catering',
-        'Online Food Ordering & 35-minute Express City Delivery'
+        'Slow-cooked Kacchi Biryani with farm-fresh Mutton',
+        'Air-conditioned VIP Family Cabins',
+        'Grand Wedding & Corporate Catering',
+        '35-Minute Fast City Delivery'
       ],
       banglaHighlights: [
-        'খাঁটি খাসির মাংসের দম কাচ্চি বিরিয়ানি ও স্পেশাল মোরগ পোলাও',
-        'পরিবার ও ভিআইপি অতিথিদের জন্য শীতাতপ নিয়ন্ত্রিত আধুনিক কেবিন',
-        'বিয়ে, জন্মদিন ও করপোরেট ইভেন্টের ৫০০-৩০০০ জনের ক্যাটারিং সুবিধা',
-        'সরাসরি অনলাইন ফুড অর্ডারিং ও ৩৫ মিনিটে দ্রুততম হোম ডেলিভারি'
+        'খাঁটি খাসির মাংসের দম কাচ্চি ও মোরগ পোলাও',
+        'পরিবারের জন্য নিরিবিলি ভিআইপি কেবিন',
+        'বিয়ে ও করপোরেট রাজকীয় ক্যাটারিং',
+        '৩৫ মিনিটে এক্সপ্রেস সিটি ডেলিভারি'
       ],
-      badge: 'Flagship Culinary Brand',
-      banglaBadge: 'মূল ফ্ল্যাগশিপ ব্র্যান্ড',
-      actionType: 'order_food',
-      features: [
-        {
-          title: 'Authentic Heritage Recipes',
-          banglaTitle: 'ঐতিহ্যবাহী শাহী রন্ধনশৈলী',
-          description: 'Slow-cooked in heavy copper degs using hand-ground spices and pure ghee.',
-          banglaDescription: 'খাঁটি ঘি, সরিষার তেল ও গোপন মসলায় ভারী তামার ডেকে ঐতিহ্যবাহী দম রান্না।',
-          iconName: 'Utensils'
-        },
-        {
-          title: 'Dine-In, VIP Cabins & Catering',
-          banglaTitle: 'ভিআইপি কেবিন ও বিশাল ক্যাটারিং',
-          description: 'Spacious 200+ seat dining hall with dedicated family private cabins.',
-          banglaDescription: '২০০+ আসনবিশিষ্ট বিশাল ডাইনিং এবং পরিবারের জন্য নিরিবিলি ভিআইপি কেবিন।',
-          iconName: 'Crown'
-        },
-        {
-          title: 'Express City Delivery',
-          banglaTitle: 'দ্রুততম সিটি ডেলিভারি',
-          description: 'Insulated hot-pack delivery across Mymensingh city within 30-40 minutes.',
-          banglaDescription: 'থার্মাল সিলযুক্ত প্যাকেজিংয়ে গরম গরম খাবার ময়মনসিংহ শহরের যেকোনো প্রান্তে পৌঁছে দেওয়া হয়।',
-          iconName: 'Truck'
-        }
-      ]
+      badge: 'Flagship Restaurant',
+      banglaBadge: 'মূল রেস্তোরাঁ',
+      actionType: 'order_food'
     },
     {
       id: 'sobari-resort',
       name: 'Sarinda Sobari Resort',
       banglaName: 'সারিন্দা সবারি রিসোর্ট',
       category: 'Resort & Eco-Hospitality',
-      banglaCategory: 'বিলাসবহুল ইকো রিসোর্ট ও ডে-আউট কেন্দ্র',
+      banglaCategory: 'ইকো রিসোর্ট, সুইমিংপুল ও অবকাশ',
       established: '2022',
-      tagline: 'The "Switzerland of Mymensingh" — Azure Pool, Cottages & Green Serenity',
-      banglaTagline: 'ময়মনসিংহের সুইজারল্যান্ড — সবুজ বৃক্ষরাজি, সুইমিংপুল ও নান্দনিক কটেজ',
-      address: 'Akua Morolpara, Akua Abdul Mannan Road, Mymensingh',
-      banglaAddress: 'আকুয়া মোড়লপাড়া, আকুয়া আব্দুল মান্নান রোড, ময়মনসিংহ',
+      tagline: 'The "Switzerland of Mymensingh" — Azure Pool & Cottages',
+      banglaTagline: 'ময়মনসিংহের সুইজারল্যান্ড — সবুজ প্রকৃতি, সুইমিংপুল ও কটেজ',
+      address: 'Akua Morolpara, Mymensingh',
+      banglaAddress: 'আকুয়া মোড়লপাড়া, ময়মনসিংহ',
       phone: '+880 1979-121434',
       altPhone: '+880 1712-121434',
-      hours: 'Open 24 Hours (Day Out: 9:00 AM - 9:00 PM)',
-      banglaHours: '২৪ ঘণ্টা খোলা (ডে ট্যুর: সকাল ৯:০০ - রাত ৯:০০)',
+      hours: '24/7 (Day-out: 9 AM - 9 PM)',
+      banglaHours: '২৪ ঘণ্টা খোলা (ডে ট্যুর: ৯:০০ - ৯:০০)',
       rating: 4.8,
       reviewsCount: 3120,
       heroImage: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=1200&q=80',
       galleryImages: [
-        'https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=800&q=80', // luxury resort pool
-        'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=800&q=80', // luxury cottage room
-        'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=800&q=80', // resort exterior
-        'https://images.unsplash.com/photo-1510414842594-a61c69b5ae57?auto=format&fit=crop&w=800&q=80'  // night lighting & water
+        'https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=800&q=80',
+        'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=800&q=80',
+        'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=800&q=80',
+        'https://images.unsplash.com/photo-1510414842594-a61c69b5ae57?auto=format&fit=crop&w=800&q=80'
       ],
-      description: 'The viral eco-luxury paradise in Mymensingh. Nestled in Akua Morolpara, Sarinda Sobari Resort features crystal-clear swimming pools, rustic wooden cottages, sprawling landscaped gardens, open-air BBQ pavilions, and premium event hosting.',
-      banglaDescription: 'সামাজিক যোগাযোগ মাধ্যমে ভাইরাল হওয়া ময়মনসিংহের অন্যতম শ্রেষ্ঠ পর্যটন ও রিসোর্ট কেন্দ্র — যাকে অনেকেই ভালোবেসে বলেন ময়মনসিংহের "সুইজারল্যান্ড"। বিশাল সুইমিংপুল, নান্দনিক কাঠের কটেজ, সবুজ উদ্যান, শিশুদের খেলার পার্ক এবং উন্মুক্ত বারবিকিউ ডাইনিং।',
+      description: 'The viral eco-luxury paradise in Mymensingh with crystal swimming pools, rustic wooden cottages, day tours, and 100% redeemable food coupons.',
+      banglaDescription: 'বিশাল সুইমিংপুল, নান্দনিক কাঠের কটেজ ও সবুজ প্রকৃতির স্বপ্নপুরী। ৫০০ টাকার প্রবেশ কুপন—যা রেস্তোরাঁর সুস্বাদু খাবারে ১০০% ব্যবহারযোগ্য।',
       highlights: [
-        'Olympic-grade Crystal Clear Swimming Pool with kids wading section',
-        'Premium Duplex & Single Wooden Eco-Cottages for overnight serene stays',
-        'Day-Out Tour Pass with 100% Food Coupon Redemption (৳ 500 entry)',
-        'Destination Wedding, Photoshoot & Corporate Conference Lawn'
+        'Crystal Swimming Pool & Kids Water Zone',
+        'Serene Duplex Wooden Eco-Cottages',
+        '৳500 Entry Pass = 100% Food Coupon Credit',
+        'Wedding Photoshoot & Corporate Lawn'
       ],
       banglaHighlights: [
-        'ঝলমলে সুইমিংপুল ও শিশুদের জন্য নিরাপদ ওয়াটার জোন',
-        'রাত্রিযাপনের জন্য শীতাতপ নিয়ন্ত্রিত নান্দনিক কাঠের কটেজ ও স্যুট',
-        '৳ ৫০০ টাকার প্রবেশ কুপন ব্যবস্থা — যা রেস্তোরাঁয় খাবারের জন্য ১০০% প্রযোজ্য',
-        'ডে-ট্যুর, ফ্যামিলি পিকনিক, প্রি-ওয়েডিং ফটোশুট ও করপোরেট কনফারেন্স সুবিধা'
+        'ঝলমলে সুইমিংপুল ও নিরাপদ ওয়াটার জোন',
+        'নান্দনিক কাঠের ডুপ্লেক্স ইকো-কটেজ',
+        '৳ ৫০০ এন্ট্রি কুপন = ১০০% খাবারের ক্রেডিট',
+        'ফ্যামিলি পিকনিক ও ফটোশুট স্পট'
       ],
-      badge: 'Top Viral Resort in Mymensingh',
-      banglaBadge: 'ময়মনসিংহের সবচেয়ে জনপ্রিয় রিসোর্ট',
+      badge: 'Viral Eco Resort',
+      banglaBadge: 'ভাইরাল ইকো রিসোর্ট',
       actionType: 'book_resort',
       pricingOrSpec: [
         {
-          label: 'Day Out Food Coupon Entry',
-          banglaLabel: 'ডে-আউট প্রবেশ কুপন',
-          price: '৳ ৫০০ / জনপ্রতি',
+          label: 'Day Out Food Coupon Pass',
+          banglaLabel: 'ডে-আউট ফুড কুপন পাস',
+          price: '৳ ৫০০ / জন',
           details: 'Full ৳500 is completely redeemable for mouthwatering meals at the resort restaurant.',
-          banglaDetails: 'পুরো ৫০০ টাকার খাবার রিসোর্টের রেস্তোরাঁ থেকে যেকোনো মেন্যুতে উপভোগ করতে পারবেন।'
+          banglaDetails: 'পুরো ৫০০ টাকার খাবার রিসোর্টের রেস্তোরাঁ থেকে উপভোগ করা যাবে।'
         },
         {
           label: 'Executive Wooden Cottage',
-          banglaLabel: 'এক্সিকিউটিভ উডেন কটেজ',
+          banglaLabel: 'উডেন কটেজ রাত্রিযাপন',
           price: '৳ ৪,৫০০ / রাত',
           details: 'Includes AC, King Bed, Pool Access, Free Breakfast for 2, Wi-Fi & Garden View.',
-          banglaDetails: 'এসি, কিং সাইজ বেড, সুইমিংপুল অ্যাক্সেস, ২ জনের বুফে ব্রেকফাস্ট ও গার্ডেন ভিউ।'
+          banglaDetails: 'এসি, কিং বেড, সুইমিংপুল অ্যাক্সেস ও ২ জনের ফ্রি ব্রেকফাস্ট।'
         },
         {
           label: 'Presidential Poolside Suite',
           banglaLabel: 'প্রেসিডেন্সিয়াল পুলসাইড স্যুট',
           price: '৳ ৭,০০০ / রাত',
           details: 'Duplex suite facing pool, private balcony, Jacuzzi shower, 4 guests capacity.',
-          banglaDetails: 'ডুপ্লেক্স কটেজ, সুইমিংপুল ভিউ প্রাইভেট বারান্দা, ৪ জনের আবাসন ও ভিআইপি সেবা।'
+          banglaDetails: 'ডুপ্লেক্স স্যুট, প্রাইভেট বারান্দা ও ৪ জনের ভিআইপি সুবিধা।'
         },
         {
-          label: 'Corporate / Wedding Lawn',
-          banglaLabel: 'ওয়েডিং ও ইভেন্ট প্যাকেজ',
+          label: 'Wedding & Event Lawn',
+          banglaLabel: 'ওয়েডিং ও ইভেন্ট লন',
           price: 'কাস্টম কোটেশন',
           details: 'Up to 1,500 guests capacity with stage lighting, sound system & Sarinda catering.',
-          banglaDetails: '১৫০০ অতিথির ধারণক্ষমতা, স্টেজ আলোকসজ্জা ও সারিন্দার এক্সক্লুসিভ ক্যাটারিং।'
+          banglaDetails: '১৫০০ অতিথির ধারণক্ষমতা, লাইটিং ও এক্সক্লুসিভ ক্যাটারিং।'
         }
       ]
     },
@@ -259,41 +236,41 @@ export const SARINDA_GROUP_DATA: GroupData = {
       name: 'Sarinda Bakery & Confectionery',
       banglaName: 'সারিন্দা বেকারি অ্যান্ড কনফেকশনারি',
       category: 'Artisanal Bakery & Sweets',
-      banglaCategory: 'আর্টিস্যানাল বেকারি, কেক ও খাঁটি মিষ্টি',
+      banglaCategory: 'ডিজাইনার কেক, পেস্ট্রি ও খাঁটি মিষ্টি',
       established: '2012',
-      tagline: 'Freshly Baked Celebration Cakes, Oven Pastries & Pure Sweets',
-      banglaTagline: 'তাজা ওভেনে বেক করা ডিজাইনার কেক, পেস্ট্রি ও খাঁটি ঘিয়ে ভাজা মিষ্টি',
-      address: 'Flagship: C.K. Ghosh Road | Branches: Charpara Mor & Notun Bazar',
-      banglaAddress: 'প্রধান শাখা: সি.কে. ঘোষ রোড | শাখা: চরপাড়া মোড় ও নতুন বাজার',
+      tagline: 'Custom 3D Celebration Cakes & Fresh Oven Bakes',
+      banglaTagline: 'কাস্টম ডিজাইনার কেক, তাজা পেস্ট্রি ও খাঁটি মিষ্টি',
+      address: 'Flagship: C.K. Ghosh Road | Outlets: Charpara & Notun Bazar',
+      banglaAddress: 'প্রধান শাখা: সি.কে. ঘোষ রোড | শাখা: চরপাড়া ও নতুন বাজার',
       phone: '+880 1712-121434',
       altPhone: '+880 1834-535135',
-      hours: '8:00 AM - 11:00 PM (Daily)',
-      banglaHours: 'সকাল ৮:০০ - রাত ১১:০০ (প্রতিদিন)',
+      hours: '8:00 AM - 11:00 PM',
+      banglaHours: 'সকাল ৮:০০ - রাত ১১:০০',
       rating: 4.9,
       reviewsCount: 1850,
       heroImage: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=1200&q=80',
       galleryImages: [
-        'https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=800&q=80', // chocolate cake
-        'https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&w=800&q=80', // croissants & pastries
-        'https://images.unsplash.com/photo-1587314168485-3236d6710814?auto=format&fit=crop&w=800&q=80', // desserts / sweets
-        'https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?auto=format&fit=crop&w=800&q=80'  // red velvet cake
+        'https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=800&q=80',
+        'https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&w=800&q=80',
+        'https://images.unsplash.com/photo-1587314168485-3236d6710814?auto=format&fit=crop&w=800&q=80',
+        'https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?auto=format&fit=crop&w=800&q=80'
       ],
-      description: 'Mymensingh’s most beloved artisan bakery. We craft customized designer birthday cakes, velvety pastries, fresh oven breads, crunchy cookies, and authentic Bangladeshi sweets made with pure butter and ghee.',
-      banglaDescription: 'ময়মনসিংহের অন্যতম প্রিয় বেকারি ব্র্যান্ড। প্রতিটি উৎসব ও জন্মদিনকে রাঙিয়ে তুলতে আমাদের রয়েছে এক্সক্লুসিভ কাস্টমাইজড কেক, মাখনের সুবাসিত পেস্ট্রি, টাটকা ওভেন ব্রেড ও খাঁটি ঘিয়ে তৈরি ঐতিহ্যবাহী মিষ্টি।',
+      description: 'Artisanal designer birthday and wedding cakes, warm flaky pastries, oven-baked cookies, and pure ghee traditional sweets across 3 outlets.',
+      banglaDescription: 'জন্মদিন ও বিশেষ উৎসবের কাস্টম থিম কেক, ওভেনের তাজা পেস্ট্রি, বাটার কুকিজ ও খাঁটি ঘিয়ে তৈরি ঐতিহ্যবাহী মিষ্টি।',
       highlights: [
-        '3D Custom Designer Birthday, Wedding & Anniversary Cakes',
-        'Daily Live Baking: Croissants, Chicken Patties, Buns & Loaves',
-        'Pure Ghee Bengali Sweets: Motichoor Ladoo, Rasmalai, Chamcham',
-        '3 Prime Outlets in Mymensingh with Fast Home Delivery'
+        'Custom 3D Fondant & Belgian Truffle Cakes',
+        'Daily Live Baking: Patties, Croissants & Breads',
+        'Pure Ghee Bengali Sweets & Rasmalai',
+        '3 Convenient City Outlets in Mymensingh'
       ],
       banglaHighlights: [
-        'জন্মদিন ও অ্যানিভার্সারির কাস্টম ডিজাইনার ৩ডি ফন্ড্যান্ট ও ট্রাফেল কেক',
-        'প্রতিদিন ওভেনে তাজা বেকড ক্রিস্পি প্যাটিস, বাটার বান ও পেস্ট্রি',
-        'খাঁটি ঘিয়ে তৈরি মতিচুর লাড্ডু, স্পঞ্জ রসগোল্লা, রসমালাই ও মিষ্টি',
-        'ময়মনসিংহের ৩টি প্রধান পয়েন্টে আউটলেট ও দ্রুত ডেলিভারি'
+        'কাস্টম ৩ডি ফন্ড্যান্ট ও চকোলেট ট্রাফেল কেক',
+        'প্রতিদিন তাজা বেকড পাফ প্যাটিস ও পেস্ট্রি',
+        'খাঁটি ঘিয়ে তৈরি মতিচুর লাড্ডু ও মিষ্টি',
+        'ময়মনসিংহে ৩টি সুসজ্জিত আউটলেট'
       ],
-      badge: 'Mymensingh Premier Bakery',
-      banglaBadge: 'ময়মনসিংহের শীর্ষ বেকারি',
+      badge: 'Premier Bakery',
+      banglaBadge: 'প্রিমিয়াম বেকারি',
       actionType: 'order_cake',
       branches: [
         {
@@ -307,14 +284,14 @@ export const SARINDA_GROUP_DATA: GroupData = {
           name: 'Charpara Mor Branch',
           banglaName: 'চরপাড়া মোড় শাখা',
           address: 'Charpara Medical Gate Road, Mymensingh',
-          banglaAddress: 'চরপাড়া মেডিকেল গেট সংলগ্ন, ময়মনসিংহ',
+          banglaAddress: 'চরপাড়া মেডিকেল গেট, ময়মনসিংহ',
           phone: '+880 1834-535135'
         },
         {
           name: 'Notun Bazar Branch',
           banglaName: 'নতুন বাজার শাখা',
           address: 'Notun Bazar Main Chowrasta, Mymensingh',
-          banglaAddress: 'নতুন বাজার প্রধান চৌরাস্তা, ময়মনসিংহ',
+          banglaAddress: 'নতুন বাজার চৌরাস্তা, ময়মনসিংহ',
           phone: '+880 1979-121434'
         }
       ],
@@ -330,22 +307,22 @@ export const SARINDA_GROUP_DATA: GroupData = {
           label: 'Royal Red Velvet Cream Cheese',
           banglaLabel: 'রয়্যাল রেড ভেলভেট কেক',
           price: '৳ ১,৩০০ / পাউন্ড',
-          details: 'Imported Philadelphia-style cream cheese frosting and velvety crumb.',
-          banglaDetails: 'আমদানিকৃত ক্রিম চিজ ফ্রস্টিং ও মোলায়েম ভেলভেট ক্রাম্ব।'
+          details: 'Imported cream cheese frosting and velvety crumb.',
+          banglaDetails: 'প্রিমিয়াম ক্রিম চিজ ফ্রস্টিং ও নরম ভেলভেট ক্রাম্ব।'
         },
         {
           label: 'Shahi Motichoor Ladoo (Pure Ghee)',
           banglaLabel: 'শাহী মতিচুর লাড্ডু (খাঁটি ঘি)',
           price: '৳ ৭০০ / কেজি',
-          details: 'Prepared in premium pure clarified butter and garnished with pistachios.',
-          banglaDetails: 'খাঁটি গাওয়া ঘিয়ে ভাজা ও পেস্তা বাদামে সুসজ্জিত।'
+          details: 'Prepared in pure ghee and garnished with pistachios.',
+          banglaDetails: 'খাঁটি গাওয়া ঘিয়ে ভাজা ও পেস্তা বাদামে সাজানো।'
         },
         {
           label: 'Live Fresh Chicken Puff Patties',
           banglaLabel: 'লাইভ চিকেন পাফ প্যাটিস',
           price: '৳ ৭০ / পিস',
-          details: 'Golden crispy flaky puff pastry filled with spiced juicy chicken.',
-          banglaDetails: 'মুচমুচে সোনালী বাটার পাফ পেস্ট্রিতে রসালো চিকেন পুর।'
+          details: 'Golden crispy flaky puff pastry filled with juicy chicken.',
+          banglaDetails: 'মুচমুচে বাটার পাফ পেস্ট্রিতে রসালো চিকেন পুর।'
         }
       ]
     },
@@ -353,143 +330,143 @@ export const SARINDA_GROUP_DATA: GroupData = {
       id: 'sorgorom-restaurant',
       name: 'Sorgorom Restaurant & Cafe',
       banglaName: 'সরগরম রেস্টুরেন্ট অ্যান্ড ক্যাফে',
-      category: 'Youth Hangout & Sizzlers',
-      banglaCategory: 'সিজলিং ফুড, তরুণদের ক্যাফে ও আড্ডা',
+      category: 'Sizzlers, Steaks & Cafe',
+      banglaCategory: 'সিজলিং ফুড, ক্যাফে ও জমজমাট আড্ডা',
       established: '2018',
-      tagline: 'Smoking Hot Sizzlers, Juicy Burgers & Energetic Cafe Vibes',
-      banglaTagline: 'ধোঁয়া ওঠা গরম সিজলার্স, রসালো বার্গার ও বন্ধুদের জমজমাট আড্ডা',
-      address: 'Charpara Road, Mymensingh (Near Medical Area)',
-      banglaAddress: 'চরপাড়া রোড (মেডিকেল সংলগ্ন), ময়মনসিংহ',
+      tagline: 'Sizzling Steaks, Loaded Burgers & Cafe Vibes',
+      banglaTagline: 'ধোঁয়া ওঠা সিজলার্স, মেগা বার্গার ও প্রাণবন্ত আড্ডা',
+      address: 'Charpara Road, Mymensingh',
+      banglaAddress: 'চরপাড়া রোড, ময়মনসিংহ',
       phone: '+880 1834-535135',
       altPhone: '+880 1712-121434',
-      hours: '7:30 AM - 10:30 PM (Daily)',
-      banglaHours: 'সকাল ৭:৩০ - রাত ১০:৩০ (প্রতিদিন)',
+      hours: '7:30 AM - 10:30 PM',
+      banglaHours: 'সকাল ৭:৩০ - রাত ১০:৩০',
       rating: 4.7,
       reviewsCount: 1980,
       heroImage: 'https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=1200&q=80',
       galleryImages: [
-        'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80', // sizzling steak
-        'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=800&q=80', // burger
-        'https://images.unsplash.com/photo-1551024709-8f23befc6f87?auto=format&fit=crop&w=800&q=80', // mocktail / drink
-        'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=800&q=80'  // vibrant cafe vibe
+        'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80',
+        'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=800&q=80',
+        'https://images.unsplash.com/photo-1551024709-8f23befc6f87?auto=format&fit=crop&w=800&q=80',
+        'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=800&q=80'
       ],
-      description: 'The liveliest youth and family hangout at Charpara, Mymensingh. Sorgorom is celebrated for its sizzling cast-iron platters, gourmet loaded burgers, authentic Bengali lunch items, rich cold coffees, and welcoming modern ambiance.',
-      banglaDescription: 'ময়মনসিংহের তরুণ প্রজন্ম ও ভোজনরসিক পরিবারের অন্যতম পছন্দের ঠিকানা। চরপাড়া মোড়ের সরগরম বিখ্যাত তাদের ধোঁয়া ওঠা কাস্ট-আইরন সিজলিং প্ল্যাটিনাম ডিশ, রসালো মেগা বার্গার, থাই-চাইনিজ এবং বন্ধুদের প্রাণবন্ত আড্ডার জন্য।',
+      description: 'The energetic youth hangout in Charpara famous for cast-iron sizzling steaks, loaded burgers, rich cold coffees, and authentic Bengali lunch curries.',
+      banglaDescription: 'চরপাড়া মোড়ের সবচেয়ে প্রিয় আড্ডার স্থান—ধোঁয়া ওঠা সিজলিং স্টেক, ক্রিস্পি বার্গার, রিফ্রেশিং মকটেল ও খাঁটি বাঙালি খাবারের সমাহার।',
       highlights: [
-        'Signature Sizzling Beef & Chicken Steaks with butter-herb glaze',
-        'Gourmet Loaded Burgers with double cheese and house secret sauce',
-        'Popular Bengali Lunch: Bhuna Beef, Rezala & Fragrant Polao',
-        'Specialty Cold Coffee, Boba Shakes & Tropical Fruit Mocktails'
+        'Sizzling Beef & Chicken Cast-Iron Steaks',
+        'Gourmet Double-Cheese Loaded Burgers',
+        'Traditional Bhuna Beef & Rezala Lunch',
+        'Espresso, Cold Coffee & Mocktail Bar'
       ],
       banglaHighlights: [
-        'কাস্ট আয়রন তাওয়ায় ধোঁয়া ওঠা সিজলিং বিফ ও চিকেন স্টেক',
-        'ডাবল ক্রিস্পি চিকেন ও চিজি মেগা বাফেলো বার্গার',
-        'দুপুরের জনপ্রিয় খাঁটি ভুনা বিফ, খাসির রেজালা ও কাচ্চি মেন্যু',
-        'কোল্ড কফি, ফ্র্যাপে ও প্রাণজুড়ানো কালারফুল রিফ্রেশিং মকটেল'
+        'কাস্ট আয়রন তাওয়ায় ধোঁয়া ওঠা সিজলিং স্টেক',
+        'ডাবল চিজ সমৃদ্ধ ক্রাঞ্চি মেগা বার্গার',
+        'দুপুরের জনপ্রিয় খাঁটি ভুনা বিফ ও খাসির রেজালা',
+        'রিফ্রেশিং মকটেল ও কোল্ড কফি বার'
       ],
-      badge: 'Top Youth Hangout & Cafe',
-      banglaBadge: 'জনপ্রিয় তরুণদের ক্যাফে',
+      badge: 'Youth & Cafe Hangout',
+      banglaBadge: 'জনপ্রিয় ক্যাফে',
       actionType: 'dine_sorgorom',
       pricingOrSpec: [
         {
           label: 'Sizzling Beef Pepper Steak',
           banglaLabel: 'সিজলিং বিফ পেপার স্টেক',
           price: '৳ ৪৯০',
-          details: 'Prime beef steak served on smoking cast iron with sauteed veggies & mashed potato.',
-          banglaDetails: 'ধোঁয়া ওঠা কাস্ট আয়রনে পরিবেশিত তুলতুলে বিফ স্টেক ও বাটার ভেজিটেবল।'
+          details: 'Prime beef steak served on smoking cast iron with sauteed veggies.',
+          banglaDetails: 'ধোঁয়া ওঠা কাস্ট আয়রনে পরিবেশিত তুলতুলে বিফ স্টেক।'
         },
         {
           label: 'Sorgorom Double Crunch Burger',
           banglaLabel: 'সরগরম ডাবল ক্রাঞ্চ বার্গার',
           price: '৳ ৩২০',
-          details: 'Double fried crispy chicken patties, melted cheddar, lettuce & spicy garlic mayo.',
-          banglaDetails: 'ডাবল ক্রিস্পি চিকেন প্যাটি, গলিত চেডার চিজ ও স্পাইসি গার্লিক মেয়ো।'
+          details: 'Double fried crispy chicken patties with melted cheddar.',
+          banglaDetails: 'ডাবল ক্রিস্পি চিকেন প্যাটি ও গলিত চেডার চিজ।'
         },
         {
           label: 'Sizzling Hakka Chowmein',
           banglaLabel: 'সিজলিং হাক্কা চাউমিন',
           price: '৳ ৩৫০',
-          details: 'Wok-tossed noodles with chicken, shrimp and bell peppers sizzling hot.',
-          banglaDetails: 'চিকেন, প্রন ও ক্যাপসিকামের সুস্বাদু মিক্সড সিজলিং চাউমিন।'
+          details: 'Wok-tossed noodles with chicken, shrimp and bell peppers.',
+          banglaDetails: 'চিকেন ও প্রন সমৃদ্ধ সুস্বাদু মিক্সড সিজলিং চাউমিন।'
         },
         {
           label: 'Blue Ocean Curacao Mocktail',
           banglaLabel: 'ব্লু ওশান কুরাসাও মকটেল',
           price: '৳ ১৮০',
-          details: 'Refreshing citrus blue beverage garnished with fresh mint & crushed ice.',
-          banglaDetails: 'লেমন-মিন্ট ও ব্লু কুরাসাও ব্লেন্ডেড বরফশীতল রিফ্রেশিং মকটেল।'
+          details: 'Refreshing citrus blue beverage garnished with fresh mint.',
+          banglaDetails: 'লেমন-মিন্ট ব্লেন্ডেড বরফশীতল রিফ্রেশিং মকটেল।'
         }
       ]
     },
     {
       id: 'sarinda-lights',
-      name: 'Sarinda Lights & Interior Décor',
-      banglaName: 'সারিন্দা লাইটস অ্যান্ড ইন্টেরিয়র সলিউশনস',
-      category: 'Architectural & Interior Lighting',
-      banglaCategory: 'আধুনিক লাইটিং, ঝাড়বাতি ও ইন্টেরিয়র',
+      name: 'Sarinda Lights, Fans & Electricals',
+      banglaName: 'সারিন্দা লাইটস, ফ্যান ও ইলেকট্রিক্যালস',
+      category: 'Lighting, Fans & Interior',
+      banglaCategory: 'ঝাড়বাতি, সিলিং ফ্যান ও আধুনিক লাইটিং',
       established: '2021',
-      tagline: 'Illuminating Elegance — Luxury Chandeliers, Smart LED & Architectural Lighting',
-      banglaTagline: 'আলোকিত জীবনের রূপকার — রাজকীয় ক্রিস্টাল ঝাড়বাতি, স্মার্ট এলইডি ও রিসোর্ট লাইটিং',
-      address: 'C.K. Ghosh Road Commercial Area, Mymensingh, Bangladesh',
+      tagline: 'Luxury Chandeliers, Smart Ceiling Fans & Architectural Lighting',
+      banglaTagline: 'রাজকীয় ক্রিস্টাল ঝাড়বাতি, লাক্সারি সিলিং ফ্যান ও স্মার্ট লাইটিং',
+      address: 'C.K. Ghosh Road Commercial Area, Mymensingh',
       banglaAddress: 'সি.কে. ঘোষ রোড বাণিজ্যিক এলাকা, ময়মনসিংহ',
       phone: '+880 1712-121434',
       altPhone: '+880 1979-121434',
-      hours: '10:00 AM - 9:00 PM (Saturday - Thursday)',
-      banglaHours: 'সকাল ১০:০০ - রাত ৯:০০ (শনিবার - বৃহস্পতিবার)',
+      hours: '10:00 AM - 9:00 PM',
+      banglaHours: 'সকাল ১০:০০ - রাত ৯:০০',
       rating: 4.9,
       reviewsCount: 680,
       heroImage: 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=1200&q=80',
       galleryImages: [
-        'https://images.unsplash.com/photo-1540932239986-30128078f3c5?auto=format&fit=crop&w=800&q=80', // luxury crystal chandelier
-        'https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=800&q=80', // pendant modern lamp
-        'https://images.unsplash.com/photo-1510414842594-a61c69b5ae57?auto=format&fit=crop&w=800&q=80', // architectural resort lighting
-        'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80'  // luxury interior light
+        'https://images.unsplash.com/photo-1540932239986-30128078f3c5?auto=format&fit=crop&w=800&q=80',
+        'https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=800&q=80',
+        'https://images.unsplash.com/photo-1510414842594-a61c69b5ae57?auto=format&fit=crop&w=800&q=80',
+        'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80'
       ],
-      description: 'The architectural lighting division of Sarinda Group. Powering the breathtaking nighttime illumination of Sarinda Sobari Resort, luxury duplex residences, banquets, and modern commercial spaces across Bangladesh with imported crystal chandeliers and smart LED lighting.',
-      banglaDescription: 'সারিন্দা গ্রুপের আর্কিটেকচারাল লাইটিং ও ইন্টেরিয়র উইং। সারিন্দা সবারি রিসোর্টের চোখজুড়ানো রাতের আলোকসজ্জা যার হাত ধরে সৃষ্টি — সেই সারিন্দা লাইটস সরবরাহ করে আধুনিক রাজকীয় ঝাড়বাতি, ম্যাগনেটিক ট্র্যাক লাইট, আউটডোর গার্ডেন লাইট ও স্মার্ট এলইডি সলিউশন।',
+      description: 'Powering the night illumination of Sarinda Sobari Resort. Premium imported K9 crystal chandeliers, luxury smart BLDC ceiling fans, and architectural LED profiles.',
+      banglaDescription: 'সবারি রিসোর্টের রাতের নান্দনিক আলোকসজ্জার রূপকার। আমদানিকৃত রাজকীয় ঝাড়বাতি, আধুনিক বিএলডিসি ডেকোরেটিভ ফ্যান ও স্মার্ট সিলিং লাইটিং সলিউশন।',
       highlights: [
-        'Imported High-Purity K9 Crystal Chandeliers for grand living rooms & banquets',
-        'Outdoor Waterproof Landscape & Resort Illumination (Featured at Sobari Resort)',
-        'Modern Magnetic Track Lights & Smart Ambient Dimmable Ceiling Profiles',
-        'Turnkey Architectural Lighting Planning, Delivery & On-Site Installation'
+        'Imported High-Purity K9 Crystal Chandeliers',
+        'Luxury BLDC Energy-Saving Decorative Ceiling Fans',
+        'Resort & Garden Waterproof Uplights (IP67)',
+        'Magnetic Track Lighting & Complete Installation'
       ],
       banglaHighlights: [
-        'আভিজাত্যপূর্ণ কে৯ ক্রিস্টাল ঝাড়বাতি — ড্রয়িং রুম, কনভেনশন হল ও ডুপ্লেক্সের জন্য',
-        'ওয়াটারপ্রুফ আউটডোর ল্যান্ডস্কেপ ও গার্ডেন লাইটিং (সবারি রিসোর্টে ব্যবহৃত)',
-        'মডার্ন ম্যাগনেটিক ট্র্যাক লাইট ও স্মার্ট ওয়ার্ম হোয়াইট সিলিং প্রোফাইল',
-        'অভিজ্ঞ ইঞ্জিনিয়ারদের দ্বারা সাইট ভিজিট, লাইটিং ডিজাইন ও কমপ্লিট ইনস্টলেশন'
+        'আভিজাত্যপূর্ণ কে৯ ক্রিস্টাল ঝাড়বাতি',
+        'বিদ্যুৎসাশ্রয়ী লাক্সারি ডেকোরেটিভ সিলিং ফ্যান',
+        'আইপি৬৭ ওয়াটারপ্রুফ আউটডোর রিসোর্ট লাইট',
+        'ম্যাগনেটিক ট্র্যাক ও ফুল প্রজেক্ট ইনস্টলেশন'
       ],
-      badge: 'Architectural Lighting Excellence',
-      banglaBadge: 'প্রিমিয়াম ইন্টেরিয়র ও লাইটিং',
+      badge: 'Lighting & Fans',
+      banglaBadge: 'লাইটিং ও ফ্যান শোরুম',
       actionType: 'inquire_lights',
       pricingOrSpec: [
         {
-          label: 'Imperial K9 Grand Crystal Chandelier',
+          label: 'Imperial K9 Crystal Chandelier',
           banglaLabel: 'ইম্পেরিয়াল গ্র্যান্ড ক্রিস্টাল ঝাড়বাতি',
           price: '৳ ৩৫,০০০ - ৳ ১,২০,০০০',
-          details: 'Multi-tiered genuine K9 leaded crystal with warm/cool adjustable LED drivers.',
+          details: 'Multi-tiered genuine K9 crystal with remote control & tri-color dimming.',
           banglaDetails: 'মাল্টি-টায়ার পিওর ক্রিস্টাল, রিমোট কন্ট্রোল ও ট্রাই-কালার ডিমার সহ।'
         },
         {
-          label: 'Resort & Landscape Garden Uplights (IP67)',
+          label: 'Sarinda Luxury BLDC Ceiling Fan',
+          banglaLabel: 'লাক্সারি বিএলডিসি স্মার্ট সিলিং ফ্যান',
+          price: '৳ ৮,৫০০ - ৳ ১৮,৫০০',
+          details: 'Super silent BLDC motor, 65% energy saving, aerodynamic blades & remote.',
+          banglaDetails: 'শব্দহীন বিএলডিসি মোটর, ৬৫% বিদ্যুৎসাশ্রয়ী, নান্দনিক ব্লেড ও রিমোট।'
+        },
+        {
+          label: 'Resort Waterproof Garden Uplights',
           banglaLabel: 'আউটডোর রিসোর্ট ল্যান্ডস্কেপ লাইট (IP67)',
           price: '৳ ১,৮০০ - ৳ ৪,৫০০ / পিস',
-          details: 'Heavy-duty waterproof die-cast aluminum casing, warm 3000K accent beam.',
-          banglaDetails: '১০০% ওয়াটারপ্রুফ অ্যালুমিনিয়াম বডি, বাগান ও গাছপালার মনোরম আলোকসজ্জা।'
+          details: 'Heavy-duty waterproof die-cast aluminum casing for gardens & pools.',
+          banglaDetails: '১০০% ওয়াটারপ্রুফ অ্যালুমিনিয়াম বডি, বাগান ও সুইমিংপুলের আলোকসজ্জা।'
         },
         {
           label: 'Smart Magnetic Track Light System',
           banglaLabel: 'স্মার্ট ম্যাগনেটিক ট্র্যাক লাইট সিস্টেম',
-          price: '৳ ৩,২০০ / মিটার হতে শুরু',
-          details: 'Recessed and surface-mounted ultra-slim track with adjustable spot & flood modules.',
-          banglaDetails: 'আধুনিক সিলিংয়ের জন্য স্লিম ম্যাগনেটিক ট্র্যাক ও রিচার্জেবল ডিরেকশনাল স্পট।'
-        },
-        {
-          label: 'Nordic Minimalist Dining Pendant',
-          banglaLabel: 'নর্ডিক মিনিমালিস্ট ডাইনিং পেনড্যান্ট',
-          price: '৳ ৪,৫০০ - ৳ ১২,০০০',
-          details: 'Matte gold & black Scandinavian designer pendant lights for stylish dining areas.',
-          banglaDetails: 'ম্যাট গোল্ড ফিনিশিং ও স্লো গ্লো লাইটিং সমৃদ্ধ আকর্ষণীয় পেনড্যান্ট।'
+          price: '৳ ৩,২০০ / মিটার থেকে শুরু',
+          details: 'Ultra-slim recessed magnetic track with directional LED spots.',
+          banglaDetails: 'আধুনিক সিলিংয়ের জন্য স্লিম ম্যাগনেটিক ট্র্যাক ও ডিরেকশনাল স্পট।'
         }
       ]
     },
@@ -497,17 +474,17 @@ export const SARINDA_GROUP_DATA: GroupData = {
       id: 'pizza-shuttle',
       name: 'Sarinda Pizza Shuttle',
       banglaName: 'সারিন্দা পিৎজা শাটল',
-      category: 'Italian & Fast Food Delivery',
-      banglaCategory: 'ইতালিয়ান পিৎজা ও ফাস্টফুড ডেলিভারি',
+      category: 'Italian & Pizza Delivery',
+      banglaCategory: 'ইতালিয়ান পিৎজা ও দ্রুত ডেলিভারি',
       established: '2016',
-      tagline: 'Hot & Cheesy Oven-Baked Pizzas Delivered at Lightning Speed',
-      banglaTagline: 'গরম ও চিজি প্রিমিয়াম পিৎজা আপনার দরজায় দ্রুততম সময়ে',
+      tagline: 'Hot & Cheesy Oven-Baked Pizzas in 35 Mins',
+      banglaTagline: 'গরম ও চিজি প্রিমিয়াম পিৎজা ৩৫ মিনিটে আপনার দরজায়',
       address: 'C.K. Ghosh Road / Charpara Outlet, Mymensingh',
       banglaAddress: 'সি.কে. ঘোষ রোড ও চরপাড়া আউটলেট, ময়মনসিংহ',
       phone: '+880 1712-121434',
       altPhone: '+880 1834-535135',
-      hours: '12:00 PM - 11:30 PM (Daily)',
-      banglaHours: 'দুপুর ১২:০০ - রাত ১১:৩০ (প্রতিদিন)',
+      hours: '12:00 PM - 11:30 PM',
+      banglaHours: 'দুপুর ১২:০০ - রাত ১১:৩০',
       rating: 4.8,
       reviewsCount: 1120,
       heroImage: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=1200&q=80',
@@ -515,22 +492,22 @@ export const SARINDA_GROUP_DATA: GroupData = {
         'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=800&q=80',
         'https://images.unsplash.com/photo-1574071318508-1cdbab80d002?auto=format&fit=crop&w=800&q=80'
       ],
-      description: 'The premier express pizza brand of Sarinda Group. Hand-tossed artisan dough, melted whole-milk mozzarella cheese, signature herbs and succulent toppings baked fresh and delivered piping hot.',
-      banglaDescription: 'সারিন্দা গ্রুপের এক্সপ্রেস পিৎজা ব্র্যান্ড। হাতে তৈরি ফ্রেশ পিৎজা ডো, প্রিমিয়াম মজারেলা চিজ ও স্পাইসি টপিংস দিয়ে ওভেনে বেকড গরম গরম পিৎজা দ্রুততম সময়ে ডেলিভারি করা হয়।',
+      description: 'Hand-tossed artisan dough, whole-milk mozzarella cheese, and signature herbs baked fresh with 35-minute express city delivery.',
+      banglaDescription: 'হাতে তৈরি ফ্রেশ ডো, ১০০% খাঁটি মোজারেলা চিজ ও স্পাইসি টপিংসে ওভেনে বেক করা গরম গরম পিৎজা দ্রুততম সময়ে ডেলিভারি।',
       highlights: [
-        '100% Real Wisconsin-style Mozzarella with legendary cheese pull',
-        'Stuffed Crust & Thin Crust Pizza variations in 8", 10" and 12" sizes',
-        'Express 35-minute home delivery across all wards of Mymensingh',
-        'Family Feast Combos with Cheesy Garlic Bread and Buffalo Wings'
+        '100% Real Whole Mozzarella with Legendary Cheese Pull',
+        'Stuffed Crust & Thin Crust Pizza Variations',
+        '35-Minute Fast Delivery in Mymensingh',
+        'Family Feast Combos with Garlic Bread'
       ],
       banglaHighlights: [
-        '১০০% খাঁটি মজারেলা চিজের অসাধারণ চিজি পুল',
-        'স্টাফড ক্রাস্ট, ডিপ ডিশ ও থিন ক্রাস্ট পিৎজার নানান ফ্লেভার',
-        'ময়মনসিংহ শহরের সর্বত্র ৩৫ মিনিটে স্পিডি হোম ডেলিভারি',
-        'গার্লিক ব্রেড ও স্পাইসি উইংস সহ আকর্ষণীয় কম্বো অফার'
+        '১০০% খাঁটি মোজারেলা চিজের চিজি পুল',
+        'স্টাফড ক্রাস্ট ও থিন ক্রাস্ট পিৎজা',
+        'ময়মনসিংহ শহরে ৩৫ মিনিটে ডেলিভারি',
+        'গার্লিক ব্রেড ও উইংস সহ কম্বো অফার'
       ],
-      badge: 'City Favorite Pizza Delivery',
-      banglaBadge: 'শহরের প্রিয় পিৎজা ডেলিভারি',
+      badge: 'Express Pizza',
+      banglaBadge: 'এক্সপ্রেস পিৎজা',
       actionType: 'order_pizza'
     },
     {
@@ -540,13 +517,13 @@ export const SARINDA_GROUP_DATA: GroupData = {
       category: 'Grooming & Lifestyle',
       banglaCategory: 'গ্রুমিং, বিউটি ও প্রিমিয়াম সেলুন',
       established: '2020',
-      tagline: 'Modern Elegance — Signature Grooming, Hair Care & Wellness',
-      banglaTagline: 'আধুনিক রুচি ও পরিপাটি জীবনের বিশ্বস্ত প্রিমিয়াম সেলুন',
-      address: 'C.K. Ghosh Road, Mymensingh, Bangladesh',
+      tagline: 'Modern Elegance — Signature Grooming & Wellness',
+      banglaTagline: 'আধুনিক রুচি ও পরিপাটি জীবনের বিশ্বস্ত সেলুন',
+      address: 'C.K. Ghosh Road, Mymensingh',
       banglaAddress: 'সি.কে. ঘোষ রোড, ময়মনসিংহ',
       phone: '+880 1979-121434',
-      hours: '10:00 AM - 9:30 PM (Daily)',
-      banglaHours: 'সকাল ১০:০০ - রাত ৯:৩০ (প্রতিদিন)',
+      hours: '10:00 AM - 9:30 PM',
+      banglaHours: 'সকাল ১০:০০ - রাত ৯:৩০',
       rating: 4.7,
       reviewsCount: 520,
       heroImage: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=1200&q=80',
@@ -554,86 +531,78 @@ export const SARINDA_GROUP_DATA: GroupData = {
         'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=800&q=80',
         'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&w=800&q=80'
       ],
-      description: 'Executive salon and grooming parlour under Sarinda Group offering bridal makeovers, gent’s grooming, skin therapy, and luxury spa treatments.',
-      banglaDescription: 'সারিন্দা গ্রুপের প্রিমিয়াম লাইফস্টাইল ও সেলুন উইং। আধুনিক হেয়ার কাট, ব্রাইডাল মেকওভার, স্কিন থেরাপি এবং স্বাস্থ্যসম্মত রিফ্রেশিং স্পা সেবা।',
+      description: 'Executive grooming parlour under Sarinda Group offering bridal makeovers, gent’s styling, skin therapy, and organic wellness.',
+      banglaDescription: 'সারিন্দা গ্রুপের প্রিমিয়াম সেলুন উইং—হেয়ার কাট, ব্রাইডাল মেকওভার, স্কিন থেরাপি ও সম্পূর্ণ স্বাস্থ্যসম্মত রিফ্রেশিং স্পা সেবা।',
       highlights: [
-        'Certified Stylists & Hygienic Sanitized Equipment',
+        'Certified Stylists & Sanitized Suites',
         'Bridal, Groom & Event Special Makeovers',
-        'Advanced Hair Spa, Keratin & Organic Skin Facials'
+        'Advanced Hair Spa & Organic Facials'
       ],
       banglaHighlights: [
-        'দক্ষ ও সার্টিফাইড স্টাইলিস্ট এবং সম্পূর্ণ জীবাণুমুক্ত পরিবেশ',
-        'বর-কনে ও বিশেষ উৎসবের আকর্ষণীয় মেকওভার প্যাকেজ',
-        'অ্যাডভান্সড হেয়ার স্পা, কেরাটিন ও স্কিন ফেসিয়াল ট্রিটমেন্ট'
+        'দক্ষ স্টাইলিস্ট ও জীবাণুমুক্ত পরিবেশ',
+        'বর-কনে ও উৎসবের মেকওভার প্যাকেজ',
+        'অ্যাডভান্সড হেয়ার স্পা ও ফেসিয়াল'
       ],
-      badge: 'Lifestyle & Wellness',
-      banglaBadge: 'লাইফস্টাইল ও ওয়েলনেস',
+      badge: 'Lifestyle & Spa',
+      banglaBadge: 'লাইফস্টাইল ও স্পা',
       actionType: 'book_salon'
     }
   ],
   milestones: [
     {
-      year: '2008',
-      title: 'The Inception of Sarinda Restaurant',
-      banglaTitle: 'সারিন্দা রেস্টুরেন্টের যাত্রা শুরু',
-      description: 'Founded at CK Ghosh Road, Mymensingh with a commitment to pure Mughlai taste and high-hygiene Bengali dining.',
-      banglaDescription: 'সি.কে. ঘোষ রোডে খাঁটি মুঘলাই স্বাদ ও স্বাস্থ্যকর বাঙালি খাবারের প্রতিশ্রুতি নিয়ে সারিন্দা রেস্টুরেন্টের জন্ম।',
+      year: '২০০৮',
+      title: 'Inception of Sarinda Restaurant',
+      banglaTitle: 'সারিন্দা রেস্টুরেন্টের ঐতিহাসিক সূচনা',
+      description: 'Started at CK Ghosh Road with authentic Mughlai and Bengali cuisine.',
+      banglaDescription: 'সি.কে. ঘোষ রোডে খাঁটি মুঘলাই স্বাদ ও বাঙালি খাবারের অনন্য অঙ্গীকার নিয়ে শুরু।',
       brand: 'Sarinda Restaurant'
     },
     {
-      year: '2012',
-      title: 'Sarinda Bakery & Confectionery Launched',
-      banglaTitle: 'সারিন্দা বেকারির যাত্রা',
-      description: 'Expanded into artisanal live bakery and traditional sweets, quickly expanding to three strategic outlets in Mymensingh.',
-      banglaDescription: 'লাইভ ওভেন বেকারি ও খাঁটি ঘিয়ে ভাজা মিষ্টির সমাহার নিয়ে যাত্রা শুরু করে সারিন্দা বেকারি।',
+      year: '২০১২',
+      title: 'Sarinda Bakery Launched',
+      banglaTitle: 'সারিন্দা বেকারির বিস্তার',
+      description: 'Live oven baking and traditional Bengali sweets expanded to 3 outlets.',
+      banglaDescription: 'লাইভ ওভেন বেকিং ও খাঁটি ঘিয়ে তৈরি মিষ্টি নিয়ে ৩টি প্রধান শাখায় বিস্তার।',
       brand: 'Sarinda Bakery'
     },
     {
-      year: '2016',
-      title: 'Pizza Shuttle Express Introduced',
-      banglaTitle: 'পিৎজা শাটল ডেলিভারির সূচনা',
-      description: 'Pioneered rapid hot pizza delivery in Mymensingh with cheese-filled gourmet options.',
-      banglaDescription: 'ময়মনসিংহে স্পিডি গরম পিৎজা ডেলিভারি সেবা নিশ্চিত করতে পিৎজা শাটলের সূচনা।',
+      year: '২০১৬',
+      title: 'Pizza Shuttle Express',
+      banglaTitle: 'পিৎজা শাটল ডেলিভারি',
+      description: 'Pioneered 35-minute oven-baked hot pizza delivery in Mymensingh.',
+      banglaDescription: 'ময়মনসিংহে দ্রুততম সময়ে গরম পিৎজা হোম ডেলিভারি সেবার বিপ্লব।',
       brand: 'Pizza Shuttle'
     },
     {
-      year: '2018',
-      title: 'Sorgorom Restaurant Opened at Charpara',
+      year: '২০১৮',
+      title: 'Sorgorom Restaurant Opened',
       banglaTitle: 'চরপাড়ায় সরগরম রেস্টুরেন্ট স্থাপন',
-      description: 'Established the iconic youth hangout specializing in sizzling platters, steaks, burgers, and cafe ambiance.',
-      banglaDescription: 'সিজলার্স, স্টেক, বার্গার ও ক্যাফে আড্ডার প্রিয় ঠিকানা হিসেবে চরপাড়ায় সরগরমের শুভ উদ্বোধন।',
+      description: 'Iconic hangout for sizzling cast-iron steaks, burgers and cafe ambiance.',
+      banglaDescription: 'সিজলার্স, স্টেক, বার্গার ও প্রাণবন্ত আড্ডার প্রিয় ঠিকানা হিসেবে উদ্বোধন।',
       brand: 'Sorgorom Restaurant'
     },
     {
-      year: '2020',
-      title: 'Starline Sparkle Salon & Lifestyle Expansion',
-      banglaTitle: 'স্টারলাইন স্পার্কল সেলুনের অভিষেক',
-      description: 'Diversified into high-end personal grooming and bridal salon services.',
-      banglaDescription: 'ব্যক্তিগত রূপচর্চা ও আধুনিক গ্রুমিং সেবার প্রসারে স্টারলাইন স্পার্কলের প্রতিষ্ঠা।',
-      brand: 'Starline Sparkle'
+      year: '২০২১',
+      title: 'Sarinda Lights & Fans Established',
+      banglaTitle: 'সারিন্দা লাইটস ও ফ্যানের অভিষেক',
+      description: 'Showroom for imported crystal chandeliers, designer fans & smart lighting.',
+      banglaDescription: 'আমদানিকৃত ক্রিস্টাল ঝাড়বাতি, লাক্সারি ফ্যান ও আর্কিটেকচারাল লাইটিং প্রতিষ্ঠা।',
+      brand: 'Sarinda Lights & Fans'
     },
     {
-      year: '2021',
-      title: 'Sarinda Lights & Interior Décor Established',
-      banglaTitle: 'সারিন্দা লাইটস অ্যান্ড ইন্টেরিয়রের যাত্রা',
-      description: 'Formed architectural lighting consultancy supplying grand crystal chandeliers and smart landscape illumination.',
-      banglaDescription: 'প্রিমিয়াম ক্রিস্টাল ঝাড়বাতি ও আউটডোর রিসোর্ট আলোকসজ্জার বিশ্বস্ত সমাধান হিসেবে প্রতিষ্ঠা।',
-      brand: 'Sarinda Lights'
-    },
-    {
-      year: '2022',
-      title: 'Sarinda Sobari Resort — The Grand Opening',
-      banglaTitle: 'সারিন্দা সবারি রিসোর্টের মহোৎসব',
-      description: 'Unveiled the viral eco-paradise in Akua Morolpara, celebrated statewide as the "Switzerland of Mymensingh".',
-      banglaDescription: 'আকুয়া মোড়লপাড়ায় সুইমিংপুল ও কটেজ নিয়ে গড়ে ওঠে ময়মনসিংহের সুইজারল্যান্ড খ্যাত সবারি রিসোর্ট।',
+      year: '২০২২',
+      title: 'Sarinda Sobari Resort Grand Launch',
+      banglaTitle: 'সবারি রিসোর্টের রাজকীয় যাত্রা',
+      description: 'Unveiled the viral eco-paradise acclaimed as the "Switzerland of Mymensingh".',
+      banglaDescription: 'সুইমিংপুল ও কটেজ নিয়ে গড়ে ওঠে ময়মনসিংহের সুইজারল্যান্ড খ্যাত সবারি রিসোর্ট।',
       brand: 'Sarinda Sobari Resort'
     },
     {
-      year: '2025-2026',
-      title: 'Unified Digital Ecosystem & Corporate Growth',
-      banglaTitle: 'সারিন্দা গ্রুপ সমন্বিত ডিজিটাল প্ল্যাটফর্ম',
-      description: 'Connecting all sister concerns under Sarinda Group with online ordering, resort booking, and smart POS.',
-      banglaDescription: 'গ্রুপের সকল অঙ্গপ্রতিষ্ঠানকে এক ছাতার নিচে নিয়ে এসে ডিজিটাল সেবা ও আধুনিক বুকিং নিশ্চিতকরণ।',
+      year: '২০২৬',
+      title: 'Unified Digital Ecosystem',
+      banglaTitle: 'সমন্বিত ডিজিটাল প্ল্যাটফর্ম',
+      description: 'All 7 ventures united under one seamless omnichannel portal.',
+      banglaDescription: 'গ্রুপের সকল অঙ্গপ্রতিষ্ঠানকে এক ডিজিটাল ছাতার নিচে নিয়ে আসা।',
       brand: 'Sarinda Group'
     }
   ],
@@ -643,8 +612,8 @@ export const SARINDA_GROUP_DATA: GroupData = {
       banglaName: 'হাজী মোঃ রফিকুল ইসলাম',
       role: 'Chairman, Sarinda Group',
       banglaRole: 'চেয়ারম্যান, সারিন্দা গ্রুপ',
-      message: 'From day one in 2008, our unwavering focus has been honesty, hospitality, and uncompromised quality. We consider every resident of Mymensingh and every traveler a guest of our family.',
-      banglaMessage: '২০০৮ সালে প্রথম যাত্রার দিন থেকেই আমাদের মূল লক্ষ্য ছিল সততা, খাঁটি আতিথেয়তা ও আপসহীন মান। ময়মনসিংহের প্রতিটি মানুষ এবং দেশ-বিদেশের অতিথিদের আমরা নিজেদের পরিবারের অংশ মনে করি।',
+      message: 'From day one in 2008, our foundation has been honesty, warm hospitality, and uncompromised quality for every guest.',
+      banglaMessage: '২০০৮ সাল থেকে আমাদের মূল শক্তি সততা, অকৃত্রিম আতিথেয়তা ও গ্রাহকের শতভাগ সন্তুষ্টি।',
       image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=600&q=80'
     },
     managingDirector: {
@@ -652,8 +621,8 @@ export const SARINDA_GROUP_DATA: GroupData = {
       banglaName: 'ইঞ্জি. তানভীর আহমেদ',
       role: 'Managing Director, Sarinda Group',
       banglaRole: 'ম্যানেজিং ডিরেক্টর, সারিন্দা গ্রুপ',
-      message: 'By blending traditional Bengali warmth with cutting-edge architecture, hygienic culinary standards, and digital convenience, we are building a progressive lifestyle empire for generations.',
-      banglaMessage: 'আমাদের লক্ষ্য ঐতিহ্যবাহী বাঙালি আবেগের সাথে আধুনিক আর্কিটেকচার, শতভাগ স্বাস্থ্যসম্মত খাদ্য প্রস্তুতপ্রণালী ও ডিজিটাল সেবাকে একত্রিত করে একটি আন্তর্জাতিক মানের লাইফস্টাইল প্রতিষ্ঠান গড়ে তোলা।',
+      message: 'We unite heritage taste, modern architecture, and digital convenience to elevate living in Mymensingh.',
+      banglaMessage: 'ঐতিহ্যবাহী স্বাদ, নান্দনিক আর্কিটেকচার ও ডিজিটাল সেবাকে একত্রিত করে আমরা ময়মনসিংহের জীবনযাত্রাকে এগিয়ে নিচ্ছি।',
       image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=600&q=80'
     }
   }

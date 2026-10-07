@@ -31,17 +31,17 @@ export const LightsFeatureSection: React.FC = () => {
           <div className="max-w-3xl">
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-500/20 text-amber-300 text-xs font-black uppercase tracking-wider mb-3 border border-amber-500/30">
               <Lamp className="w-4 h-4 text-amber-400" />
-              <span>{lang === 'en' ? 'Architectural & Interior Lighting' : 'আর্কিটেকচারাল ও ইন্টেরিয়র লাইটিং'}</span>
+              <span>{lang === 'en' ? 'Chandeliers • BLDC Fans • Smart Lighting' : 'ঝাড়বাতি • বিএলডিসি ফ্যান • স্মার্ট লাইটিং'}</span>
             </div>
 
             <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-black text-white leading-tight">
-              {lang === 'en' ? 'Sarinda Lights & Interior Décor' : 'সারিন্দা লাইটস অ্যান্ড ইন্টেরিয়র সলিউশনস'}
+              {lang === 'en' ? 'Sarinda Lights, Fans & Electricals' : 'সারিন্দা লাইটস, ফ্যান ও ইলেকট্রিক্যালস'}
             </h2>
 
             <p className="text-base sm:text-lg text-gray-300 mt-3 font-medium">
               {lang === 'en'
-                ? 'Illuminating living spaces, luxury duplexes, and grand venues — powering the breathtaking night glow of Sarinda Sobari Resort with imported crystal chandeliers and smart LED systems.'
-                : 'সারিন্দা সবারি রিসোর্টের চোখজুড়ানো রাতের আলোকসজ্জার নেপথ্যে যার ভূমিকা — সেই সারিন্দা লাইটস নিয়ে এসেছে রাজকীয় ক্রিস্টাল ঝাড়বাতি, স্মার্ট ম্যাগনেটিক ট্র্যাক ও আউটডোর গার্ডেন লাইটিং সলিউশন।'}
+                ? 'Powering the ethereal night glow of Sobari Resort — imported K9 crystal chandeliers, silent BLDC ceiling fans, and modern architectural lighting.'
+                : 'সবারি রিসোর্টের রাতের মুগ্ধকর আলোকসজ্জার রূপকার — রাজকীয় ক্রিস্টাল ঝাড়বাতি, শব্দহীন বিএলডিসি ফ্যান ও আর্কিটেকচারাল লাইটিং।'}
             </p>
           </div>
 
@@ -51,7 +51,7 @@ export const LightsFeatureSection: React.FC = () => {
               className="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-stone-950 px-6 py-3.5 rounded-2xl font-black text-sm flex items-center gap-2 shadow-lg hover:scale-102 transition cursor-pointer"
             >
               <Lightbulb className="w-4 h-4" />
-              <span>{lang === 'en' ? 'Request Lighting Consultation' : 'লাইটিং কনসালটেন্সি ও কোটেশন'}</span>
+              <span>{lang === 'en' ? 'Request Consultation' : 'ক্যাটালগ ও কোটেশন'}</span>
             </button>
 
             <a
@@ -119,19 +119,19 @@ export const LightsFeatureSection: React.FC = () => {
               <div className="mt-4 space-y-2 pt-3 border-t border-white/15 text-xs text-gray-200">
                 <div className="flex items-center gap-2">
                   <CheckCircle2 className="w-4 h-4 text-amber-400 shrink-0" />
-                  <span>{lang === 'en' ? 'Authentic K9 Precision Crystal Chandeliers' : '১০০% পিওর কে৯ ক্রিস্টাল ঝাড়বাতি'}</span>
+                  <span>{lang === 'en' ? 'Authentic K9 Precision Crystal Chandeliers' : '১০০% পিওর কে৯ ক্রিস্টাল রাজকীয় ঝাড়বাতি'}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <CheckCircle2 className="w-4 h-4 text-amber-400 shrink-0" />
-                  <span>{lang === 'en' ? 'Outdoor IP67 Waterproof Garden & Pool Lights' : 'আইপি৬৭ ওয়াটারপ্রুফ আউটডোর গার্ডেন ও পুল লাইট'}</span>
+                  <span>{lang === 'en' ? 'Super-Silent BLDC Energy-Saving Smart Fans' : '৬৫% বিদ্যুৎসাশ্রয়ী সাউন্ডলেস বিএলডিসি স্মার্ট ফ্যান'}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <CheckCircle2 className="w-4 h-4 text-amber-400 shrink-0" />
-                  <span>{lang === 'en' ? 'Magnetic Track & Dimmable Profile Lights' : 'ম্যাগনেটিক ট্র্যাক ও ডিমাবল প্রোফাইল সিস্টেম'}</span>
+                  <span>{lang === 'en' ? 'Resort IP67 Waterproof Garden & Pool Uplights' : 'সবারি রিসোর্ট আইপি৬৭ ওয়াটারপ্রুফ আউটডোর লাইট'}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <CheckCircle2 className="w-4 h-4 text-amber-400 shrink-0" />
-                  <span>{lang === 'en' ? 'Experienced Electrical Installation Team' : 'দক্ষ ইঞ্জিনিয়ার ও অভিজ্ঞ টেকনিশিয়ান দ্বারা ফিটিং'}</span>
+                  <span>{lang === 'en' ? 'Full Architectural Layout & Engineering Fitting' : 'সাইট ভিজিট, লাইটিং প্ল্যান ও ফুল ইনস্টলেশন'}</span>
                 </div>
               </div>
 
