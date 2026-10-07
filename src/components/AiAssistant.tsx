@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useStore } from '../context/StoreContext';
 import { translations } from '../data/translations';
-import { Bot, X, Send, Sparkles, ShoppingBag, Calendar, MapPin, Tag, CheckCircle2, ChevronRight, Plus, Minus, MessageCircle } from 'lucide-react';
+import { Bot, X, Send, Sparkles, ShoppingBag, Calendar, MapPin, Tag, CheckCircle2, ChevronRight, Plus, Minus, MessageCircle, Copy, Check, Settings } from 'lucide-react';
 
 export interface OrderItem {
   id: string;
@@ -113,6 +113,23 @@ export const AiAssistant: React.FC = () => {
   const [messages, setMessages] = useState<ChatMessage[]>(initialMessages);
   const [inputText, setInputText] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+  const [testWaNumber, setTestWaNumber] = useState<string>(() => {
+    return localStorage.getItem('sarinda_test_wa_number') || '';
+  });
+  const [showWaSettings, setShowWaSettings] = useState(false);
+  const [copiedOrderId, setCopiedOrderId] = useState<string | null>(null);
+
+  const getDestinationWaNumber = () => {
+    if (!testWaNumber.trim()) return '8801712121434';
+    let cleaned = testWaNumber.replace(/[^0-9]/g, '');
+    if (cleaned.startsWith('01')) cleaned = '88' + cleaned;
+    return cleaned;
+  };
+
+  const handleSaveTestNumber = (num: string) => {
+    setTestWaNumber(num);
+    localStorage.setItem('sarinda_test_wa_number', num);
+  };
 
   // Auto-send prompt when opened from banner or suggestion chip
   React.useEffect(() => {
@@ -1110,7 +1127,8 @@ export const AiAssistant: React.FC = () => {
                           type="button"
                           onClick={() => {
                             const waText = buildWhatsAppOrderMessage(m.orderData!);
-                            const waUrl = `https://wa.me/8801712121434?text=${encodeURIComponent(waText)}`;
+                            const destNumber = getDestinationWaNumber();
+                            const waUrl = `https://wa.me/${destNumber}?text=${encodeURIComponent(waText)}`;
                             window.open(waUrl, '_blank');
                           }}
                           className="w-full py-2.5 px-3 rounded-xl bg-[#25D366] hover:bg-[#20ba5a] text-white font-black text-xs shadow-md transition flex items-center justify-center gap-2 cursor-pointer border border-white/20 active:scale-98"
@@ -1118,8 +1136,93 @@ export const AiAssistant: React.FC = () => {
                           <svg className="w-4 h-4 fill-current shrink-0" viewBox="0 0 24 24">
                             <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/>
                           </svg>
-                          <span>{lang === 'en' ? 'Send Order to WhatsApp (1-Click)' : 'সরাসরি WhatsApp-এ অর্ডার পাঠান (১-ক্লিক)'}</span>
+                          <span>
+                            {testWaNumber.trim()
+                              ? `টেস্ট WhatsApp-এ পাঠান (${testWaNumber})`
+                              : (lang === 'en' ? 'Send Order to WhatsApp (1-Click)' : 'সরাসরি WhatsApp-এ অর্ডার পাঠান (১-ক্লিক)')
+                            }
+                          </span>
                         </button>
+
+                        {/* Quick Action: Copy Order Receipt & Test Number Switcher */}
+                        <div className="flex items-center gap-1.5">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const waText = buildWhatsAppOrderMessage(m.orderData!);
+                              navigator.clipboard.writeText(waText);
+                              setCopiedOrderId(m.id);
+                              setTimeout(() => setCopiedOrderId(null), 2500);
+                            }}
+                            className="flex-1 py-1.5 px-2 rounded-lg bg-white/10 hover:bg-white/20 text-white/90 text-[11px] font-semibold transition flex items-center justify-center gap-1 cursor-pointer border border-white/10"
+                            title="মেসেজটি কপি করুন যেন নিজে WhatsApp-এ পেস্ট করে টেস্ট করতে পারেন"
+                          >
+                            {copiedOrderId === m.id ? (
+                              <>
+                                <Check className="w-3.5 h-3.5 text-emerald-400" />
+                                <span className="text-emerald-400">মেসেজ কপি হয়েছে!</span>
+                              </>
+                            ) : (
+                              <>
+                                <Copy className="w-3.5 h-3.5 text-brand-gold" />
+                                <span>রেসিপ্ট কপি করুন</span>
+                              </>
+                            )}
+                          </button>
+
+                          <button
+                            type="button"
+                            onClick={() => setShowWaSettings(!showWaSettings)}
+                            className="py-1.5 px-2 rounded-lg bg-white/10 hover:bg-white/20 text-white/80 hover:text-white text-[11px] font-semibold transition flex items-center justify-center gap-1 cursor-pointer border border-white/10"
+                            title="টেস্ট নম্বর পরিবর্তন করুন"
+                          >
+                            <Settings className="w-3.5 h-3.5 text-brand-gold" />
+                            <span>{testWaNumber.trim() ? 'টেস্ট মোড অন' : 'টেস্ট নম্বর'}</span>
+                          </button>
+                        </div>
+
+                        {/* Expandable Test Mode Number Configuration */}
+                        {showWaSettings && (
+                          <div className="p-2.5 rounded-xl bg-black/40 border border-brand-gold/30 flex flex-col gap-2 text-xs">
+                            <div className="flex items-center justify-between text-[11px] font-bold text-brand-gold">
+                              <span>🧪 টেস্ট মোড: নিজের নম্বরে পাঠিয়ে দেখুন</span>
+                              <button
+                                type="button"
+                                onClick={() => setShowWaSettings(false)}
+                                className="text-white/60 hover:text-white text-xs cursor-pointer"
+                              >
+                                ✕
+                              </button>
+                            </div>
+                            <p className="text-[10px] text-white/70 leading-relaxed">
+                              সারিন্দার আসল নম্বরে মেসেজ পাঠাতে না চাইলে আপনার নিজের WhatsApp নম্বর লিখুন। এতে মেসেজটি অন্য কারো কাছে না গিয়ে সরাসরি আপনার ইনবক্সে টেস্ট হবে।
+                            </p>
+                            <div className="flex gap-1.5">
+                              <input
+                                type="tel"
+                                placeholder="যেমন: 017XXXXXXXX"
+                                value={testWaNumber}
+                                onChange={(e) => handleSaveTestNumber(e.target.value)}
+                                className="flex-1 bg-white/10 border border-white/20 rounded-lg px-2.5 py-1.5 text-white placeholder-white/40 text-xs focus:outline-none focus:border-brand-gold"
+                              />
+                              {testWaNumber && (
+                                <button
+                                  type="button"
+                                  onClick={() => handleSaveTestNumber('')}
+                                  className="px-2 py-1.5 rounded-lg bg-rose-500/30 hover:bg-rose-500/50 text-rose-200 text-[10px] font-bold cursor-pointer"
+                                  title="রিসেট করে সারিন্দার আসল নম্বর ফিরিয়ে আনুন"
+                                >
+                                  রিসেট
+                                </button>
+                              )}
+                            </div>
+                            <div className="text-[10px] text-emerald-400/90 font-medium">
+                              {testWaNumber.trim()
+                                ? `✓ এখন অর্ডার যাবে: ${getDestinationWaNumber()}`
+                                : 'ℹ️ বর্তমানে সেট করা: সারিন্দার অফিসিয়াল নম্বর (+8801712121434)'}
+                            </div>
+                          </div>
+                        )}
 
                         {/* Messenger Order */}
                         <button
