@@ -114,7 +114,7 @@ export const AiAssistant: React.FC = () => {
   const [inputText, setInputText] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [testWaNumber, setTestWaNumber] = useState<string>(() => {
-    return localStorage.getItem('sarinda_test_wa_number') || '';
+    return localStorage.getItem('sarinda_test_wa_number') || '01771232632';
   });
   const [showWaSettings, setShowWaSettings] = useState(false);
   const [copiedOrderId, setCopiedOrderId] = useState<string | null>(null);
