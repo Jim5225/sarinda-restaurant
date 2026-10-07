@@ -30,6 +30,7 @@ interface WAMessage {
 export const WhatsAppButton: React.FC = () => {
   const { lang, cart, cartCount, cartTotal, cartDeliveryFee, deliveryArea } = useStore();
   const [isOpen, setIsOpen] = useState(false);
+  const [showMenu, setShowMenu] = useState(false);
   const [inputText, setInputText] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [soundEnabled, setSoundEnabled] = useState(true);
@@ -304,15 +305,21 @@ export const WhatsAppButton: React.FC = () => {
       <div className="fixed bottom-20 sm:bottom-6 left-4 sm:left-6 z-40 flex items-center gap-3">
         {/* Animated Tooltip Pill (Desktop) */}
         <div
-          onClick={() => setIsOpen(true)}
+          onClick={() => {
+            if (isOpen) {
+              setIsOpen(false);
+            } else {
+              setShowMenu(!showMenu);
+            }
+          }}
           className="hidden md:flex items-center gap-2.5 bg-[#075E54] text-white py-2 px-3.5 rounded-2xl shadow-elevated border border-[#25D366]/40 cursor-pointer hover:bg-[#128C7E] transition backdrop-blur-md group"
-          title="ক্লিক করে সরাসরি লাইভ হোয়াটসঅ্যাপ এআই এজেন্টের সাথে কথা বলুন"
+          title="ক্লিক করে সরাসরি হোয়াটসঅ্যাপ বা লাইভ এআই এজেন্টের সাথে কথা বলুন"
         >
           <span className="w-2.5 h-2.5 rounded-full bg-[#25D366] animate-ping" />
           <div className="flex flex-col text-left">
             <span className="text-xs font-bold text-white group-hover:underline flex items-center gap-1.5">
-              <span>{lang === 'en' ? 'Live WhatsApp Foodie AI' : 'হোয়াটসঅ্যাপে লাইভ এআই এজেন্ট'}</span>
-              <span className="text-[10px] bg-[#25D366] text-black font-extrabold px-1.5 py-0.2 rounded-full">VERY FAST</span>
+              <span>{lang === 'en' ? 'Live WhatsApp & AI Agent' : 'হোয়াটসঅ্যাপ ও লাইভ এআই এজেন্ট'}</span>
+              <span className="text-[10px] bg-[#25D366] text-black font-extrabold px-1.5 py-0.2 rounded-full">01852363235</span>
             </span>
             <span className="text-[10px] text-emerald-200">
               টেস্ট নম্বর: {getFormattedPhone(testWaNumber)}
@@ -323,10 +330,16 @@ export const WhatsAppButton: React.FC = () => {
         {/* WhatsApp Main Pulsing Button */}
         <div className="relative">
           <button
-            onClick={() => setIsOpen(!isOpen)}
+            onClick={() => {
+              if (isOpen) {
+                setIsOpen(false);
+              } else {
+                setShowMenu(!showMenu);
+              }
+            }}
             className="relative group p-3.5 sm:p-4 rounded-full bg-[#25D366] hover:bg-[#20ba59] text-white shadow-float hover:scale-105 active:scale-95 transition-all duration-300 flex items-center justify-center cursor-pointer border-2 border-white shadow-[#25D366]/40"
             aria-label="WhatsApp Live Agent"
-            title="সারিন্দা হোয়াটসঅ্যাপ এআই এজেন্টের সাথে লাইভ চ্যাট করুন"
+            title="সারিন্দা হোয়াটসঅ্যাপ এআই এজেন্টের সাথে লাইভ চ্যাট বা মেসেজ করুন"
           >
             {/* WhatsApp Vector Icon */}
             <svg
@@ -349,6 +362,88 @@ export const WhatsAppButton: React.FC = () => {
           <span className="absolute -inset-1 rounded-full bg-[#25D366] opacity-35 animate-ping -z-10" />
         </div>
       </div>
+
+      {/* QUICK CHOICE FLYOUT MENU */}
+      {showMenu && !isOpen && (
+        <div className="fixed bottom-36 sm:bottom-24 left-4 sm:left-6 z-50 w-72 sm:w-80 bg-white rounded-3xl shadow-2xl border border-brand-border p-4 animate-in slide-in-from-bottom-3 duration-200">
+          <div className="flex items-center justify-between pb-2.5 border-b border-brand-border">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-full bg-[#25D366] text-white flex items-center justify-center">
+                <MessageCircle className="w-4 h-4" />
+              </div>
+              <div>
+                <p className="font-bold text-xs text-brand-charcoal">সারিন্দা WhatsApp হাব</p>
+                <p className="text-[10px] text-brand-muted">টেস্ট নম্বর: {getFormattedPhone(testWaNumber)}</p>
+              </div>
+            </div>
+            <button
+              onClick={() => setShowMenu(false)}
+              className="p-1 rounded-lg text-brand-muted hover:text-brand-charcoal hover:bg-brand-cream transition cursor-pointer"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+
+          <div className="mt-3 space-y-2">
+            {/* Option 1: Direct Real WhatsApp to 01852363235 */}
+            <button
+              onClick={() => {
+                setShowMenu(false);
+                handleLaunchExternalWhatsApp();
+              }}
+              className="w-full text-left p-3 rounded-2xl bg-[#E7F8E8] hover:bg-[#25D366] hover:text-white transition group border border-[#25D366]/30 cursor-pointer shadow-2xs"
+            >
+              <div className="flex items-center justify-between">
+                <span className="font-bold text-xs text-[#075E54] group-hover:text-white flex items-center gap-1.5">
+                  <span>📱 সরাসরি WhatsApp খুলুন</span>
+                </span>
+                <span className="text-[10px] bg-[#25D366] text-white group-hover:bg-white group-hover:text-black font-extrabold px-1.5 py-0.5 rounded-full">
+                  ১-ক্লিক
+                </span>
+              </div>
+              <p className="text-[10.5px] text-neutral-600 group-hover:text-white/90 mt-1 leading-snug">
+                সরাসরি আপনার WhatsApp অ্যাপে <strong>{getFormattedPhone(testWaNumber)}</strong> নম্বরে চ্যাট ও অর্ডার পাঠান।
+              </p>
+            </button>
+
+            {/* Option 2: Live AI Agent Right on Website */}
+            <button
+              onClick={() => {
+                setShowMenu(false);
+                setIsOpen(true);
+              }}
+              className="w-full text-left p-3 rounded-2xl bg-[#075E54] hover:bg-[#128C7E] text-white transition group cursor-pointer shadow-md"
+            >
+              <div className="flex items-center justify-between">
+                <span className="font-bold text-xs text-white flex items-center gap-1.5">
+                  <Sparkles className="w-3.5 h-3.5 text-brand-gold animate-spin [animation-duration:3s]" />
+                  <span>🤖 সারিন্দা AI লাইভ এজেন্ট</span>
+                </span>
+                <span className="text-[10px] bg-emerald-400 text-black font-extrabold px-1.5 py-0.5 rounded-full">
+                  VERY FAST
+                </span>
+              </div>
+              <p className="text-[10.5px] text-emerald-100 mt-1 leading-snug">
+                ওয়েবসাইটে বসেই Gemini এআই-এর সাথে লাইভ চ্যাট করে কাচ্চি অর্ডার বা মেনুর তথ্য জানুন।
+              </p>
+            </button>
+          </div>
+
+          <div className="mt-2.5 pt-2 border-t border-brand-border flex items-center justify-between text-[10px] text-brand-muted">
+            <span>নম্বর পরিবর্তন করতে চান?</span>
+            <button
+              onClick={() => {
+                setShowMenu(false);
+                setShowSettings(true);
+                setIsOpen(true);
+              }}
+              className="text-[#075E54] hover:underline font-bold cursor-pointer"
+            >
+              সেটিংস ⚙️
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* FULL INTERACTIVE WHATSAPP LIVE AGENT MODAL */}
       {isOpen && (
