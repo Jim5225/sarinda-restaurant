@@ -46,7 +46,7 @@ export default async function handler(req: any, res: any) {
 
       let userText = '';
       let senderPhone = '';
-      let phoneNumberId = process.env.WHATSAPP_PHONE_ID || '';
+      let phoneNumberId = process.env.WHATSAPP_PHONE_ID || '1472306229289510';
       let isTwilio = false;
 
       // Case A: Meta WhatsApp Cloud API format
@@ -82,10 +82,12 @@ export default async function handler(req: any, res: any) {
       const replyText = await generateWhatsAppAiReply(userText.trim());
 
       // If Meta WhatsApp Cloud API: Send message back to user via Graph API
-      const whatsappToken = process.env.WHATSAPP_TOKEN;
+      const DEFAULT_TOKEN = 'EAAPhQEh7pfABSmpAbsBqZBhs5Gmq4syyVZCeeRRrNRfa2I1ZAo0HMgzcZABLgPAadOidF503xTKsmzkqZAqBfZC2dZANrK6nraDiejR8JVDcMxl5GQroLtfRb7PBgHgUkj8hrRZAlY1x8TggzZC14hC608TbZCC15D0JF0FTjOxRzARXZC3lXZBPYZCT4d98UpoWxWAZBaZAZCDVQiMYCZBUkNzFeATOcD6IjZBcnTCrZCASVL7s7hvIQgOIKjwbZC1sbOO7onvJ9WfpSdMxLycgtWSefGrMgfsy';
+      const whatsappToken = process.env.WHATSAPP_TOKEN || DEFAULT_TOKEN;
+
       if (whatsappToken && phoneNumberId && senderPhone && !isTwilio) {
         try {
-          const metaRes = await fetch(`https://graph.facebook.com/v20.0/${phoneNumberId}/messages`, {
+          const metaRes = await fetch(`https://graph.facebook.com/v22.0/${phoneNumberId}/messages`, {
             method: 'POST',
             headers: {
               'Authorization': `Bearer ${whatsappToken}`,
@@ -217,7 +219,7 @@ CRITICAL MANDATORY RULES:
       `• সারিন্দা রয়্যাল গ্র্যান্ড প্ল্যাটার: ৳৯৯০\n` +
       `• ঠান্ডা শাহী বোরহানি: ৳৭৫ (গ্লাস) | ৳১৫৫ (৫০০মি.লি.)\n` +
       `• জাফরানী শাহী ফিরনি: ৳৭০\n\n` +
-      `💡 ধানমন্ডি ও আশেপাশের এলাকায় ৩০-৪০ মিনিটে হোম ডেলিভারি পেতে আপনার কাঙ্ক্ষিত খাবারের নাম ও ঠিকানা লিখে পাঠান!`;
+      `💡 ময়মনসিংহের সি কে ঘোষ রোড, গাঙ্গিনারপাড়, চরপাড়া সহ পুরো শহরে ৩০-৪০ মিনিটে ডেলিভারি পেতে পছন্দের খাবার ও ঠিকানা লিখে পাঠান!`;
   }
 
   if (q.includes('table') || q.includes('টেবিল') || q.includes('booking') || q.includes('বুকিং') || q.includes('cabin') || q.includes('কেবিন')) {
@@ -225,11 +227,11 @@ CRITICAL MANDATORY RULES:
       `১. কতজনের জন্য টেবিল প্রয়োজন?\n` +
       `২. কোন তারিখ ও কয়টার সময় আসবেন?\n` +
       `৩. আপনার নাম ও ফোন নম্বর।\n\n` +
-      `তথ্যগুলো লিখে পাঠিয়ে দিন, আমরা সাথে সাথে আপনার টেবিলটি কনফার্ম করে রাখব। সরাসরি কল করতে পারেন: +880 1712-121434`;
+      `তথ্যগুলো লিখে পাঠিয়ে দিন, আমরা সাথে সাথে আপনার টেবিলটি কনফার্ম করে রাখব। সরাসরি কল করতে পারেন: +880 1852-363235`;
   }
 
-  return `আসসালামু আলাইকুম! সারিন্দা রেস্তোরাঁ ও ক্যাটারিং-এ আপনাকে স্বাগতম। 🍽️\n\n` +
+  return `আসসালামু আলাইকুম! সারিন্দা রেস্তোরাঁ ও ক্যাটারিং (ময়মনসিংহ)-এ আপনাকে স্বাগতম। 🍽️\n\n` +
     `আমি সারিন্দার লাইভ এজেন্ট। আপনি কি খাবার অর্ডার করতে চান, নাকি আজকের মেনু ও টেবিল বুকিং নিয়ে জানতে চান?\n\n` +
-    `আমাদের হটলাইন: +880 1712-121434\n` +
-    `ঠিকানা: রোড ১৬, ধানমন্ডি ২৭ (পুরাতন), ঢাকা।`;
+    `আমাদের হটলাইন: +880 1852-363235\n` +
+    `ঠিকানা: সি কে ঘোষ রোড, ময়মনসিংহ-২২০০।`;
 }
