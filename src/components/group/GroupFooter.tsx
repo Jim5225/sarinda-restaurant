@@ -161,7 +161,7 @@ export const GroupFooter: React.FC = () => {
             <div className="space-y-2 text-xs text-gray-300">
               <div className="flex items-center gap-2">
                 <Phone className="w-3.5 h-3.5 text-brand-gold" />
-                <a href="tel:+8801712121434" className="hover:text-brand-gold font-bold">
+                <a href="tel:+8801852363235" className="hover:text-brand-gold font-bold">
                   +880 1712-121434 (General)
                 </a>
               </div>

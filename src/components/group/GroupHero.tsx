@@ -167,7 +167,7 @@ export const GroupHero: React.FC = () => {
 
             {/* Direct Phone */}
             <a
-              href="tel:+8801712121434"
+              href="tel:+8801852363235"
               className="px-3.5 py-3 rounded-xl bg-black/40 hover:bg-black/60 border border-white/10 text-gray-200 hover:text-white transition flex items-center gap-2 text-xs font-semibold"
             >
               <PhoneCall className="w-3.5 h-3.5 text-brand-gold" />

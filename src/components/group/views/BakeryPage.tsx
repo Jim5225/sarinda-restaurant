@@ -80,7 +80,7 @@ export const BakeryPage: React.FC = () => {
               </button>
 
               <a
-                href="tel:+8801712121434"
+                href="tel:+8801852363235"
                 className="bg-white/15 hover:bg-white/25 text-white border border-white/30 px-5 py-3.5 rounded-2xl font-bold text-sm flex items-center gap-2 transition"
               >
                 <Phone className="w-4 h-4 text-pink-300" />

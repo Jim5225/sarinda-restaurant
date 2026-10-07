@@ -55,7 +55,7 @@ export const LightsFeatureSection: React.FC = () => {
             </button>
 
             <a
-              href="tel:+8801712121434"
+              href="tel:+8801852363235"
               className="bg-white/10 hover:bg-white/20 border border-white/20 text-white px-5 py-3.5 rounded-2xl font-bold text-sm flex items-center gap-2 transition"
             >
               <Phone className="w-4 h-4 text-amber-400" />

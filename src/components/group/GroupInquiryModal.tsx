@@ -133,7 +133,7 @@ export const GroupInquiryModal: React.FC = () => {
               {/* Instant WhatsApp Connect */}
               <div className="pt-4 flex flex-col sm:flex-row gap-3 justify-center">
                 <a
-                  href={`https://wa.me/8801712121434?text=${getWhatsAppMessage()}`}
+                  href={`https://wa.me/8801852363235?text=${getWhatsAppMessage()}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 shadow-md transition"
@@ -143,7 +143,7 @@ export const GroupInquiryModal: React.FC = () => {
                 </a>
 
                 <a
-                  href="tel:+8801712121434"
+                  href="tel:+8801852363235"
                   className="bg-brand-primary hover:bg-brand-dark text-white px-5 py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition"
                 >
                   <Phone className="w-4 h-4 text-brand-gold" />

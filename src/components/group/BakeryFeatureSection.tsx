@@ -52,7 +52,7 @@ export const BakeryFeatureSection: React.FC = () => {
             </button>
 
             <a
-              href="tel:+8801712121434"
+              href="tel:+8801852363235"
               className="bg-white border border-pink-200 text-pink-900 px-5 py-3.5 rounded-2xl font-bold text-sm flex items-center gap-2 hover:bg-pink-50 transition"
             >
               <Phone className="w-4 h-4 text-pink-600" />

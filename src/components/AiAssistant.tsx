@@ -122,7 +122,7 @@ export const AiAssistant: React.FC = () => {
   const [copiedOrderId, setCopiedOrderId] = useState<string | null>(null);
 
   const getDestinationWaNumber = () => {
-    if (!testWaNumber.trim()) return '8801712121434';
+    if (!testWaNumber.trim()) return '8801852363235';
     let cleaned = testWaNumber.replace(/[^0-9]/g, '');
     if (cleaned.startsWith('01')) cleaned = '88' + cleaned;
     return cleaned;
@@ -1221,7 +1221,7 @@ export const AiAssistant: React.FC = () => {
                             <div className="text-[10px] text-emerald-400/90 font-medium">
                               {testWaNumber.trim()
                                 ? `✓ এখন অর্ডার যাবে: ${getDestinationWaNumber()}`
-                                : 'ℹ️ বর্তমানে সেট করা: সারিন্দার অফিসিয়াল নম্বর (+8801712121434)'}
+                                : 'ℹ️ বর্তমানে সেট করা নম্বর: +8801852363235'}
                             </div>
                           </div>
                         )}

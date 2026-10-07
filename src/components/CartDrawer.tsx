@@ -57,7 +57,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onProceedCheckout }) => 
       `-------------------------\n\n` +
       `দয়া করে আমার অর্ডারটি কনফার্ম করুন ও ডেলিভারির সময় জানিয়ে দিন। ধন্যবাদ!`;
 
-    window.open(`https://wa.me/8801712121434?text=${encodeURIComponent(msg)}`, '_blank', 'noopener,noreferrer');
+    window.open(`https://wa.me/8801852363235?text=${encodeURIComponent(msg)}`, '_blank', 'noopener,noreferrer');
   };
 
   if (!isCartOpen) return null;

@@ -6,7 +6,7 @@ export const WhatsAppButton: React.FC = () => {
   const { lang, cart, cartCount, cartTotal, cartDeliveryFee, deliveryArea } = useStore();
   const [showFlyout, setShowFlyout] = useState(false);
 
-  const restaurantPhone = '8801712121434'; // Official Sarinda Restaurant WhatsApp Number
+  const restaurantPhone = '8801852363235'; // Test WhatsApp Number
 
   const buildWhatsAppUrl = (customText?: string) => {
     let message = '';

@@ -103,16 +103,16 @@ export const ContactSection: React.FC = () => {
               {/* Direct Instant Messaging CTAs */}
               <div className="pt-4 border-t border-brand-border space-y-2">
                 <a
-                  href="tel:+8801712121434"
+                  href="tel:+8801852363235"
                   className="w-full py-3 px-4 rounded-2xl bg-brand-primary hover:bg-brand-dark text-white font-bold text-xs flex items-center justify-center gap-2 shadow-xs transition"
                 >
                   <Phone className="w-4 h-4 text-brand-gold" />
-                  <span>{lang === 'en' ? 'Click to Call Directly (+880 1712-121434)' : 'সরাসরি কল করুন (+৮৮০ ১৭১২-১২১৪৩৪)'}</span>
+                  <span>{lang === 'en' ? 'Click to Call Directly (+880 1852-363235)' : 'সরাসরি কল করুন (+৮৮০ ১৮৫২-৩৬৩২৩৫)'}</span>
                 </a>
 
                 <div className="grid grid-cols-2 gap-2">
                   <a
-                    href="https://wa.me/8801712121434?text=Hello%20Sarinda%20Restaurant,%20I%20would%20like%20to%20place%20an%20order"
+                    href="https://wa.me/8801852363235?text=Hello%20Sarinda%20Restaurant,%20I%20would%20like%20to%20place%20an%20order"
                     target="_blank"
                     rel="noreferrer"
                     className="py-2.5 px-3 rounded-2xl bg-[#25D366] hover:bg-[#20ba59] text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-xs transition"

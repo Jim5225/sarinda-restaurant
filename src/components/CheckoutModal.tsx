@@ -89,7 +89,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose })
       `Total Payable: ৳${placedOrder.total}\n` +
       `Payment: ${placedOrder.paymentMethod.toUpperCase()}`;
 
-    window.open(`https://wa.me/8801712121434?text=${encodeURIComponent(msg)}`, '_blank');
+    window.open(`https://wa.me/8801852363235?text=${encodeURIComponent(msg)}`, '_blank');
   };
 
   const resetAndClose = () => {
@@ -340,7 +340,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose })
                           bKash Online / QR Payment
                         </span>
                         <span className="text-[11px] text-brand-muted">
-                          Merchant: 01712121434 (Send Money / Counter Pay)
+                          Merchant: 01852363235 (Send Money / Counter Pay)
                         </span>
                       </div>
                     </div>
@@ -367,7 +367,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose })
                           Nagad Payment
                         </span>
                         <span className="text-[11px] text-brand-muted">
-                          Merchant: 01712121434
+                          Merchant: 01852363235
                         </span>
                       </div>
                     </div>

@@ -117,7 +117,7 @@ export const GroupHeader: React.FC = () => {
           <div className="flex items-center space-x-3 text-xs font-semibold ml-auto">
             {/* 24/7 Hotline */}
             <a 
-              href="tel:+8801712121434" 
+              href="tel:+8801852363235" 
               className="text-brand-gold hover:text-white transition flex items-center gap-1.5 font-bold"
             >
               <Phone className="w-3.5 h-3.5" />
