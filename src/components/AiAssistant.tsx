@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useStore } from '../context/StoreContext';
 import { translations } from '../data/translations';
-import { Bot, X, Send, Sparkles, ShoppingBag, Calendar, MapPin, Tag, CheckCircle2, ChevronRight, Plus, Minus } from 'lucide-react';
+import { Bot, X, Send, Sparkles, ShoppingBag, Calendar, MapPin, Tag, CheckCircle2, ChevronRight, Plus, Minus, MessageCircle } from 'lucide-react';
 
 export interface OrderItem {
   id: string;
@@ -37,6 +37,29 @@ export const DELIVERY_ZONES = [
   { id: 'other', name: 'ময়মনসিংহের অন্যান্য এলাকা', fee: 50, time: '৩০-৪৫ মিনিট' },
 ];
 
+export const buildWhatsAppOrderMessage = (orderData: OrderData) => {
+  const subtotal = orderData.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const fee = orderData.deliveryFee ?? 30;
+  const total = subtotal + fee;
+  const currentArea = orderData.selectedArea || 'সি কে ঘোষ রোড / টাউন হল';
+
+  const itemsList = orderData.items
+    .map(it => `• ${it.quantity}× ${it.banglaName} — ৳${it.price * it.quantity}`)
+    .join('\n');
+
+  return `*🍛 সারিন্দা রেস্তোরাঁ - অনলাইন ফুড অর্ডার*\n` +
+    `--------------------------------\n` +
+    `*অর্ডারকৃত খাবার:*\n${itemsList}\n\n` +
+    `*খাবার সাবটোটাল:* ৳${subtotal}\n` +
+    `*ডেলিভারি এলাকা:* 📍 ${currentArea}\n` +
+    `*ডেলিভারি চার্জ:* ৳${fee}\n` +
+    `--------------------------------\n` +
+    `*সর্বমোট প্রদেয় বিল:* *৳${total}*\n\n` +
+    `গ্রাহকের ডেলিভারি ঠিকানা:\n` +
+    `(অনুগ্রহ করে আপনার সঠিক ঠিকানা ও মোবাইল নম্বরটি এখানে লিখে পাঠান)\n\n` +
+    `ধন্যবাদ, সারিন্দা রেস্তোরাঁ ও ক্যাটারিং, সি কে ঘোষ রোড, ময়মনসিংহ।`;
+};
+
 interface ChatMessage {
   id: string;
   sender: 'ai' | 'user';
@@ -46,6 +69,10 @@ interface ChatMessage {
     type: 'menu' | 'reservation' | 'offers' | 'contact';
   };
   orderData?: OrderData;
+  quickReplies?: Array<{
+    label: string;
+    textToSend: string;
+  }>;
 }
 
 export const AiAssistant: React.FC = () => {
@@ -72,8 +99,14 @@ export const AiAssistant: React.FC = () => {
       id: 'msg-1',
       sender: 'ai',
       text: lang === 'en'
-        ? "Hello! I am your Sarinda Foodie Concierge. I can help you find popular dishes, recommend family combos, check offers, or book a table. How can I assist you today?"
-        : "নমস্কার ও আসসালামু আলাইকুম! আমি সারিন্দা রেস্তোরাঁর ফুডি সহকারী। সেরা খাবার নির্বাচন, ফ্যামিলি কম্বো বা টেবিল বুকিং এ আপনাকে সাহায্য করতে পারি। কি জানতে চান বলুন!"
+        ? "Hello & Welcome! I am your Sarinda Foodie Concierge. I can help you choose delicious biryani, recommend portions, or order directly via WhatsApp & Messenger. What would you like today?"
+        : "নমস্কার ও আসসালামু আলাইকুম! আমি সারিন্দা রেস্তোরাঁর স্মার্ট লাইভ ফুড কনসিয়ার্জ। সেরা বিরিয়ানি পছন্দ করা, প্লেটের সংখ্যা বা সরাসরি ১-ক্লিকে WhatsApp ও Messenger-এ অর্ডার পাঠাতে সাহায্য করব। নিচের বাটন থেকে সহজে বেছে নিন:",
+      quickReplies: [
+        { label: '🍛 বিরিয়ানি ও কাচ্চি মেনু', textToSend: 'বিরিয়ানি মেনু দেখতে চাই' },
+        { label: '👨‍👩‍👦 ৪ জনের ফ্যামিলি কম্বো', textToSend: '৪ জনের জন্য কী খাবার নেওয়া যায়?' },
+        { label: '🎁 চলতি স্পেশাল অফার', textToSend: 'চলতি অফার কী আছে?' },
+        { label: '📅 টেবিল ও কেবিন বুকিং', textToSend: 'একটি টেবিল বুক করতে চাই' }
+      ]
     }
   ];
 
@@ -102,183 +135,261 @@ export const AiAssistant: React.FC = () => {
   const generateAiReply = (userQuery: string): ChatMessage => {
     const q = userQuery.toLowerCase().trim();
 
-    // 0. Order & Waiter Interaction Detection
-    const isBiryani = q.includes('biryani') || q.includes('biriyani') || q.includes('kacchi') || q.includes('বিরিয়ানি') || q.includes('কাচ্চি');
-    const isTehari = q.includes('tehari') || q.includes('তেহারি') || q.includes('তেহারী');
-    const isPolao = q.includes('morog') || q.includes('মোরগ') || q.includes('polao') || q.includes('পোলাও');
-    const hasBorhani = q.includes('borhani') || q.includes('বোরহানি');
-
-    // Check if previous AI message asked about Borhani
+    // 0. Check if this is an answer to an add-on / upsell question (Borhani, Kebab, Both, No)
     const lastAiMsg = messages.slice().reverse().find(m => m.sender === 'ai')?.text?.toLowerCase() || '';
-    const isAfterBorhaniUpsell = lastAiMsg.includes('বোরহানি') && (lastAiMsg.includes('নিবেন') || lastAiMsg.includes('দেব') || lastAiMsg.includes('borhani'));
+    const lastAiMsgObj = messages.slice().reverse().find(m => m.sender === 'ai');
+    const isAfterUpsell = (lastAiMsgObj?.orderData?.stage === 'upsell') || (lastAiMsg.includes('বোরহানি') && (lastAiMsg.includes('নিবেন') || lastAiMsg.includes('দেব') || lastAiMsg.includes('যোগ করবেন')));
 
-    // Detect previous biryani quantity from history
-    let prevQty = 2;
+    let prevItems = lastAiMsgObj?.orderData?.items || [
+      { id: 'special-kacchi-biryani', name: 'Special Kacchi Biryani', banglaName: 'স্পেশাল কাচ্চি বিরিয়ানি (হাফ)', price: 340, quantity: 2 }
+    ];
+    let prevQty = prevItems[0]?.quantity || 2;
     const prevMatch = lastAiMsg.match(/(\d+|[১-৯])\s*প্লেট/);
     if (prevMatch) {
-      const digitMap: { [k: string]: number } = { '১': 1, '২': 2, '৩': 3, '৪': 4, '৫': 5 };
-      prevQty = digitMap[prevMatch[1]] || parseInt(prevMatch[1], 10) || 2;
+      const digitMap: { [k: string]: number } = { '১': 1, '২': 2, '৩': 3, '৪': 4, '৫': 5, '৬': 6 };
+      prevQty = digitMap[prevMatch[1]] || parseInt(prevMatch[1], 10) || prevQty;
     }
 
-    if (isAfterBorhaniUpsell) {
-      const isYes =
-        (
-          q.includes('ha') || q.includes('হ্যাঁ') || q.includes('yes') ||
-          q.includes('dao') || q.includes('দাও') || q.includes('din') || q.includes('দিন') ||
-          q.includes('borhani') || q.includes('বোরহানি')
-        ) &&
-        !q.includes('na') && !q.includes('না') && !q.includes('lagbe na') && !q.includes('লাগবে না') && !q.includes('shudhu') && !q.includes('শুধু');
+    if (isAfterUpsell) {
+      const isBoth = q.includes('both') || q.includes('দুটোই') || (q.includes('বোরহানি') && q.includes('কাবাব')) || (q.includes('borhani') && q.includes('kebab'));
+      const isBorhaniOnly = !isBoth && (q.includes('borhani') || q.includes('বোরহানি') || q.includes('ha') || q.includes('হ্যাঁ') || q.includes('yes') || q.includes('din') || q.includes('দিন')) && !q.includes('na') && !q.includes('না') && !q.includes('lagbe na') && !q.includes('shudhu') && !q.includes('শুধু');
+      const isKebabOnly = !isBoth && (q.includes('kebab') || q.includes('কাবাব')) && !q.includes('na') && !q.includes('না');
+      const isNoAddon = q === 'na' || q === 'না' || q === 'no' || q.includes('lagbe na') || q.includes('লাগবে না') || q.includes('shudhu') || q.includes('শুধু') || q.includes('না শুধু');
 
-      const isNo =
-        q === 'na' || q === 'না' || q === 'no' || q.includes('lagbe na') || q.includes('লাগবে না') || q.includes('shudhu') || q.includes('শুধু') || q.includes('na lagbe na');
+      const bnPrev = String(prevQty).replace(/\d/g, d => '০১২৩৪৫৬৭৮৯'[+d]);
+      const dishTitle = prevItems[0]?.banglaName || 'কাচ্চি বিরিয়ানি';
 
-      if (isYes) {
-        let borhaniQty = prevQty;
-        const numMatch = q.match(/(\d+|[১-৯])\s*(ta|টা)?/);
-        if (numMatch) {
-          const digitMap: { [k: string]: number } = { '১': 1, '২': 2, '৩': 3, '৪': 4, '৫': 5 };
-          borhaniQty = digitMap[numMatch[1]] || parseInt(numMatch[1], 10) || prevQty;
-        }
-
-        const bnPrev = String(prevQty).replace(/\d/g, d => '০১২৩৪৫৬৭৮৯'[+d]);
-        const bnBorhani = String(borhaniQty).replace(/\d/g, d => '০১২৩৪৫৬৭৮৯'[+d]);
-
+      if (isBoth) {
+        const finalItems = [...prevItems];
+        finalItems.push(
+          { id: 'shahi-borhani', name: 'Traditional Shahi Borhani', banglaName: 'শাহী বোরহানি (গ্লাস)', price: 75, quantity: prevQty },
+          { id: 'jali-kebab', name: 'Special Jali Kebab', banglaName: 'স্পেশাল জালি কাবাব (পিস)', price: 50, quantity: prevQty }
+        );
         return {
           id: `ai-${Date.now()}`,
           sender: 'ai',
-          text: `চমৎকার! আপনার জন্য ${bnPrev} প্লেট স্পেশাল কাচ্চি বিরিয়ানি ও ${bnBorhani}টা ঠান্ডা শাহী বোরহানি প্রস্তুত করেছি।\n\nনিচে আপনার ডেলিভারি এলাকা নির্বাচন করুন, ডেলিভারি চার্জসহ মোট বিল স্বয়ংক্রিয়ভাবে চলে আসবে এবং সরাসরি এক ক্লিকে অর্ডার কনফার্ম করতে পারবেন 👇`,
+          text: `অসাধারণ! আপনার জন্য ${bnPrev} প্লেট ${dishTitle}, সাথে ${bnPrev}টা শাহী বোরহানি ও ${bnPrev}টা জালি কাবাব যোগ করেছি।\n\nনিচে আপনার ডেলিভারি এলাকা নির্বাচন করে সরাসরি ১-ক্লিকে WhatsApp বা Messenger-এ অর্ডার পাঠান 👇`,
+          orderData: {
+            stage: 'ready',
+            items: finalItems,
+            selectedArea: 'সি কে ঘোষ রোড / টাউন হল',
+            deliveryFee: 30
+          }
+        };
+      }
+
+      if (isKebabOnly) {
+        const finalItems = [...prevItems];
+        finalItems.push({ id: 'jali-kebab', name: 'Special Jali Kebab', banglaName: 'স্পেশাল জালি কাবাব (পিস)', price: 50, quantity: prevQty });
+        return {
+          id: `ai-${Date.now()}`,
+          sender: 'ai',
+          text: `চমৎকার! আপনার জন্য ${bnPrev} প্লেট ${dishTitle} ও ${bnPrev}টা মুচমুচে জালি কাবাব প্রস্তুত করেছি।\n\nনিচে আপনার ডেলিভারি এলাকা নির্বাচন করে সরাসরি ১-ক্লিকে WhatsApp বা Messenger-এ অর্ডার পাঠান 👇`,
+          orderData: {
+            stage: 'ready',
+            items: finalItems,
+            selectedArea: 'সি কে ঘোষ রোড / টাউন হল',
+            deliveryFee: 30
+          }
+        };
+      }
+
+      if (isBorhaniOnly) {
+        const finalItems = [...prevItems];
+        finalItems.push({ id: 'shahi-borhani', name: 'Traditional Shahi Borhani', banglaName: 'শাহী বোরহানি (গ্লাস)', price: 75, quantity: prevQty });
+        return {
+          id: `ai-${Date.now()}`,
+          sender: 'ai',
+          text: `চমৎকার! আপনার জন্য ${bnPrev} প্লেট ${dishTitle} ও ${bnPrev}টা ঠান্ডা শাহী বোরহানি প্রস্তুত করেছি।\n\nনিচে আপনার ডেলিভারি এলাকা নির্বাচন করে সরাসরি ১-ক্লিকে WhatsApp বা Messenger-এ অর্ডার পাঠান 👇`,
+          orderData: {
+            stage: 'ready',
+            items: finalItems,
+            selectedArea: 'সি কে ঘোষ রোড / টাউন হল',
+            deliveryFee: 30
+          }
+        };
+      }
+
+      if (isNoAddon) {
+        return {
+          id: `ai-${Date.now()}`,
+          sender: 'ai',
+          text: `ঠিক আছে! আপনার জন্য ${bnPrev} প্লেট ${dishTitle} প্রস্তুত করেছি।\n\nনিচে আপনার ডেলিভারি এলাকা নির্বাচন করে সরাসরি ১-ক্লিকে WhatsApp বা Messenger-এ অর্ডার পাঠান 👇`,
+          orderData: {
+            stage: 'ready',
+            items: prevItems,
+            selectedArea: 'সি কে ঘোষ রোড / টাউন হল',
+            deliveryFee: 30
+          }
+        };
+      }
+    }
+
+    // Skip order flow if asking explicitly about ingredients or recipe
+    const isIngredientQuery =
+      q.includes('ki ki ache') ||
+      q.includes('ki thake') ||
+      q.includes('কী কী আছে') ||
+      q.includes('কী থাকে') ||
+      q.includes('উপাদান') ||
+      q.includes('উপকরণ') ||
+      q.includes('ingredients') ||
+      q.includes('inside') ||
+      q.includes('recipe') ||
+      ((q.includes('kacchi') || q.includes('biryani') || q.includes('biriyani') || q.includes('কাচ্চি')) &&
+        (q.includes('moddhe') || q.includes('ki ache') || q.includes('ki thake') || q.includes('banay') || q.includes('ranna')));
+
+    if (isIngredientQuery) {
+      return {
+        id: `ai-${Date.now()}`,
+        sender: 'ai',
+        text: "সারিন্দার ঐতিহ্যবাহী 'স্পেশাল কাচ্চি বিরিয়ানি' তৈরি হয় আসল পুরান ঢাকার রাজকীয় খাস রেসিপিতে। এর মধ্যে থাকে:\n\n" +
+          "• **সুগন্ধি পোলাও চাল:** প্রিমিয়াম গ্রেডের সুবাসিত চিনিগুঁড়া চাল (বাসমতী ভ্যারিয়েন্টে লং-গ্রেইন বাসমতী চাল)।\n" +
+          "• **রসালো দেশি খাসির মাংস:** স্পেশাল শাহী মশলায় ম্যারিনেট করা টাটকা দেশি খাসির বড় ও তুলতুলে সাইজের মাংসের পিস।\n" +
+          "• **গাওয়া ঘি ও সরিষার তেল:** খাঁটি গাওয়া ঘি ও ঘানিভাঙা খাঁটি সরিষার তেলে মাটির হাঁড়িতে খাঁটি দমে রান্না।\n" +
+          "• **শাহী মশলাপাতি:** আসল জাফরান, জয়ত্রী, জয়ফল, আলুবোখারা, দারুচিনি, ছোট এলাচ ও তেজপাতা।\n" +
+          "• **রসালো স্পেশাল আলু:** ঘিয়ে ভাজা সোনালী রঙের রসালো ও তুলতুলে স্পেশাল দম আলু।\n" +
+          "• **ডিম ও চাটনি:** ডিমসহ ভ্যারিয়েন্টে সিদ্ধ ডিম, সাথে থাকে ফ্রেশ শসা-লেবুর শাহী সালাদ ও পুদিনা-টমেটোর চাটনি!\n\n" +
+          "💡 সারিন্দায় কোনো ক্ষতিকর কৃত্রিম রঙ বা ফ্লেভার দেওয়া হয় না—প্রতিটি লোকমা শতভাগ স্বাস্থ্যসম্মত ও খাঁটি স্বাদে ভরপুর!",
+        quickReplies: [
+          { label: '🍛 স্পেশাল খাসির কাচ্চি (৳৩৪০)', textToSend: 'স্পেশাল খাসির কাচ্চি' },
+          { label: '👑 বাসমতি মাটন কাচ্চি (৳৪৫০)', textToSend: 'বাসমতি মাটন কাচ্চি' },
+          { label: '🛒 মেনু দেখুন', textToSend: 'সম্পূর্ণ মেনু দেখতে চাই' }
+        ],
+        action: { label: lang === 'en' ? 'Order Special Kacchi' : 'কাচ্চি বিরিয়ানি অর্ডার করুন', type: 'menu' }
+      };
+    }
+
+    // Detect Dish Types
+    const isSpecialKacchi = q.includes('special') || q.includes('স্পেশাল') || q.includes('খাসি') || q.includes('mutton kacchi') || (q.includes('kacchi') && !q.includes('basmati'));
+    const isBasmatiKacchi = q.includes('basmati') || q.includes('বাসমতি');
+    const isTehari = q.includes('tehari') || q.includes('তেহারি') || q.includes('তেহারী');
+    const isPolao = q.includes('morog') || q.includes('মোরগ') || q.includes('polao') || q.includes('পোলাও');
+    const isGeneralBiryani = (q.includes('biryani') || q.includes('biriyani') || q.includes('কাচ্চি') || q.includes('বিরিয়ানি') || q.includes('খাবার') || q.includes('khabar')) && !isSpecialKacchi && !isBasmatiKacchi && !isTehari && !isPolao;
+
+    // Detect quantity / portion
+    let detectedQty: number | null = null;
+    const numMatch = q.match(/(\d+)\s*(ta|plate|টি|টা|পিস|প্লেট)?/);
+    const bnNumMatch = q.match(/([১-৯])\s*(টা|টি|প্লেট)?/);
+    if (numMatch && parseInt(numMatch[1], 10) > 0) {
+      detectedQty = parseInt(numMatch[1], 10);
+    } else if (bnNumMatch) {
+      const bnMap: { [k: string]: number } = { '১': 1, '২': 2, '৩': 3, '৪': 4, '৫': 5, '৬': 6, '৭': 7, '৮': 8, '৯': 9 };
+      detectedQty = bnMap[bnNumMatch[1]] || null;
+    } else if (q.includes('ek') || q.includes('এক') || q.includes('one')) {
+      detectedQty = 1;
+    } else if (q.includes('dui') || q.includes('দুই') || q.includes('two')) {
+      detectedQty = 2;
+    } else if (q.includes('tin') || q.includes('তিন') || q.includes('three')) {
+      detectedQty = 3;
+    } else if (q.includes('char') || q.includes('চার') || q.includes('four')) {
+      detectedQty = 4;
+    }
+
+    // Step 1: User says general "biryani" or "কাচ্চি" without quantity or specific dish
+    if (!detectedQty && (isGeneralBiryani || q.includes('বিরিয়ানি মেনু') || q === 'biryani' || q === 'biriyani' || q === 'কাচ্চি' || q === 'kacchi')) {
+      return {
+        id: `ai-${Date.now()}`,
+        sender: 'ai',
+        text: `সারিন্দার প্রতিটি বিরিয়ানি ঐতিহ্যবাহী পুরান ঢাকার শাহী রেসিপিতে খাঁটি গাওয়া ঘি ও ঘানিভাঙা সরিষার তেলে মাটির হাঁড়িতে খাঁটি দমে রান্না।\n\nআপনার কেমন বিরিয়ানি পছন্দ বলুন তো? নিচের বাটন থেকে সহজে বেছে নিতে পারেন:`,
+        quickReplies: [
+          { label: '🍛 স্পেশাল খাসির কাচ্চি (৳৩৪০)', textToSend: 'স্পেশাল খাসির কাচ্চি' },
+          { label: '👑 বাসমতি মাটন কাচ্চি (৳৪৫০)', textToSend: 'বাসমতি মাটন কাচ্চি' },
+          { label: '🍚 সরিষার তেলের বিফ তেহারী (৳২৯০)', textToSend: 'বিফ তেহারী' },
+          { label: '🍗 শাহী মোরগ পোলাও (৳২৯০)', textToSend: 'শাহী মোরগ পোলাও' }
+        ]
+      };
+    }
+
+    // Step 2: User picked a specific dish, but NOT quantity yet
+    if (!detectedQty && (isSpecialKacchi || isBasmatiKacchi || isTehari || isPolao)) {
+      let dishName = 'স্পেশাল খাসির কাচ্চি';
+      if (isBasmatiKacchi) dishName = 'বাসমতি মাটন কাচ্চি';
+      else if (isTehari) dishName = 'বিফ তেহারী';
+      else if (isPolao) dishName = 'শাহী মোরগ পোলাও';
+
+      return {
+        id: `ai-${Date.now()}`,
+        sender: 'ai',
+        text: `অসাধারণ পছন্দ! সারিন্দার '${dishName}' আমাদের অন্যতম জনপ্রিয় শাহী খাবার।\n\nকতজনের জন্য বা কত প্লেট দিতে পারি আপনার জন্য?`,
+        quickReplies: [
+          { label: '১ প্লেট (১ জন)', textToSend: `১ প্লেট ${dishName}` },
+          { label: '২ প্লেট (জনপ্রিয়)', textToSend: `২ প্লেট ${dishName}` },
+          { label: '৩ প্লেট', textToSend: `৩ প্লেট ${dishName}` },
+          { label: '৪ প্লেট (ফ্যামিলি)', textToSend: `৪ প্লেট ${dishName}` }
+        ]
+      };
+    }
+
+    // Step 3: User picked a quantity / portion
+    if (detectedQty) {
+      let dishName = 'স্পেশাল খাসির কাচ্চি (হাফ)';
+      let dishEn = 'Special Kacchi Biryani';
+      let dishId = 'special-kacchi-biryani';
+      let dishPrice = 340;
+
+      if (isBasmatiKacchi || lastAiMsg.includes('বাসমতি')) {
+        dishName = 'বাসমতি মাটন কাচ্চি (দম)';
+        dishEn = 'Basmati Mutton Dum Biryani';
+        dishId = 'basmati-mutton-kacchi';
+        dishPrice = 450;
+      } else if (isTehari || lastAiMsg.includes('তেহারী')) {
+        dishName = 'সরিষার তেলের বিফ তেহারী';
+        dishEn = 'Beef Tehari';
+        dishId = 'beef-tehari';
+        dishPrice = 290;
+      } else if (isPolao || lastAiMsg.includes('মোরগ পোলাও')) {
+        dishName = 'ঐতিহ্যবাহী শাহী মোরগ পোলাও';
+        dishEn = 'Morog Polao';
+        dishId = 'morog-polao';
+        dishPrice = 290;
+      }
+
+      const hasBorhaniNow = q.includes('borhani') || q.includes('বোরহানি');
+      const bnQty = String(detectedQty).replace(/\d/g, d => '০১২৩৪৫৬৭৮৯'[+d]);
+
+      if (hasBorhaniNow) {
+        return {
+          id: `ai-${Date.now()}`,
+          sender: 'ai',
+          text: `জি নিশ্চয়ই! আপনার জন্য ${bnQty} প্লেট ${dishName} এবং ${bnQty}টা ঠান্ডা শাহী বোরহানি প্রস্তুত করেছি।\n\nনিচে আপনার ডেলিভারি এলাকা নির্বাচন করে সরাসরি ১-ক্লিকে WhatsApp বা Messenger-এ অর্ডার পাঠান 👇`,
           orderData: {
             stage: 'ready',
             items: [
-              { id: 'special-kacchi-biryani', name: 'Special Kacchi Biryani', banglaName: 'স্পেশাল কাচ্চি বিরিয়ানি (হাফ)', price: 340, quantity: prevQty },
-              { id: 'shahi-borhani', name: 'Traditional Shahi Borhani', banglaName: 'শাহী বোরহানি (গ্লাস)', price: 75, quantity: borhaniQty }
+              { id: dishId, name: dishEn, banglaName: dishName, price: dishPrice, quantity: detectedQty },
+              { id: 'shahi-borhani', name: 'Traditional Shahi Borhani', banglaName: 'শাহী বোরহানি (গ্লাস)', price: 75, quantity: detectedQty }
             ],
-            selectedArea: 'ধানমন্ডি / কলাবাগান',
-            deliveryFee: 40
-          }
-        };
-      }
-      if (isNo) {
-        const bnPrev = String(prevQty).replace(/\d/g, d => '০১২৩৪৫৬৭৮৯'[+d]);
-        return {
-          id: `ai-${Date.now()}`,
-          sender: 'ai',
-          text: `ঠিক আছে! আপনার জন্য ${bnPrev} প্লেট স্পেশাল কাচ্চি বিরিয়ানি প্রস্তুত করেছি।\n\nনিচে আপনার ডেলিভারি এলাকা নির্বাচন করুন, ডেলিভারি চার্জসহ মোট বিল স্বয়ংক্রিয়ভাবে চলে আসবে এবং সরাসরি এক ক্লিকে অর্ডার কনফার্ম করতে পারবেন 👇`,
-          orderData: {
-            stage: 'ready',
-            items: [
-              { id: 'special-kacchi-biryani', name: 'Special Kacchi Biryani', banglaName: 'স্পেশাল কাচ্চি বিরিয়ানি (হাফ)', price: 340, quantity: prevQty }
-            ],
-            selectedArea: 'ধানমন্ডি / কলাবাগান',
-            deliveryFee: 40
-          }
-        };
-      }
-    }
-
-    // Skip if asking about recipe/ingredients
-    const isOrderingExcluded = q.includes('ki ki ache') || q.includes('ingredients') || q.includes('recipe') || q.includes('উপাদান');
-
-    if (!isOrderingExcluded && (isBiryani || isTehari || isPolao)) {
-      // Determine quantity
-      let qty = 1;
-      const numMatch = q.match(/(\d+)\s*(ta|plate|টি|টা|পিস|প্লেট)?/);
-      const bnNumMatch = q.match(/([১-৯])\s*(টা|টি|প্লেট)?/);
-      if (numMatch) {
-        qty = parseInt(numMatch[1], 10);
-      } else if (bnNumMatch) {
-        const bnMap: { [k: string]: number } = { '১': 1, '২': 2, '৩': 3, '৪': 4, '৫': 5, '৬': 6, '৭': 7, '৮': 8, '৯': 9 };
-        qty = bnMap[bnNumMatch[1]] || 1;
-      } else if (q.includes('dui') || q.includes('দুই') || q.includes('two')) {
-        qty = 2;
-      } else if (q.includes('tin') || q.includes('তিন') || q.includes('three')) {
-        qty = 3;
-      } else if (q.includes('char') || q.includes('চার') || q.includes('four')) {
-        qty = 4;
-      }
-      if (isNaN(qty) || qty < 1) qty = 1;
-      const bnQty = String(qty).replace(/\d/g, d => '০১২৩৪৫৬৭৮৯'[+d]);
-
-      if (isBiryani) {
-        if (hasBorhani) {
-          return {
-            id: `ai-${Date.now()}`,
-            sender: 'ai',
-            text: `জি নিশ্চয়ই! আপনার জন্য ${bnQty} প্লেট স্পেশাল কাচ্চি বিরিয়ানি এবং ${bnQty}টা ঠান্ডা শাহী বোরহানি প্রস্তুত করেছি।\n\nনিচে আপনার ডেলিভারি এলাকা নির্বাচন করুন, ডেলিভারি চার্জসহ মোট বিল স্বয়ংক্রিয়ভাবে চলে আসবে এবং সরাসরি এক ক্লিকে অর্ডার কনফার্ম করতে পারবেন 👇`,
-            orderData: {
-              stage: 'ready',
-              items: [
-                { id: 'special-kacchi-biryani', name: 'Special Kacchi Biryani', banglaName: 'স্পেশাল কাচ্চি বিরিয়ানি (হাফ)', price: 340, quantity: qty },
-                { id: 'shahi-borhani', name: 'Traditional Shahi Borhani', banglaName: 'শাহী বোরহানি (গ্লাস)', price: 75, quantity: qty }
-              ],
-              selectedArea: 'ধানমন্ডি / কলাবাগান',
-              deliveryFee: 40
-            }
-          };
-        }
-
-        // Upsell Borhani!
-        return {
-          id: `ai-${Date.now()}`,
-          sender: 'ai',
-          text: `জি অবশ্যই! আপনার জন্য ${bnQty} প্লেট সুস্বাদু স্পেশাল কাচ্চি বিরিয়ানি রেডি করছি।\n\nকাচ্চির সাথে কি শাহী বোরহানি নিবেন? কাচ্চির পর ঠান্ডা বোরহানি খেলে ভারী খাবার সহজে হজম হয় আর স্বাদটাও পুরো জমে যায়! সাথে দিয়ে দেব কি?`,
-          orderData: {
-            stage: 'upsell',
-            items: [
-              { id: 'special-kacchi-biryani', name: 'Special Kacchi Biryani', banglaName: 'স্পেশাল কাচ্চি বিরিয়ানি (হাফ)', price: 340, quantity: qty }
-            ],
-            suggestAddon: {
-              id: 'shahi-borhani',
-              name: 'Traditional Shahi Borhani',
-              banglaName: 'শাহী বোরহানি (গ্লাস)',
-              price: 75,
-              defaultQty: qty
-            }
+            selectedArea: 'সি কে ঘোষ রোড / টাউন হল',
+            deliveryFee: 30
           }
         };
       }
 
-      if (isTehari) {
-        return {
-          id: `ai-${Date.now()}`,
-          sender: 'ai',
-          text: `জি অবশ্যই! আপনার জন্য ${bnQty} প্লেট সরিষার তেলের বিফ তেহারী রেডি করছি।\n\nতেহারীর সাথে কি ঠান্ডা শাহী বোরহানি নিবেন? সাথে দিয়ে দেব কি?`,
-          orderData: {
-            stage: 'upsell',
-            items: [
-              { id: 'beef-tehari', name: 'Beef Tehari', banglaName: 'সরিষার তেলের বিফ তেহারী', price: 290, quantity: qty }
-            ],
-            suggestAddon: {
-              id: 'shahi-borhani',
-              name: 'Traditional Shahi Borhani',
-              banglaName: 'শাহী বোরহানি (গ্লাস)',
-              price: 75,
-              defaultQty: qty
-            }
+      // Natural Waiter Upsell Question
+      return {
+        id: `ai-${Date.now()}`,
+        sender: 'ai',
+        text: `জি অবশ্যই! আপনার জন্য ${bnQty} প্লেট ${dishName} প্রস্তুত করছি।\n\nখাবারের সাথে কি ঠান্ডা শাহী বোরহানি বা জালি কাবাব যোগ করবেন? ভারী খাবার খাওয়ার পর ঠান্ডা বোরহানি সহজে হজমে সাহায্য করে এবং আসল শাহী তৃপ্তি এনে দেয়!`,
+        orderData: {
+          stage: 'upsell',
+          items: [
+            { id: dishId, name: dishEn, banglaName: dishName, price: dishPrice, quantity: detectedQty }
+          ],
+          suggestAddon: {
+            id: 'shahi-borhani',
+            name: 'Traditional Shahi Borhani',
+            banglaName: 'শাহী বোরহানি (গ্লাস)',
+            price: 75,
+            defaultQty: detectedQty
           }
-        };
-      }
-
-      if (isPolao) {
-        return {
-          id: `ai-${Date.now()}`,
-          sender: 'ai',
-          text: `জি অবশ্যই! আপনার জন্য ${bnQty} প্লেট ঐতিহ্যবাহী শাহী মোরগ পোলাও রেডি করছি।\n\nপোলাওয়ের সাথে কি শাহী বোরহানি নিবেন? সাথে দিয়ে দেব কি?`,
-          orderData: {
-            stage: 'upsell',
-            items: [
-              { id: 'morog-polao', name: 'Morog Polao', banglaName: 'ঐতিহ্যবাহী শাহী মোরগ পোলাও', price: 240, quantity: qty }
-            ],
-            suggestAddon: {
-              id: 'shahi-borhani',
-              name: 'Traditional Shahi Borhani',
-              banglaName: 'শাহী বোরহানি (গ্লাস)',
-              price: 75,
-              defaultQty: qty
-            }
-          }
-        };
-      }
+        },
+        quickReplies: [
+          { label: `🥛 ${bnQty}টা শাহী বোরহানি দিন (+৳${detectedQty * 75})`, textToSend: 'হ্যাঁ বোরহানি দিন' },
+          { label: `🍢 ${bnQty}টা জালি কাবাব দিন (+৳${detectedQty * 50})`, textToSend: 'হ্যাঁ জালি কাবাব দিন' },
+          { label: '🥛+🍢 বোরহানি ও কাবাব দুটোই', textToSend: 'বোরহানি ও কাবাব দুটোই দিন' },
+          { label: '❌ না, শুধু খাবার দিন', textToSend: 'না শুধু খাবার দিন' }
+        ]
+      };
     }
 
     // 1. Budget Query ("1000 tk", "1000 taka", "budget", "kom taka")
@@ -289,6 +400,10 @@ export const AiAssistant: React.FC = () => {
         text: "১,০০০ টাকা বাজেটের মধ্যে আমাদের সেরা ২টি ভ্যালু কম্বো:\n\n" +
           "• **অপশন ১ (গ্র্যান্ড প্ল্যাটার):** 'সারিন্দা রয়্যাল গ্র্যান্ড প্ল্যাটার' (৳৯৯০) — যাতে কাচ্চি, মোরগ পোলাও, রোস্ট, কাবাব ও বোরহানি একসাথে থাকে (৩-৪ জনের জন্য পারফেক্ট)!\n" +
           "• **অপশন ২ (কাচ্চি লাভার কম্বো):** ২x স্পেশাল কাচ্চি বিরিয়ানি (৳৬৮০) + ২x শাহী বোরহানি গ্লাস (৳১৫০) + ২x জালি কাবাব (৳১০০) = মোট মাত্র ৳৯৩০!",
+        quickReplies: [
+          { label: '🍛 ২ প্লেট কাচ্চি অর্ডার করব', textToSend: '২ প্লেট কাচ্চি' },
+          { label: '🎁 স্পেশাল অফার দেখুন', textToSend: 'চলতি অফার কী আছে?' }
+        ],
         action: { label: lang === 'en' ? 'Order Budget Feast' : 'বাজেট ভোজ অর্ডার করুন', type: 'menu' }
       };
     }
@@ -377,9 +492,11 @@ export const AiAssistant: React.FC = () => {
           "  - ১x স্পেশাল জালি কাবাব — ৳৫০\n" +
           "  - ১x শাহী বোরহানি — ৳৭৫\n" +
           "  **সর্বমোট: মাত্র ৳৪১৫!**\n\n" +
-          "• **অপশন ৩ (সরিষার তেলের বিফ তেহারী):**\n" +
-          "  - ১x বিফ তেহারী (৳২৯০) + ১x শাহী বোরহানি (৳৭৫) = **মোট মাত্র ৳৩৬৫!**\n\n" +
           "💡 প্রথম অনলাইন অর্ডারে প্রোমোকোড 'SARINDA15' ব্যবহার করে পেয়ে যান সরাসরি ১৫% বিশেষ ছাড়!",
+        quickReplies: [
+          { label: '🍛 ১ প্লেট কাচ্চি নেব', textToSend: '১ প্লেট কাচ্চি' },
+          { label: '🍗 ১ প্লেট মোরগ পোলাও', textToSend: '১ প্লেট মোরগ পোলাও' }
+        ],
         action: { label: lang === 'en' ? 'Order Solo Feast' : '১ জনের খাবার অর্ডার করুন', type: 'menu' }
       };
     }
@@ -389,32 +506,21 @@ export const AiAssistant: React.FC = () => {
         id: `ai-${Date.now()}`,
         sender: 'ai',
         text: "২ জনের জন্য আমাদের পারফেক্ট রোমান্টিক/ফ্রেন্ডস কম্বিনেশন:\n\n" +
-          "• ২x স্পেশাল কাচ্চি বিরিয়ানি (ডিমসহ হাফ) — ৳৭০০\n" +
+          "• ২x স্পেশাল কাচ্চি বিরিয়ানি (হাফ) — ৳৬৮০\n" +
           "• ১x বিয়ে বাড়ির চিকেন রোস্ট — ৳১৮০\n" +
           "• ১x শাহী বোরহানি (৫০০ মি.লি. বোতল) — ৳১৫৫\n" +
           "• ২x জাফরানী শাহী ফিরনি — ৳১৪০\n\n" +
-          "মোট খরচ: ৳১,১৭৫।\n" +
-          "💡 প্রথম অনলাইন অর্ডারে 'SARINDA15' প্রোমোকোড ব্যবহারে সরাসরি ১৫% ছাড় (৳১৭৬ সাশ্রয়) পেয়ে যাবেন মাত্র ৳৯৯৯ টাকায়!",
+          "মোট খরচ: ৳১,১৫৫।\n" +
+          "💡 প্রথম অনলাইন অর্ডারে 'SARINDA15' প্রোমোকোড ব্যবহারে সরাসরি ১৫% ছাড় (৳১৭৩ সাশ্রয়) পেয়ে যাবেন মাত্র ৳৯৮২ টাকায়!",
+        quickReplies: [
+          { label: '🍛 ২ প্লেট কাচ্চি অর্ডার করব', textToSend: '২ প্লেট কাচ্চি' },
+          { label: '🎁 স্পেশাল অফার দেখুন', textToSend: 'চলতি অফার কী আছে?' }
+        ],
         action: { label: lang === 'en' ? 'View 2-Person Menu' : '২ জনের মেনু দেখুন ও অর্ডার করুন', type: 'menu' }
       };
     }
 
-    if (partySize === 3) {
-      return {
-        id: `ai-${Date.now()}`,
-        sender: 'ai',
-        text: "৩ জনের জন্য আমাদের প্রধান খাদ্য উপদেষ্টার সেরা ভোজ প্ল্যান:\n\n" +
-          "• ৩x স্পেশাল কাচ্চি বিরিয়ানি (হাফ সাইজ) — ৳১,০২০\n" +
-          "• ২x বিয়ে বাড়ির চিকেন রোস্ট — ৳৩৬০\n" +
-          "• ১x শাহী বোরহানি (১ লিটার শেয়ারিং বোতল) — ৳৩২৫\n" +
-          "• ৩x জাফরানী শাহী ফিরনি — ৳২১০\n\n" +
-          "মোট খরচ: ৳১,৯১৫।\n" +
-          "💡 সাশ্রয়ী টিপস: চেকআউটে প্রোমোকোড 'FAMILY20' বসালে সরাসরি ২০% ছাড় (৳৩৮৩ সাশ্রয়!) পাবেন, অর্থাৎ মাত্র ৳১,৫৩২ টাকায় ৩ জন মিলে জমিয়ে শাহী খাবার উপভোগ করতে পারবেন!",
-        action: { label: lang === 'en' ? 'Order 3-Person Feast' : '৩ জনের খাবার অর্ডার করুন', type: 'menu' }
-      };
-    }
-
-    if (partySize === 4) {
+    if (partySize === 4 || q.includes('4 jon') || q.includes('৪ জন') || q.includes('family')) {
       return {
         id: `ai-${Date.now()}`,
         sender: 'ai',
@@ -425,41 +531,16 @@ export const AiAssistant: React.FC = () => {
           "• ৪x জাফরানী শাহী ফিরনি — ৳২৮০\n\n" +
           "মোট খরচ: ৳২,১৪৫।\n" +
           "💡 সাশ্রয়ী টিপস: চেকআউটে প্রোমোকোড 'FAMILY20' বসালে সরাসরি ২০% ছাড় (৳৪২৯ সাশ্রয়!) পাবেন, অর্থাৎ মাত্র ৳১,৭১৬ টাকায় ৪ জন মিলে তৃপ্তি সহকারে রাজকীয় ভোজ উপভোগ করতে পারবেন!",
+        quickReplies: [
+          { label: '🍛 ৪ প্লেট কাচ্চি বিরিয়ানি নেব', textToSend: '৪ প্লেট কাচ্চি' },
+          { label: '🎁 স্পেশাল অফার ও কুপন কোড', textToSend: 'চলতি অফার কী আছে?' },
+          { label: '📅 রেস্তোরাঁয় টেবিল বুকিং', textToSend: 'একটি টেবিল বুক করতে চাই' }
+        ],
         action: { label: lang === 'en' ? 'Order 4-Person Feast' : '৪ জনের খাবার অর্ডার করুন', type: 'menu' }
       };
     }
 
-    if (partySize === 5) {
-      return {
-        id: `ai-${Date.now()}`,
-        sender: 'ai',
-        text: "৫ জনের জন্য আমাদের প্রধান খাদ্য উপদেষ্টার সেরা ভোজ প্ল্যান:\n\n" +
-          "• ২x স্পেশাল কাচ্চি বিরিয়ানি (ফুল সাইজ) — ৳১,১৮০\n" +
-          "• ১x বাসমতী মাটন দম বিরিয়ানি — ৳৪৫০\n" +
-          "• ৩x বিয়ে বাড়ির চিকেন রোস্ট — ৳৫৪০\n" +
-          "• ১x শাহী বোরহানি (১ লিটার শেয়ারিং বোতল) — ৳৩২৫\n" +
-          "• ৫x জাফরানী শাহী ফিরনি — ৳৩৫০\n\n" +
-          "মোট খরচ: ৳২,৮৪৫।\n" +
-          "💡 সাশ্রয়ী টিপস: প্রোমোকোড 'FAMILY20' দিয়ে সরাসরি ২০% ছাড় (৳৫৬৯ সাশ্রয়!) পেয়ে পুরো ৫ জনের রাজকীয় আয়োজন পাবেন মাত্র ৳২,২৭৬ টাকায়!",
-        action: { label: lang === 'en' ? 'Order 5-Person Feast' : '৫ জনের খাবার অর্ডার করুন', type: 'menu' }
-      };
-    }
-
-    if (partySize === 6) {
-      return {
-        id: `ai-${Date.now()}`,
-        sender: 'ai',
-        text: "৬ থেকে ১০ জনের বড় আড্ডা বা পারিবারিক দাওয়াতের জন্য আমাদের স্পেশাল পরামর্শ:\n\n" +
-          "• ২x 'সারিন্দা রয়্যাল গ্র্যান্ড প্ল্যাটার' (৳৯৯০ করে) — ৳১,৯৮০ (এতে কাচ্চি, মোরগ পোলাও, রোস্ট, কাবাব ও ফিরনি অন্তর্ভুক্ত)\n" +
-          "• ১x স্পেশাল কাবাব প্ল্যাটার — ৳৬৫০\n" +
-          "• ২ লিটার ঠান্ডা শাহী বোরহানি — ৳৬৫০\n\n" +
-          "মোট খরচ: ৳৩,২৮০।\n" +
-          "💡 ১২০০ টাকার বেশি অর্ডারে 'FAMILY20' কোড ব্যবহারে সরাসরি ২০% ছাড় (৳৬৫৬ সাশ্রয়!) পেয়ে যাবেন মাত্র ৳২,৬২৪ টাকায়!",
-        action: { label: lang === 'en' ? 'Explore Family Platters' : 'গ্র্যান্ড প্ল্যাটার দেখুন', type: 'menu' }
-      };
-    }
-
-    // 5. Kacchi Pairings & Sides (e.g. "kacchi r sathe ki khabo", "biryani r sathe ki nebo")
+    // 5. Kacchi Pairings & Sides
     if (q.includes('sathe') || q.includes('সাথে') || q.includes('side') || q.includes('pairing')) {
       return {
         id: `ai-${Date.now()}`,
@@ -469,37 +550,11 @@ export const AiAssistant: React.FC = () => {
           "• **শাহী মাটন রেজালা (৳৩২০):** দই, পোস্তদানা ও কাজুবাদামের ক্রিমি গ্রেভি কাচ্চির স্বাদকে দ্বিগুণ করে দেয়।\n" +
           "• **ঠান্ডা শাহী বোরহানি (৳৭৫/৳১৫৫):** পুদিনা ও টক দইয়ের তৈরি ঐতিহ্যবাহী বোরহানি যা ভারী খাবার সহজে হজমে সাহায্য করে।\n" +
           "• **জাফরানী শাহী ফিরনি (৳৭০):** মাটির পাত্রে জমানো খাঁটি দুধের ফিরনি ভোজনের শেষে মিষ্টি সমাপ্তি এনে দেবে!",
+        quickReplies: [
+          { label: '🍛 কাচ্চি বিরিয়ানি অর্ডার করব', textToSend: 'স্পেশাল খাসির কাচ্চি' },
+          { label: '🛒 মেনু দেখুন', textToSend: 'সম্পূর্ণ মেনু দেখতে চাই' }
+        ],
         action: { label: lang === 'en' ? 'View Kacchi & Sides' : 'কাচ্চি ও সাইড ডিশ অর্ডার করুন', type: 'menu' }
-      };
-    }
-
-    // 6. Ingredients / What's inside (e.g. "biriyani r moddhe ki ki ache ?", "kacchi te ki ache")
-    const isIngredientQuery =
-      q.includes('ki ki ache') ||
-      q.includes('ki thake') ||
-      q.includes('কী কী আছে') ||
-      q.includes('কী থাকে') ||
-      q.includes('উপাদান') ||
-      q.includes('উপকরণ') ||
-      q.includes('ingredients') ||
-      q.includes('inside') ||
-      q.includes('recipe') ||
-      ((q.includes('kacchi') || q.includes('biryani') || q.includes('biriyani') || q.includes('কাচ্চি')) &&
-        (q.includes('moddhe') || q.includes('ki ache') || q.includes('ki thake') || q.includes('banay') || q.includes('ranna')));
-
-    if (isIngredientQuery) {
-      return {
-        id: `ai-${Date.now()}`,
-        sender: 'ai',
-        text: "সারিন্দার ঐতিহ্যবাহী 'স্পেশাল কাচ্চি বিরিয়ানি' তৈরি হয় আসল পুরান ঢাকার রাজকীয় খাস রেসিপিতে। এর মধ্যে থাকে:\n\n" +
-          "• **সুগন্ধি পোলাও চাল:** প্রিমিয়াম গ্রেডের সুবাসিত চিনিগুঁড়া চাল (বাসমতী ভ্যারিয়েন্টে লং-গ্রেইন বাসমতী চাল)।\n" +
-          "• **রসালো দেশি খাসির মাংস:** স্পেশাল শাহী মশলায় ম্যারিনেট করা টাটকা দেশি খাসির বড় ও তুলতুলে সাইজের মাংসের পিস।\n" +
-          "• **গাওয়া ঘি ও সরিষার তেল:** খাঁটি গাওয়া ঘি ও ঘানিভাঙা খাঁটি সরিষার তেলে মাটির হাঁড়িতে খাঁটি দমে রান্না।\n" +
-          "• **শাহী মশলাপাতি:** আসল জাফরান, জয়ত্রী, জয়ফল, আলুবোখারা, দারুচিনি, ছোট এলাচ ও তেজপাতা।\n" +
-          "• **রসালো স্পেশাল আলু:** ঘিয়ে ভাজা সোনালী রঙের রসালো ও তুলতুলে স্পেশাল দম আলু।\n" +
-          "• **ডিম ও চাটনি:** ডিমসহ ভ্যারিয়েন্টে সিদ্ধ ডিম, সাথে থাকে ফ্রেশ শসা-লেবুর শাহী সালাদ ও পুদিনা-টমেটোর চাটনি!\n\n" +
-          "💡 সারিন্দায় কোনো ক্ষতিকর কৃত্রিম রঙ বা ফ্লেভার দেওয়া হয় না—প্রতিটি লোকমা শতভাগ স্বাস্থ্যসম্মত ও খাঁটি স্বাদে ভরপুর!",
-        action: { label: lang === 'en' ? 'Order Special Kacchi' : 'কাচ্চি বিরিয়ানি অর্ডার করুন', type: 'menu' }
       };
     }
 
@@ -513,38 +568,20 @@ export const AiAssistant: React.FC = () => {
           "• **বিয়ে বাড়ির চিকেন রোস্ট (৳১৮০):** পেঁয়াজ বেরেস্তা, বাদাম বাটা ও কিশমিশের গ্রেভিতে তৈরি মিষ্টি-ঝাল স্বাদ যা বাচ্চারা দারুণ পছন্দ করে।\n" +
           "• **শাহী মাটন রেজালা (৳৩২০):** দই ও কাজুবাদামের ক্রিমি ঝোল, যাতে লাল মরিচের কোনো তীব্র ঝাল নেই।\n" +
           "• **জাফরানী শাহী ফিরনি (৳৭০):** মিষ্টি ডেজার্ট হিসেবে বাচ্চাদের অসম্ভব প্রিয়!",
+        quickReplies: [
+          { label: '🍗 শাহী মোরগ পোলাও অর্ডার করব', textToSend: 'শাহী মোরগ পোলাও' },
+          { label: '🛒 মেনু দেখুন', textToSend: 'সম্পূর্ণ মেনু দেখতে চাই' }
+        ],
         action: { label: lang === 'en' ? 'Browse Mild Dishes' : 'কম ঝালের মেনু দেখুন', type: 'menu' }
       };
     }
 
-    // 8. Beef Tehari
-    if (q.includes('tehari') || q.includes('তেহারী') || q.includes('তেহারি')) {
-      return {
-        id: `ai-${Date.now()}`,
-        sender: 'ai',
-        text: "আমাদের খাঁটি পুরান ঢাকার 'বিফ তেহারী' (৳২৯০):\n\n" +
-          "ঘানিভাঙা খাঁটি সরিষার তেলে ছোট এলাচ, দারুচিনি ও কাঁচামরিচ দিয়ে সুগন্ধি চিনিগুঁড়া চাল ও নরম তুলতুলে গরুর মাংসের টুকরো একসাথে রান্না করা হয়। তেল-মশলার ভারসাম্য নিখুঁত হওয়ায় খাওয়ার পর কোনো ভারী ভাব থাকে না! সাথে দেওয়া হয় শসা-লেবুর ফ্রেশ সালাদ।",
-        action: { label: lang === 'en' ? 'Order Beef Tehari' : 'বিফ তেহারী অর্ডার করুন', type: 'menu' }
-      };
-    }
-
-    // 9. Morog Polao
-    if (q.includes('polao') || q.includes('মোরগ') || q.includes('পোলাও') || q.includes('morog')) {
-      return {
-        id: `ai-${Date.now()}`,
-        sender: 'ai',
-        text: "আমাদের 'শাহী মোরগ পোলাও' (৳২৯০):\n\n" +
-          "ঐতিহ্যবাহী পুরান ঢাকার বিয়ের বাড়ির রন্ধনশৈলীতে খাঁটি গাওয়া ঘিয়ে রান্না সুগন্ধি চিনিগুঁড়া পোলাও, তার ওপর বড় সাইজের আস্ত রোস্ট চিকেন লেগ পিস এবং ডিম। মিষ্টি বাদাম-বেরেস্তার শাহী গ্রেভি দিয়ে পরিবেশন করা হয়।",
-        action: { label: lang === 'en' ? 'Order Morog Polao' : 'মোরগ পোলাও অর্ডার করুন', type: 'menu' }
-      };
-    }
-
-    // 10. Table / Cabin
+    // 10. Table / Cabin Booking
     if (q.includes('book') || q.includes('table') || q.includes('reserve') || q.includes('বুকিং') || q.includes('টেবিল') || q.includes('কেবিন') || q.includes('cabin')) {
       return {
         id: `ai-${Date.now()}`,
         sender: 'ai',
-        text: "সারিন্দায় আপনাকে স্বাগত! আমাদের ধানমন্ডি শাখায় রয়েছে সুপরিসর ফ্যামিলি ডাইনিং হল এবং একান্ত পারিবারিক বা ব্যবসায়িক আড্ডার জন্য সাউন্ডপ্রুফ ভিআইপি প্রাইভেট কেবিন। কোনো বুকিং ফি ছাড়াই আপনি অনলাইন থেকে সরাসরি তারিখ, সময় ও সিট বেছে নিতে পারবেন!",
+        text: "সারিন্দায় আপনাকে স্বাগত! ময়মনসিংহের সি কে ঘোষ রোডে আমাদের রেস্তোরাঁয় রয়েছে সুপরিসর ফ্যামিলি ডাইনিং হল এবং একান্ত পারিবারিক বা ব্যবসায়িক আড্ডার জন্য সাউন্ডপ্রুফ ভিআইপি প্রাইভেট কেবিন। কোনো বুকিং ফি ছাড়াই আপনি অনলাইন থেকে সরাসরি তারিখ, সময় ও সিট বেছে নিতে পারবেন!",
         action: { label: lang === 'en' ? 'Book a Table Now' : 'টেবিল বুকিং ফর্ম খুলুন', type: 'reservation' }
       };
     }
@@ -555,7 +592,11 @@ export const AiAssistant: React.FC = () => {
         id: `ai-${Date.now()}`,
         sender: 'ai',
         text: "সারিন্দার দ্রুত হোম ডেলিভারি সেবা:\n\n" +
-          "ধানমন্ডি, লালমাটিয়া, মোহাম্মদপুর ও সংলগ্ন এলাকায় মাত্র ৩০ থেকে ৪০ মিনিটের মধ্যে গরম গরম খাবার ডেলিভারি করা হয়। খাবার একদম ফ্রেশ ও স্পেশাল হট-বক্সে প্যাক করে পাঠানো হয় যাতে স্বাদ ও তাপমাত্রা একদম ঠিক থাকে!",
+          "ময়মনসিংহ শহরের সি কে ঘোষ রোড, গাঙ্গিনারপাড়, চরপাড়া, নতুন বাজার ও সংলগ্ন এলাকায় মাত্র ২৫ থেকে ৩৫ মিনিটের মধ্যে গরম গরম খাবার ডেলিভারি করা হয়। খাবার একদম ফ্রেশ ও স্পেশাল হট-বক্সে প্যাক করে পাঠানো হয় যাতে স্বাদ ও তাপমাত্রা একদম ঠিক থাকে!",
+        quickReplies: [
+          { label: '🍛 কাচ্চি বিরিয়ানি অর্ডার করব', textToSend: 'স্পেশাল খাসির কাচ্চি' },
+          { label: '🛒 সম্পূর্ণ মেনু দেখুন', textToSend: 'সম্পূর্ণ মেনু দেখতে চাই' }
+        ],
         action: { label: lang === 'en' ? 'Order for Delivery' : 'ডেলিভারির জন্য মেনু দেখুন', type: 'menu' }
       };
     }
@@ -569,6 +610,10 @@ export const AiAssistant: React.FC = () => {
           "• 'SARINDA15' — প্রথম অনলাইন অর্ডারে ফ্ল্যাট ১৫% ছাড়!\n" +
           "• 'FAMILY20' — ১২০০ টাকার বেশি ফ্যামিলি অর্ডারে ফ্ল্যাট ২০% সুপার ছাড়!\n\n" +
           "অর্ডার করার সময় কার্ট (Cart) বা চেকআউটে এই কোড বসালেই স্বয়ংক্রিয়ভাবে ডিসকাউন্ট প্রযোজ্য হবে।",
+        quickReplies: [
+          { label: '🍛 কাচ্চি বিরিয়ানি অর্ডার', textToSend: 'স্পেশাল খাসির কাচ্চি' },
+          { label: '🛒 সম্পূর্ণ মেনু দেখুন', textToSend: 'সম্পূর্ণ মেনু দেখতে চাই' }
+        ],
         action: { label: lang === 'en' ? 'View All Offers' : 'সকল অফার দেখুন', type: 'offers' }
       };
     }
@@ -579,20 +624,15 @@ export const AiAssistant: React.FC = () => {
         id: `ai-${Date.now()}`,
         sender: 'ai',
         text: "সারিন্দা রেস্তোরাঁর অবস্থান ও যোগাযোগের তথ্য:\n\n" +
-          "• ঠিকানা: রোড ১৬, ধানমন্ডি ২৭ (পুরাতন), ঢাকা - ১২০৯।\n" +
+          "• ঠিকানা: সি কে ঘোষ রোড, ময়মনসিংহ - ২২০০।\n" +
           "• ফোন ও হোয়াটসঅ্যাপ: +৮৮০ ১৭১২-১২১৪৩৪\n" +
-          "• সময়সূচি: প্রতিদিন সকাল ১১:০০ থেকে রাত ১১:৩০ পর্যন্ত উন্মুক্ত।",
+          "• সময়সূচি: প্রতিদিন সকাল ১১:০০ থেকে রাত ১১:৩০ পর্যন্ত উন্মুক্ত।\n" +
+          "• হোম ডেলিভারি জোন: সি কে ঘোষ রোড, গাঙ্গিনারপাড়, চরপাড়া, নতুন বাজার ও সমগ্র ময়মনসিংহ।",
+        quickReplies: [
+          { label: '🍛 বিরিয়ানি মেনু দেখুন', textToSend: 'বিরিয়ানি মেনু দেখতে চাই' },
+          { label: '📅 টেবিল বুকিং', textToSend: 'একটি টেবিল বুক করতে চাই' }
+        ],
         action: { label: lang === 'en' ? 'Location & Map' : 'ম্যাপ ও ঠিকানা দেখুন', type: 'contact' }
-      };
-    }
-
-    // 14. Signature Kacchi
-    if (q.includes('kacchi') || q.includes('কাচ্চি') || q.includes('biryani') || q.includes('বিরিয়ানি') || q.includes('জনপ্রিয়') || q.includes('popular') || q.includes('best')) {
-      return {
-        id: `ai-${Date.now()}`,
-        sender: 'ai',
-        text: "আমাদের ১ নম্বর সিগনেচার মাস্টারপিস হলো 'স্পেশাল কাচ্চি বিরিয়ানি' (৳৩৪০ / ফুল ৳৫৯০), যা খাঁটি সরিষার তেল ও গাওয়া ঘিয়ে মাটির হাঁড়িতে খাঁটি দমে রান্না। এর সাথে একটি বিয়ে বাড়ির চিকেন রোস্ট (৳১৮০) ও ঠান্ডা শাহী বোরহানি (৳৭৫/৳১৫৫) নিলে পাবেন আসল শাহী তৃপ্তি!",
-        action: { label: lang === 'en' ? 'Order Signature Kacchi' : 'কাচ্চি বিরিয়ানি অর্ডার করুন', type: 'menu' }
       };
     }
 
@@ -600,7 +640,13 @@ export const AiAssistant: React.FC = () => {
     return {
       id: `ai-${Date.now()}`,
       sender: 'ai',
-      text: "আমি আপনার সারিন্দা চিফ ফুড অ্যাডভাইজর! আপনি কতজনের জন্য খাবার খুঁজছেন (যেমন: '৪ জনের খাবার' বা 'biriyani r moddhe ki ki ache?'), আপনার বাজেট কত, বা কেমন খাবার পছন্দ—বলুন, আমি মেনু দেখে নিখুঁত কম্বিনেশন ও ডিসকাউন্ট হিসেব করে দেব!",
+      text: "আমি সারিন্দার স্মার্ট ফুড কনসিয়ার্জ! আপনি কেমন খাবার পছন্দ করেন, কতজনের জন্য লাগবে, বা বাজেট কত বলুন—আমি সেরা খাবারের পরামর্শ ও ১-ক্লিকে WhatsApp-এ সরাসরি অর্ডার প্রস্তুত করে দেব!",
+      quickReplies: [
+        { label: '🍛 বিরিয়ানি ও কাচ্চি মেনু', textToSend: 'বিরিয়ানি মেনু দেখতে চাই' },
+        { label: '👨‍👩‍👦 ৪ জনের ফ্যামিলি কম্বো', textToSend: '৪ জনের জন্য কী খাবার নেওয়া যায়?' },
+        { label: '🎁 চলতি স্পেশাল অফার', textToSend: 'চলতি অফার কী আছে?' },
+        { label: '📅 টেবিল ও কেবিন বুকিং', textToSend: 'একটি টেবিল বুক করতে চাই' }
+      ],
       action: { label: lang === 'en' ? 'View Full Menu' : 'সম্পূর্ণ মেনু দেখুন', type: 'menu' }
     };
   };
@@ -639,7 +685,8 @@ export const AiAssistant: React.FC = () => {
             sender: 'ai',
             text: data.text,
             action: data.action,
-            orderData: data.orderData
+            orderData: data.orderData,
+            quickReplies: data.quickReplies
           };
           setMessages((prev) => [...prev, reply]);
           setIsTyping(false);
@@ -685,14 +732,18 @@ export const AiAssistant: React.FC = () => {
     setDeliveryFee(zone.fee);
   };
 
-  const handleBorhaniChoice = (choice: number | 'no', msgId: string, currentOrderData: OrderData) => {
+  const handleBorhaniChoice = (choice: 'borhani' | 'kebab' | 'both' | 'no' | number, msgId: string, currentOrderData: OrderData) => {
     const isNo = choice === 'no';
-    const borhaniQty = typeof choice === 'number' ? choice : 0;
-    
-    // Add user reply message
-    const userReplyText = isNo
-      ? 'না, শুধু বিরিয়ানি দিন'
-      : `হ্যাঁ, ${borhaniQty}টা শাহী বোরহানি দিন`;
+    const isBoth = choice === 'both';
+    const isKebab = choice === 'kebab';
+    const isBorhani = choice === 'borhani' || typeof choice === 'number';
+    const prevQty = currentOrderData.items[0]?.quantity || 2;
+    const borhaniQty = typeof choice === 'number' ? choice : prevQty;
+
+    let userReplyText = 'না, শুধু খাবার দিন';
+    if (isBoth) userReplyText = 'বোরহানি ও কাবাব দুটোই দিন';
+    else if (isKebab) userReplyText = 'হ্যাঁ, জালি কাবাব দিন';
+    else if (isBorhani) userReplyText = `হ্যাঁ, ${borhaniQty}টা শাহী বোরহানি দিন`;
 
     const userMsg: ChatMessage = {
       id: `usr-${Date.now()}`,
@@ -701,19 +752,20 @@ export const AiAssistant: React.FC = () => {
     };
 
     const finalItems = [...currentOrderData.items];
-    if (!isNo && borhaniQty > 0) {
-      finalItems.push({
-        id: 'shahi-borhani',
-        name: 'Traditional Shahi Borhani',
-        banglaName: 'শাহী বোরহানি (গ্লাস)',
-        price: 75,
-        quantity: borhaniQty
-      });
+    if (isBoth) {
+      finalItems.push(
+        { id: 'shahi-borhani', name: 'Traditional Shahi Borhani', banglaName: 'শাহী বোরহানি (গ্লাস)', price: 75, quantity: prevQty },
+        { id: 'jali-kebab', name: 'Special Jali Kebab', banglaName: 'স্পেশাল জালি কাবাব (পিস)', price: 50, quantity: prevQty }
+      );
+    } else if (isKebab) {
+      finalItems.push({ id: 'jali-kebab', name: 'Special Jali Kebab', banglaName: 'স্পেশাল জালি কাবাব (পিস)', price: 50, quantity: prevQty });
+    } else if (isBorhani && borhaniQty > 0) {
+      finalItems.push({ id: 'shahi-borhani', name: 'Traditional Shahi Borhani', banglaName: 'শাহী বোরহানি (গ্লাস)', price: 75, quantity: borhaniQty });
     }
 
     const aiConfirmationText = isNo
-      ? `ঠিক আছে! আপনার জন্য ${currentOrderData.items[0]?.quantity || 2} প্লেট স্পেশাল কাচ্চি বিরিয়ানি প্রস্তুত করেছি।\n\nনিচে আপনার ডেলিভারি এলাকা নির্বাচন করুন, ডেলিভারি চার্জসহ মোট বিল স্বয়ংক্রিয়ভাবে চলে আসবে এবং সরাসরি এক ক্লিকে অর্ডার কনফার্ম করতে পারবেন 👇`
-      : `চমৎকার! আপনার জন্য ${currentOrderData.items[0]?.quantity || 2} প্লেট কাচ্চি বিরিয়ানি ও ${borhaniQty}টা ঠান্ডা শাহী বোরহানি প্রস্তুত করেছি।\n\nনিচে আপনার ডেলিভারি এলাকা নির্বাচন করুন, ডেলিভারি চার্জসহ মোট বিল স্বয়ংক্রিয়ভাবে চলে আসবে এবং সরাসরি এক ক্লিকে অর্ডার কনফার্ম করতে পারবেন 👇`;
+      ? `ঠিক আছে! আপনার জন্য ${prevQty} প্লেট ${currentOrderData.items[0]?.banglaName || 'কাচ্চি বিরিয়ানি'} প্রস্তুত করেছি।\n\nনিচে আপনার ডেলিভারি এলাকা নির্বাচন করুন, ডেলিভারি চার্জসহ মোট বিল স্বয়ংক্রিয়ভাবে চলে এসেছে এবং সরাসরি WhatsApp বা Messenger-এ অর্ডার পাঠাতে পারেন 👇`
+      : `চমৎকার! আপনার জন্য ${prevQty} প্লেট ${currentOrderData.items[0]?.banglaName || 'কাচ্চি বিরিয়ানি'} চূড়ান্ত অর্ডার প্রস্তুত করেছি।\n\nনিচে আপনার ডেলিভারি এলাকা নির্বাচন করুন, ডেলিভারি চার্জসহ মোট বিল স্বয়ংক্রিয়ভাবে চলে এসেছে এবং সরাসরি WhatsApp বা Messenger-এ অর্ডার পাঠাতে পারেন 👇`;
 
     const aiReplyMsg: ChatMessage = {
       id: `ai-${Date.now() + 1}`,
@@ -722,8 +774,8 @@ export const AiAssistant: React.FC = () => {
       orderData: {
         stage: 'ready',
         items: finalItems,
-        selectedArea: 'ধানমন্ডি / কলাবাগান',
-        deliveryFee: 40
+        selectedArea: 'সি কে ঘোষ রোড / টাউন হল',
+        deliveryFee: 30
       }
     };
 
@@ -749,8 +801,8 @@ export const AiAssistant: React.FC = () => {
       }
     });
 
-    const zoneName = orderData.selectedArea || 'ধানমন্ডি / কলাবাগান';
-    const zoneFee = orderData.deliveryFee ?? 40;
+    const zoneName = orderData.selectedArea || 'সি কে ঘোষ রোড / টাউন হল';
+    const zoneFee = orderData.deliveryFee ?? 30;
     setDeliveryArea(zoneName);
     setDeliveryFee(zoneFee);
 
@@ -897,28 +949,52 @@ export const AiAssistant: React.FC = () => {
                   {m.text}
                 </div>
 
-                {/* Borhani Upsell Option Buttons */}
+                {/* Interactive Quick Reply Buttons */}
+                {m.quickReplies && m.quickReplies.length > 0 && (
+                  <div className="mt-2 flex flex-wrap gap-1.5 animate-in fade-in slide-in-from-bottom-2">
+                    {m.quickReplies.map((qr, qIdx) => (
+                      <button
+                        key={qIdx}
+                        type="button"
+                        onClick={() => handleSend(qr.textToSend || qr.label)}
+                        className="px-3 py-1.5 rounded-xl bg-amber-50 hover:bg-amber-100 border border-amber-300 text-amber-950 text-xs font-bold transition shadow-xs cursor-pointer active:scale-95 flex items-center gap-1"
+                      >
+                        <span>{qr.label}</span>
+                      </button>
+                    ))}
+                  </div>
+                )}
+
+                {/* Borhani / Kebab Upsell Option Buttons */}
                 {m.orderData?.stage === 'upsell' && (
                   <div className="mt-2 flex flex-wrap gap-1.5 animate-in fade-in slide-in-from-bottom-2">
                     <button
+                      type="button"
                       onClick={() => handleBorhaniChoice(m.orderData!.suggestAddon?.defaultQty || 2, m.id, m.orderData!)}
-                      className="px-3 py-2 rounded-xl bg-amber-50 border border-amber-300 text-amber-950 text-xs font-black hover:bg-amber-100 flex items-center gap-1.5 shadow-xs transition cursor-pointer active:scale-98"
+                      className="px-3 py-1.5 rounded-xl bg-amber-50 border border-amber-300 text-amber-950 text-xs font-bold hover:bg-amber-100 flex items-center gap-1.5 shadow-xs transition cursor-pointer active:scale-95"
                     >
-                      <span>🥛 হ্যাঁ, {m.orderData!.suggestAddon?.defaultQty || 2}টা শাহী বোরহানি দিন (+৳{(m.orderData!.suggestAddon?.defaultQty || 2) * (m.orderData!.suggestAddon?.price || 75)})</span>
+                      <span>🥛 হ্যাঁ, {m.orderData!.suggestAddon?.defaultQty || 2}টা শাহী বোরহানি দিন (+৳{(m.orderData!.suggestAddon?.defaultQty || 2) * 75})</span>
                     </button>
-                    {(m.orderData!.suggestAddon?.defaultQty || 2) !== 1 && (
-                      <button
-                        onClick={() => handleBorhaniChoice(1, m.id, m.orderData!)}
-                        className="px-3 py-2 rounded-xl bg-amber-50/90 border border-amber-300/80 text-amber-950 text-xs font-bold hover:bg-amber-100 flex items-center gap-1.5 shadow-xs transition cursor-pointer active:scale-98"
-                      >
-                        <span>🥛 ১টা বোরহানি দিন (+৳{m.orderData!.suggestAddon?.price || 75})</span>
-                      </button>
-                    )}
                     <button
-                      onClick={() => handleBorhaniChoice('no', m.id, m.orderData!)}
-                      className="px-3 py-2 rounded-xl bg-gray-100 border border-gray-300 text-gray-700 text-xs font-bold hover:bg-gray-200 transition cursor-pointer active:scale-98"
+                      type="button"
+                      onClick={() => handleBorhaniChoice('kebab', m.id, m.orderData!)}
+                      className="px-3 py-1.5 rounded-xl bg-orange-50 border border-orange-300 text-orange-950 text-xs font-bold hover:bg-orange-100 flex items-center gap-1.5 shadow-xs transition cursor-pointer active:scale-95"
                     >
-                      <span>❌ না, শুধু বিরিয়ানি দিন</span>
+                      <span>🍢 {m.orderData!.items[0]?.quantity || 2}টা জালি কাবাব দিন (+৳{(m.orderData!.items[0]?.quantity || 2) * 50})</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleBorhaniChoice('both', m.id, m.orderData!)}
+                      className="px-3 py-1.5 rounded-xl bg-emerald-50 border border-emerald-300 text-emerald-950 text-xs font-bold hover:bg-emerald-100 flex items-center gap-1.5 shadow-xs transition cursor-pointer active:scale-95"
+                    >
+                      <span>🥛+🍢 বোরহানি ও কাবাব দুটোই</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleBorhaniChoice('no', m.id, m.orderData!)}
+                      className="px-3 py-1.5 rounded-xl bg-gray-100 border border-gray-300 text-gray-700 text-xs font-bold hover:bg-gray-200 transition cursor-pointer active:scale-95"
+                    >
+                      <span>❌ না, শুধু খাবার দিন</span>
                     </button>
                   </div>
                 )}
@@ -926,8 +1002,8 @@ export const AiAssistant: React.FC = () => {
                 {/* In-Chat Order & Delivery Location Box */}
                 {m.orderData?.stage === 'ready' && (() => {
                   const subtotal = m.orderData.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
-                  const fee = m.orderData.deliveryFee ?? 40;
-                  const currentArea = m.orderData.selectedArea || 'ধানমন্ডি / কলাবাগান';
+                  const fee = m.orderData.deliveryFee ?? 30;
+                  const currentArea = m.orderData.selectedArea || 'সি কে ঘোষ রোড / টাউন হল';
 
                   return (
                     <div className="mt-2.5 w-full max-w-[340px] rounded-2xl bg-linear-to-br from-brand-primary via-brand-dark to-brand-primary text-white p-3.5 shadow-xl border border-brand-gold/40 animate-in zoom-in-95">
@@ -992,10 +1068,10 @@ export const AiAssistant: React.FC = () => {
                         <div className="flex items-center justify-between text-[11px]">
                           <span className="font-bold text-brand-cream/90 flex items-center gap-1">
                             <MapPin className="w-3 h-3 text-brand-gold" />
-                            {lang === 'en' ? 'Select Delivery Area:' : 'ডেলিভারি এলাকা নির্বাচন করুন:'}
+                            {lang === 'en' ? 'Delivery Area (Mymensingh):' : 'ডেলিভারি এলাকা (ময়মনসিংহ):'}
                           </span>
                           <span className="text-[10px] text-brand-gold font-bold">
-                            {DELIVERY_ZONES.find(z => z.name === currentArea)?.time || '২৫-৩৫ মিনিট'}
+                            {DELIVERY_ZONES.find(z => z.name === currentArea)?.time || '২০-৩০ মিনিট'}
                           </span>
                         </div>
                         <select
@@ -1027,16 +1103,53 @@ export const AiAssistant: React.FC = () => {
                         </div>
                       </div>
 
-                      {/* Confirmation & Cart Buttons */}
+                      {/* 1-Click WhatsApp & Messenger & Checkout Buttons */}
                       <div className="pt-2 flex flex-col gap-1.5">
+                        {/* 1-Click WhatsApp Order */}
                         <button
-                          onClick={() => handleConfirmOrderCheckout(m.orderData!)}
-                          className="w-full py-2.5 px-3 rounded-xl bg-brand-accent hover:bg-amber-600 text-white font-black text-xs shadow-md transition flex items-center justify-center gap-1.5 cursor-pointer border border-white/20 active:scale-98"
+                          type="button"
+                          onClick={() => {
+                            const waText = buildWhatsAppOrderMessage(m.orderData!);
+                            const waUrl = `https://wa.me/8801712121434?text=${encodeURIComponent(waText)}`;
+                            window.open(waUrl, '_blank');
+                          }}
+                          className="w-full py-2.5 px-3 rounded-xl bg-[#25D366] hover:bg-[#20ba5a] text-white font-black text-xs shadow-md transition flex items-center justify-center gap-2 cursor-pointer border border-white/20 active:scale-98"
                         >
-                          <ShoppingBag className="w-4 h-4 text-white" />
-                          <span>{lang === 'en' ? 'Confirm Order (Checkout)' : 'অর্ডার কনফার্ম করুন (চেকআউট)'}</span>
+                          <svg className="w-4 h-4 fill-current shrink-0" viewBox="0 0 24 24">
+                            <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/>
+                          </svg>
+                          <span>{lang === 'en' ? 'Send Order to WhatsApp (1-Click)' : 'সরাসরি WhatsApp-এ অর্ডার পাঠান (১-ক্লিক)'}</span>
                         </button>
+
+                        {/* Messenger Order */}
                         <button
+                          type="button"
+                          onClick={() => {
+                            const waText = buildWhatsAppOrderMessage(m.orderData!);
+                            try {
+                              navigator.clipboard.writeText(waText);
+                            } catch (e) {}
+                            window.open('https://m.me/sarindabd', '_blank');
+                          }}
+                          className="w-full py-2 px-3 rounded-xl bg-[#0084FF] hover:bg-[#0073e6] text-white font-bold text-xs shadow-xs transition flex items-center justify-center gap-2 cursor-pointer border border-white/20 active:scale-98"
+                        >
+                          <MessageCircle className="w-4 h-4 text-white shrink-0" />
+                          <span>{lang === 'en' ? 'Send Order on Messenger' : 'Messenger-এ অর্ডার পাঠান'}</span>
+                        </button>
+
+                        {/* Website Checkout */}
+                        <button
+                          type="button"
+                          onClick={() => handleConfirmOrderCheckout(m.orderData!)}
+                          className="w-full py-2 px-3 rounded-xl bg-brand-accent hover:bg-amber-600 text-white font-bold text-xs shadow-xs transition flex items-center justify-center gap-1.5 cursor-pointer border border-white/20 active:scale-98"
+                        >
+                          <ShoppingBag className="w-3.5 h-3.5 text-white" />
+                          <span>{lang === 'en' ? 'Checkout on Website' : 'ওয়েবসাইটে সরাসরি চেকআউট'}</span>
+                        </button>
+
+                        {/* View in Cart */}
+                        <button
+                          type="button"
                           onClick={() => handleOpenCartWithItems(m.orderData!)}
                           className="w-full py-1.5 px-3 rounded-lg bg-white/10 hover:bg-white/20 text-white/80 hover:text-white text-[11px] font-bold transition flex items-center justify-center gap-1 cursor-pointer"
                         >
