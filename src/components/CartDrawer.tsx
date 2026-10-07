@@ -57,7 +57,14 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ onProceedCheckout }) => 
       `-------------------------\n\n` +
       `দয়া করে আমার অর্ডারটি কনফার্ম করুন ও ডেলিভারির সময় জানিয়ে দিন। ধন্যবাদ!`;
 
-    window.open(`https://wa.me/8801852363235?text=${encodeURIComponent(msg)}`, '_blank', 'noopener,noreferrer');
+    const savedWa = localStorage.getItem('sarinda_test_wa_number');
+    let targetPhone = '8801852363235';
+    if (savedWa) {
+      const clean = savedWa.replace(/[^0-9]/g, '');
+      targetPhone = clean.startsWith('01') ? '88' + clean : clean;
+    }
+
+    window.open(`https://wa.me/${targetPhone}?text=${encodeURIComponent(msg)}`, '_blank', 'noopener,noreferrer');
   };
 
   if (!isCartOpen) return null;

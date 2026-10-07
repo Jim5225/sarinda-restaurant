@@ -89,7 +89,14 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ isOpen, onClose })
       `Total Payable: ৳${placedOrder.total}\n` +
       `Payment: ${placedOrder.paymentMethod.toUpperCase()}`;
 
-    window.open(`https://wa.me/8801852363235?text=${encodeURIComponent(msg)}`, '_blank');
+    const savedWa = localStorage.getItem('sarinda_test_wa_number');
+    let targetPhone = '8801852363235';
+    if (savedWa) {
+      const clean = savedWa.replace(/[^0-9]/g, '');
+      targetPhone = clean.startsWith('01') ? '88' + clean : clean;
+    }
+
+    window.open(`https://wa.me/${targetPhone}?text=${encodeURIComponent(msg)}`, '_blank', 'noopener,noreferrer');
   };
 
   const resetAndClose = () => {

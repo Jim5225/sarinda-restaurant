@@ -133,7 +133,14 @@ export const GroupInquiryModal: React.FC = () => {
               {/* Instant WhatsApp Connect */}
               <div className="pt-4 flex flex-col sm:flex-row gap-3 justify-center">
                 <a
-                  href={`https://wa.me/8801852363235?text=${getWhatsAppMessage()}`}
+                  href={`https://wa.me/${(() => {
+                    const s = localStorage.getItem('sarinda_test_wa_number');
+                    if (s) {
+                      const c = s.replace(/[^0-9]/g, '');
+                      return c.startsWith('01') ? '88' + c : c;
+                    }
+                    return '8801852363235';
+                  })()}?text=${getWhatsAppMessage()}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 shadow-md transition"
