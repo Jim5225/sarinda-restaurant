@@ -16,7 +16,8 @@ import {
   ChevronDown,
   Globe,
   Sparkles,
-  ShoppingBag
+  ShoppingBag,
+  Download
 } from 'lucide-react';
 
 export const GroupHeader: React.FC = () => {
@@ -159,6 +160,18 @@ export const GroupHeader: React.FC = () => {
             >
               <ShieldCheck className="w-3.5 h-3.5 text-brand-gold" />
               <span className="hidden sm:inline">Admin POS</span>
+            </button>
+
+            <span className="text-gray-600 hidden md:inline">|</span>
+
+            {/* Install App */}
+            <button
+              onClick={() => setActiveTab('admin')}
+              className="text-brand-gold hover:text-white flex items-center gap-1 transition text-xs cursor-pointer font-black"
+              title="ইনস্টল পিসি ও মোবাইল অ্যাপ"
+            >
+              <Download className="w-3.5 h-3.5 text-brand-gold" />
+              <span className="hidden sm:inline">ইনস্টল অ্যাপ</span>
             </button>
           </div>
 

@@ -40,6 +40,7 @@ import {
 } from 'lucide-react';
 import { MenuItem, Order, Reservation, DailyExpense, ExpenseCategory } from '../types';
 import { OfflinePosTerminal } from './OfflinePosTerminal';
+import { InstallAppModal } from './InstallAppModal';
 
 export const AdminPortal: React.FC = () => {
   const {
@@ -62,6 +63,7 @@ export const AdminPortal: React.FC = () => {
   const [activeAdminTab, setActiveAdminTab] = useState<'pos' | 'overview' | 'finance' | 'orders' | 'reservations' | 'menu' | 'offers'>('pos');
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [orderSourceFilter, setOrderSourceFilter] = useState<'all' | 'delivery' | 'dine_in' | 'pickup'>('all');
+  const [isInstallModalOpen, setIsInstallModalOpen] = useState(false);
 
   // Peak Hour Rush State
   const [isPeakHour, setIsPeakHour] = useState<boolean>(() => {
@@ -303,6 +305,16 @@ export const AdminPortal: React.FC = () => {
                 🔴 ৪০মি. (ফুল)
               </button>
             </div>
+
+            {/* 3. Install PC / Mobile App Action */}
+            <button
+              onClick={() => setIsInstallModalOpen(true)}
+              className="px-3.5 py-2 rounded-xl bg-brand-gold/20 hover:bg-brand-gold/30 text-brand-gold border border-brand-gold/50 font-black text-xs flex items-center gap-1.5 transition cursor-pointer shadow-sm hover:scale-102"
+              title="উইন্ডোজ পিসি ও অ্যান্ড্রয়েড মোবাইল অ্যাপ ইনস্টল করুন"
+            >
+              <Download className="w-3.5 h-3.5 text-brand-gold" />
+              <span>ইনস্টল অ্যাপ (PC & Mobile)</span>
+            </button>
 
           </div>
 
@@ -2007,6 +2019,12 @@ export const AdminPortal: React.FC = () => {
           </div>
         </div>
       )}
+
+      {/* Standalone PC & Mobile App Install Modal */}
+      <InstallAppModal
+        isOpen={isInstallModalOpen}
+        onClose={() => setIsInstallModalOpen(false)}
+      />
 
     </div>
   );

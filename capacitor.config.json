@@ -1,0 +1,10 @@
+{
+  "appId": "com.sarindagroup.pos",
+  "appName": "Sarinda Group",
+  "webDir": "dist",
+  "bundledWebRuntime": false,
+  "server": {
+    "url": "https://sarinda-group.vercel.app",
+    "cleartext": true
+  }
+}
