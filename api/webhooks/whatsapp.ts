@@ -18,20 +18,19 @@ export default async function handler(req: any, res: any) {
     return res.status(200).end();
   }
 
-  const query = req.query || {};
-  const url = req.url || '';
+  // Parse search params reliably across all environments
+  const rawUrl = req.url || '';
+  let parsedQuery: Record<string, any> = {};
+  try {
+    const parsed = new URL(rawUrl, 'http://localhost');
+    parsed.searchParams.forEach((val, key) => {
+      parsedQuery[key] = val;
+    });
+  } catch {}
 
-  // Route to Conversation Debugger & Management API if requested
-  if (
-    query.action === 'conversations' || 
-    query.route === 'conversations' || 
-    url.includes('/conversations') || 
-    url.includes('action=conversations')
-  ) {
-    return conversationsHandler(req, res);
-  }
+  const query = { ...parsedQuery, ...(req.query || {}) };
 
-  // 1. Meta Webhook Verification (GET request)
+  // 1. GET requests: Handle Meta Webhook Verification OR Conversation Debugger
   if (req.method === 'GET') {
     const mode = query['hub.mode'];
     const token = query['hub.verify_token'];
@@ -39,15 +38,20 @@ export default async function handler(req: any, res: any) {
 
     const VERIFY_TOKEN = process.env.WHATSAPP_VERIFY_TOKEN || 'sarinda_whatsapp_token_2026';
 
-    if (mode === 'subscribe' && token === VERIFY_TOKEN) {
-      console.log('Meta WhatsApp Webhook verified successfully!');
-      return res.status(200).send(challenge);
-    } else {
-      return res.status(403).json({ error: 'Verification token mismatch' });
+    if (mode === 'subscribe') {
+      if (token === VERIFY_TOKEN) {
+        console.log('Meta WhatsApp Webhook verified successfully!');
+        return res.status(200).send(challenge);
+      } else {
+        return res.status(403).json({ error: 'Verification token mismatch' });
+      }
     }
+
+    // Any non-Meta GET request serves Conversation History for Admin Dashboard
+    return conversationsHandler(req, res);
   }
 
-  // 2. Incoming Messages Event (POST request)
+  // 2. POST requests: Handle Admin Handoff Updates OR Incoming Customer Messages
   if (req.method === 'POST') {
     try {
       let body = req.body;
@@ -57,6 +61,11 @@ export default async function handler(req: any, res: any) {
         } catch {
           // might be urlencoded
         }
+      }
+
+      // If updating conversation status (e.g. human takeover / resolve)
+      if (body?.conversationId && (body?.status || body?.requiresHuman !== undefined)) {
+        return conversationsHandler(req, res);
       }
 
       let userText = '';
