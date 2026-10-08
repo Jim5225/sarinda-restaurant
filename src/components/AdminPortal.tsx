@@ -36,11 +36,13 @@ import {
   Printer,
   ChevronRight,
   PhoneCall,
-  RefreshCw
+  RefreshCw,
+  Bot
 } from 'lucide-react';
 import { MenuItem, Order, Reservation, DailyExpense, ExpenseCategory } from '../types';
 import { OfflinePosTerminal } from './OfflinePosTerminal';
 import { InstallAppModal } from './InstallAppModal';
+import { AiCommunicationDashboard } from './admin/AiCommunicationDashboard';
 
 export const AdminPortal: React.FC = () => {
   const {
@@ -60,7 +62,7 @@ export const AdminPortal: React.FC = () => {
     tables
   } = useStore();
 
-  const [activeAdminTab, setActiveAdminTab] = useState<'pos' | 'overview' | 'finance' | 'orders' | 'reservations' | 'menu' | 'offers'>('pos');
+  const [activeAdminTab, setActiveAdminTab] = useState<'pos' | 'overview' | 'finance' | 'orders' | 'reservations' | 'menu' | 'offers' | 'ai_chat'>('pos');
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [orderSourceFilter, setOrderSourceFilter] = useState<'all' | 'delivery' | 'dine_in' | 'pickup'>('all');
   const [isInstallModalOpen, setIsInstallModalOpen] = useState(false);
@@ -372,6 +374,14 @@ export const AdminPortal: React.FC = () => {
               badgeColor: 'bg-white/20 text-white'
             },
             {
+              id: 'ai_chat',
+              icon: Bot,
+              label: 'AI সহকারী ও চ্যাট',
+              sub: 'WhatsApp AI Agent',
+              badge: 'Gemini Live',
+              badgeColor: 'bg-emerald-400 text-slate-950 font-black'
+            },
+            {
               id: 'overview',
               icon: PieChart,
               label: 'স্টোর সামারি',
@@ -418,6 +428,7 @@ export const AdminPortal: React.FC = () => {
           { id: 'reservations', label: `📅 বুকিং (${pendingResCount})` },
           { id: 'menu', label: `🍲 মেনু (${menu.length})` },
           { id: 'offers', label: `🏷️ অফার (${offers.length})` },
+          { id: 'ai_chat', label: '🤖 AI সহকারী' },
           { id: 'overview', label: '📈 ওভারভিউ' }
         ].map((tab) => (
           <button
@@ -1692,6 +1703,13 @@ export const AdminPortal: React.FC = () => {
                 </div>
               ))}
             </div>
+          </div>
+        )}
+
+        {/* 6. AI CUSTOMER COMMUNICATION & META WHATSAPP PLATFORM TAB */}
+        {activeAdminTab === 'ai_chat' && (
+          <div className="space-y-8 animate-fadeIn">
+            <AiCommunicationDashboard />
           </div>
         )}
 
