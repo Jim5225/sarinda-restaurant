@@ -345,7 +345,7 @@ export class ConversationService {
               id: c.id,
               platform: c.platform,
               platformUserId: c.platform_user_id,
-              customerName: c.customers?.name || c.platform_user_id,
+              customerName: (Array.isArray(c.customers) ? (c.customers[0] as any)?.name : (c.customers as any)?.name) || c.platform_user_id,
               status: c.status,
               lastIntent: c.last_intent || 'unknown',
               requiresHuman: c.requires_human || false,

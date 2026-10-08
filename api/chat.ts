@@ -582,7 +582,7 @@ function detectOrderIntent(userQuery: string, history: any[] = []): { text: stri
 }
 
 // Dynamic Intelligent Advisor Decision Engine (Always replies in rich Bengali as requested)
-function generateAdvisorDecision(userQuery: string, lang: string, history: any[] = []): { text: string; action: any; orderData?: OrderData } {
+function generateAdvisorDecision(userQuery: string, lang: string, history: any[] = []): { text: string; action: any; orderData?: OrderData; quickReplies?: any[] } {
   const orderDecision = detectOrderIntent(userQuery, history);
   if (orderDecision) {
     return orderDecision;
