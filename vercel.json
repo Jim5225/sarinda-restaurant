@@ -3,11 +3,15 @@
   "rewrites": [
     {
       "source": "/api/webhooks/whatsapp",
-      "destination": "/api/webhooks/whatsapp"
+      "destination": "/api/whatsapp"
     },
     {
       "source": "/api/webhooks/messenger",
-      "destination": "/api/webhooks/messenger"
+      "destination": "/api/whatsapp"
+    },
+    {
+      "source": "/api/conversations",
+      "destination": "/api/whatsapp?action=conversations"
     }
   ]
 }

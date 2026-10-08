@@ -60,7 +60,10 @@ export const AiCommunicationDashboard: React.FC = () => {
   const fetchConversations = async () => {
     setIsLoading(true);
     try {
-      const res = await fetch('/api/conversations');
+      let res = await fetch('/api/conversations');
+      if (!res.ok) {
+        res = await fetch('/api/whatsapp?action=conversations');
+      }
       if (res.ok) {
         const data = await res.json();
         if (data.conversations) {
@@ -83,7 +86,10 @@ export const AiCommunicationDashboard: React.FC = () => {
   const loadConversationDetails = async (id: string) => {
     setSelectedConvId(id);
     try {
-      const res = await fetch(`/api/conversations?id=${id}`);
+      let res = await fetch(`/api/conversations?id=${id}`);
+      if (!res.ok) {
+        res = await fetch(`/api/whatsapp?action=conversations&id=${id}`);
+      }
       if (res.ok) {
         const data = await res.json();
         if (data.conversation) {
@@ -97,16 +103,24 @@ export const AiCommunicationDashboard: React.FC = () => {
 
   const handleToggleHandoff = async (convId: string, currentStatus: string) => {
     const nextStatus = currentStatus === 'handed_off' ? 'active' : 'handed_off';
+    const payload = JSON.stringify({
+      conversationId: convId,
+      status: nextStatus,
+      requiresHuman: nextStatus === 'handed_off'
+    });
     try {
-      await fetch('/api/conversations', {
+      let res = await fetch('/api/conversations', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          conversationId: convId,
-          status: nextStatus,
-          requiresHuman: nextStatus === 'handed_off'
-        })
+        body: payload
       });
+      if (!res.ok) {
+        await fetch('/api/whatsapp?action=conversations', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: payload
+        });
+      }
       fetchConversations();
       if (selectedConvId === convId) {
         loadConversationDetails(convId);
@@ -123,16 +137,25 @@ export const AiCommunicationDashboard: React.FC = () => {
     setIsSimulating(true);
     setSimResult(null);
 
+    const payload = JSON.stringify({
+      prompt: simMessage.trim(),
+      from: simPhone.trim(),
+      name: 'Developer Simulator'
+    });
+
     try {
-      const res = await fetch('/api/webhooks/whatsapp', {
+      let res = await fetch('/api/webhooks/whatsapp', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          prompt: simMessage.trim(),
-          from: simPhone.trim(),
-          name: 'Developer Simulator'
-        })
+        body: payload
       });
+      if (!res.ok) {
+        res = await fetch('/api/whatsapp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: payload
+        });
+      }
 
       const data = await res.json();
       setSimResult(data);
