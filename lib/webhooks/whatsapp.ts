@@ -2,8 +2,8 @@
 // Official WhatsApp Cloud API Webhook Handler for Sarinda Group
 // PRD Section 14: WhatsApp Webhook
 
-import { AiCommunicationService } from '../lib/aiService';
-import conversationsHandler from '../conversations';
+import { AiCommunicationService } from '../aiService';
+import conversationsHandler from '../server/conversations';
 
 declare const process: any;
 

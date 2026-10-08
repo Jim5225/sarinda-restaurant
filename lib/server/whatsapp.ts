@@ -2,7 +2,7 @@
 // Unified API Gateway: Routes Meta WhatsApp Webhooks, Messenger, and Conversation Debugger
 // PRD Section 14 & 27
 
-import webhookHandler from './webhooks/whatsapp';
+import webhookHandler from '../webhooks/whatsapp';
 import conversationsHandler from './conversations';
 
 export default async function handler(req: any, res: any) {

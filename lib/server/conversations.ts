@@ -2,7 +2,7 @@
 // Developer & Admin Debugging API
 // PRD Section 27: Admin / Developer Debugging
 
-import { ConversationService } from './lib/database/conversationService';
+import { ConversationService } from '../database/conversationService';
 
 export default async function handler(req: any, res: any) {
   res.setHeader('Access-Control-Allow-Credentials', 'true');

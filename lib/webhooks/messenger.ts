@@ -2,7 +2,7 @@
 // Facebook Page Messenger Webhook Handler for Sarinda Group
 // PRD Section 15 & 23: Messenger Integration — Phase 2
 
-import { AiCommunicationService } from '../lib/aiService';
+import { AiCommunicationService } from '../aiService';
 
 declare const process: any;
 
