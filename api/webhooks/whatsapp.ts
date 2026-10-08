@@ -3,6 +3,7 @@
 // PRD Section 14: WhatsApp Webhook
 
 import { AiCommunicationService } from '../lib/aiService';
+import conversationsHandler from '../conversations';
 
 declare const process: any;
 
@@ -17,9 +18,21 @@ export default async function handler(req: any, res: any) {
     return res.status(200).end();
   }
 
+  const query = req.query || {};
+  const url = req.url || '';
+
+  // Route to Conversation Debugger & Management API if requested
+  if (
+    query.action === 'conversations' || 
+    query.route === 'conversations' || 
+    url.includes('/conversations') || 
+    url.includes('action=conversations')
+  ) {
+    return conversationsHandler(req, res);
+  }
+
   // 1. Meta Webhook Verification (GET request)
   if (req.method === 'GET') {
-    const query = req.query || {};
     const mode = query['hub.mode'];
     const token = query['hub.verify_token'];
     const challenge = query['hub.challenge'];
