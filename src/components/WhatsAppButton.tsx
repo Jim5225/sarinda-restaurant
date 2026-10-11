@@ -44,6 +44,12 @@ export const WhatsAppButton: React.FC = () => {
     return saved;
   });
 
+  // Messenger Page handle (defaulting to sarindabd, user customizable)
+  const [testMessengerPage, setTestMessengerPage] = useState<string>(() => {
+    return localStorage.getItem('sarinda_test_messenger_page') || 'sarindabd';
+  });
+  const [customMessengerInput, setCustomMessengerInput] = useState('');
+
   const getCleanPhone = (num: string) => {
     let clean = num.replace(/[^0-9]/g, '');
     if (clean.startsWith('01')) clean = '88' + clean;
@@ -107,20 +113,33 @@ export const WhatsAppButton: React.FC = () => {
     }
   }, [isOpen, messages, isTyping]);
 
-  const handleSaveCustomNumber = () => {
+  const handleSaveCustomSettings = () => {
     if (customNumberInput.trim()) {
       const clean = customNumberInput.trim();
       setTestWaNumber(clean);
       localStorage.setItem('sarinda_test_wa_number', clean);
-      setShowSettings(false);
     }
+    if (customMessengerInput.trim()) {
+      const pageClean = customMessengerInput.trim().replace(/^https?:\/\/(www\.)?(facebook\.com|m\.me)\//, '').replace(/\/$/, '');
+      setTestMessengerPage(pageClean);
+      localStorage.setItem('sarinda_test_messenger_page', pageClean);
+    }
+    setShowSettings(false);
   };
 
-  const handleResetDefaultNumber = () => {
+  const handleResetDefaultSettings = () => {
     setTestWaNumber('01852363235');
     localStorage.setItem('sarinda_test_wa_number', '01852363235');
     setCustomNumberInput('01852363235');
+    setTestMessengerPage('sarindabd');
+    localStorage.setItem('sarinda_test_messenger_page', 'sarindabd');
+    setCustomMessengerInput('sarindabd');
     setShowSettings(false);
+  };
+
+  const handleLaunchExternalMessenger = () => {
+    const page = testMessengerPage.replace(/^https?:\/\/(www\.)?(facebook\.com|m\.me)\//, '').replace(/\/$/, '') || 'sarindabd';
+    window.open(`https://m.me/${page}`, '_blank', 'noopener,noreferrer');
   };
 
   // Build direct WhatsApp Web URL for external redirection
@@ -368,12 +387,12 @@ export const WhatsAppButton: React.FC = () => {
         <div className="fixed bottom-36 sm:bottom-24 left-4 sm:left-6 z-50 w-72 sm:w-80 bg-white rounded-3xl shadow-2xl border border-brand-border p-4 animate-in slide-in-from-bottom-3 duration-200">
           <div className="flex items-center justify-between pb-2.5 border-b border-brand-border">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-full bg-[#25D366] text-white flex items-center justify-center">
+              <div className="w-8 h-8 rounded-full bg-[#075E54] text-white flex items-center justify-center">
                 <MessageCircle className="w-4 h-4" />
               </div>
               <div>
-                <p className="font-bold text-xs text-brand-charcoal">সারিন্দা WhatsApp হাব</p>
-                <p className="text-[10px] text-brand-muted">টেস্ট নম্বর: {getFormattedPhone(testWaNumber)}</p>
+                <p className="font-bold text-xs text-brand-charcoal">সারিন্দা এআই যোগাযোগ হাব</p>
+                <p className="text-[10px] text-brand-muted">WhatsApp ও Messenger স্বয়ংক্রিয় সহকারী</p>
               </div>
             </div>
             <button
@@ -385,7 +404,7 @@ export const WhatsAppButton: React.FC = () => {
           </div>
 
           <div className="mt-3 space-y-2">
-            {/* Option 1: Direct Real WhatsApp to 01852363235 */}
+            {/* Option 1: Direct Real WhatsApp */}
             <button
               onClick={() => {
                 setShowMenu(false);
@@ -395,18 +414,39 @@ export const WhatsAppButton: React.FC = () => {
             >
               <div className="flex items-center justify-between">
                 <span className="font-bold text-xs text-[#075E54] group-hover:text-white flex items-center gap-1.5">
-                  <span>📱 সরাসরি WhatsApp খুলুন</span>
+                  <span>📱 WhatsApp এ চ্যাট ও অর্ডার</span>
                 </span>
                 <span className="text-[10px] bg-[#25D366] text-white group-hover:bg-white group-hover:text-black font-extrabold px-1.5 py-0.5 rounded-full">
                   ১-ক্লিক
                 </span>
               </div>
               <p className="text-[10.5px] text-neutral-600 group-hover:text-white/90 mt-1 leading-snug">
-                সরাসরি আপনার WhatsApp অ্যাপে <strong>{getFormattedPhone(testWaNumber)}</strong> নম্বরে চ্যাট ও অর্ডার পাঠান।
+                সরাসরি WhatsApp-এ <strong>{getFormattedPhone(testWaNumber)}</strong> নম্বরে কথা বলুন বা অর্ডার দিন।
               </p>
             </button>
 
-            {/* Option 2: Live AI Agent Right on Website */}
+            {/* Option 2: Facebook Messenger */}
+            <button
+              onClick={() => {
+                setShowMenu(false);
+                handleLaunchExternalMessenger();
+              }}
+              className="w-full text-left p-3 rounded-2xl bg-[#EBF5FF] hover:bg-[#0084FF] hover:text-white transition group border border-[#0084FF]/30 cursor-pointer shadow-2xs"
+            >
+              <div className="flex items-center justify-between">
+                <span className="font-bold text-xs text-[#0064BD] group-hover:text-white flex items-center gap-1.5">
+                  <span>💬 Facebook Messenger এ চ্যাট</span>
+                </span>
+                <span className="text-[10px] bg-[#0084FF] text-white group-hover:bg-white group-hover:text-black font-extrabold px-1.5 py-0.5 rounded-full">
+                  AI অটো
+                </span>
+              </div>
+              <p className="text-[10.5px] text-neutral-600 group-hover:text-white/90 mt-1 leading-snug">
+                ফেসবুক পেজে (<strong>{testMessengerPage}</strong>) মেসেজ দিয়ে কাচ্চির মেনু ও দাম জানুন।
+              </p>
+            </button>
+
+            {/* Option 3: Live AI Agent Right on Website */}
             <button
               onClick={() => {
                 setShowMenu(false);
@@ -417,14 +457,14 @@ export const WhatsAppButton: React.FC = () => {
               <div className="flex items-center justify-between">
                 <span className="font-bold text-xs text-white flex items-center gap-1.5">
                   <Sparkles className="w-3.5 h-3.5 text-brand-gold animate-spin [animation-duration:3s]" />
-                  <span>🤖 সারিন্দা AI লাইভ এজেন্ট</span>
+                  <span>🤖 ওয়েবসাইটেই লাইভ AI সহকারী</span>
                 </span>
                 <span className="text-[10px] bg-emerald-400 text-black font-extrabold px-1.5 py-0.5 rounded-full">
                   VERY FAST
                 </span>
               </div>
               <p className="text-[10.5px] text-emerald-100 mt-1 leading-snug">
-                ওয়েবসাইটে বসেই Gemini এআই-এর সাথে লাইভ চ্যাট করে কাচ্চি অর্ডার বা মেনুর তথ্য জানুন।
+                ব্রাউজারে বসেই সেকেন্ডের মধ্যে Gemini এআই-এর সাথে কথা বলে সঠিক তথ্য পান।
               </p>
             </button>
           </div>
@@ -494,10 +534,11 @@ export const WhatsAppButton: React.FC = () => {
                 <button
                   onClick={() => {
                     setCustomNumberInput(testWaNumber);
+                    setCustomMessengerInput(testMessengerPage);
                     setShowSettings(!showSettings);
                   }}
                   className="p-1.5 rounded-full text-white/80 hover:text-white hover:bg-white/10 transition cursor-pointer"
-                  title="টেস্ট WhatsApp নম্বর পরিবর্তন করুন"
+                  title="টেস্ট নম্বর ও মেসেঞ্জার পেজ সেটিংস"
                 >
                   <Settings className="w-4 h-4" />
                 </button>
@@ -541,36 +582,49 @@ export const WhatsAppButton: React.FC = () => {
             </div>
           </div>
 
-          {/* Tester Number Settings Popover */}
+          {/* Tester Settings Popover */}
           {showSettings && (
-            <div className="bg-white p-3.5 border-b border-brand-border shadow-md animate-in slide-in-from-top-2 text-xs">
-              <div className="flex items-center justify-between mb-2">
-                <span className="font-bold text-brand-charcoal">টেস্ট WhatsApp নম্বর কনফিগারেশন:</span>
+            <div className="bg-white p-3.5 border-b border-brand-border shadow-md animate-in slide-in-from-top-2 text-xs space-y-3">
+              <div className="flex items-center justify-between pb-1 border-b border-neutral-100">
+                <span className="font-bold text-brand-charcoal">টেস্ট চ্যানেল কনফিগারেশন:</span>
                 <button onClick={() => setShowSettings(false)} className="text-brand-muted hover:text-brand-charcoal">
                   <X className="w-4 h-4" />
                 </button>
               </div>
-              <p className="text-[11px] text-brand-muted mb-2.5 leading-relaxed">
-                এখানে আপনার নিজের WhatsApp নম্বর বা যেকোনো নম্বর দিন। এর ফলে মেসেজ বা অর্ডার টেস্ট করার সময় সরাসরি আপনার নির্দিষ্ট নম্বরে যাবে।
-              </p>
-              <div className="flex gap-2">
+
+              <div>
+                <label className="block text-[11px] font-semibold text-neutral-700 mb-1">WhatsApp টেস্ট নম্বর:</label>
                 <input
                   type="text"
                   value={customNumberInput}
                   onChange={(e) => setCustomNumberInput(e.target.value)}
-                  placeholder="যেমন: 01852363235 বা 017..."
-                  className="flex-1 px-3 py-1.5 text-xs border border-brand-border rounded-lg focus:outline-none focus:border-[#25D366]"
+                  placeholder="যেমন: 01852363235"
+                  className="w-full px-3 py-1.5 text-xs border border-brand-border rounded-lg focus:outline-none focus:border-[#25D366]"
                 />
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-semibold text-neutral-700 mb-1">Facebook Messenger পেজ আইডি / ইউজারনেম:</label>
+                <input
+                  type="text"
+                  value={customMessengerInput}
+                  onChange={(e) => setCustomMessengerInput(e.target.value)}
+                  placeholder="যেমন: sarindabd বা আপনার টেস্ট পেজের ইউজারনেম"
+                  className="w-full px-3 py-1.5 text-xs border border-brand-border rounded-lg focus:outline-none focus:border-[#0084FF]"
+                />
+              </div>
+
+              <div className="flex gap-2 pt-1">
                 <button
-                  onClick={handleSaveCustomNumber}
-                  className="px-3 py-1.5 bg-[#25D366] text-white font-bold rounded-lg hover:bg-[#20ba59] transition cursor-pointer"
+                  onClick={handleSaveCustomSettings}
+                  className="flex-1 py-1.5 bg-[#075E54] text-white font-bold rounded-lg hover:bg-[#128C7E] transition cursor-pointer text-center"
                 >
-                  সংরক্ষণ
+                  সংরক্ষণ করুন
                 </button>
                 <button
-                  onClick={handleResetDefaultNumber}
-                  className="px-2 py-1.5 bg-neutral-100 text-neutral-600 rounded-lg hover:bg-neutral-200 transition text-[10px] cursor-pointer"
-                  title="ডিফল্ট নম্বরে রিসেট করুন"
+                  onClick={handleResetDefaultSettings}
+                  className="px-3 py-1.5 bg-neutral-100 text-neutral-600 rounded-lg hover:bg-neutral-200 transition text-[11px] cursor-pointer"
+                  title="ডিফল্ট সেটিংসে রিসেট করুন"
                 >
                   রিসেট
                 </button>
