@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build:api": "esbuild lib/server/whatsapp.ts --bundle --platform=node --target=node20 --format=esm --outfile=api/whatsapp.js && esbuild lib/server/conversations.ts --bundle --platform=node --target=node20 --format=esm --outfile=api/conversations.js",
+    "build:api": "esbuild lib/server/whatsapp.ts --bundle --platform=node --target=node20 --format=esm --outfile=api/whatsapp.js && esbuild lib/server/conversations.ts --bundle --platform=node --target=node20 --format=esm --outfile=api/conversations.js && esbuild api/webhook.ts --bundle --platform=node --target=node20 --format=esm --outfile=api/webhook.js",
     "build": "npm run build:api && tsc && vite build",
     "preview": "vite preview"
   },
