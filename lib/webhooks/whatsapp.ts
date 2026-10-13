@@ -37,10 +37,11 @@ export default async function handler(req: any, res: any) {
     const challenge = query['hub.challenge'];
 
     const VERIFY_TOKEN = process.env.WHATSAPP_VERIFY_TOKEN || 'sarinda_whatsapp_token_2026';
+    const SOBARI_VERIFY_TOKEN = 'sobari_resort_secure_2026';
 
     if (mode === 'subscribe') {
-      if (token === VERIFY_TOKEN) {
-        console.log('Meta WhatsApp Webhook verified successfully!');
+      if (token === VERIFY_TOKEN || token === SOBARI_VERIFY_TOKEN || token === 'veltrix_multitenant_secure_2026') {
+        console.log('Meta Webhook verified successfully!');
         return res.status(200).send(challenge);
       } else {
         return res.status(403).json({ error: 'Verification token mismatch' });
@@ -72,9 +73,22 @@ export default async function handler(req: any, res: any) {
       let senderPhone = '';
       let customerName: string | undefined;
       let platformMessageId: string | undefined;
+      let isMessenger = false;
 
-      // Case A: Meta WhatsApp Cloud API format
-      if (body?.object === 'whatsapp_business_account' || body?.entry?.[0]?.changes) {
+      // Case A: Meta Facebook Messenger format (page object)
+      if (body?.object === 'page') {
+        isMessenger = true;
+        const entry = body.entry?.[0];
+        const messaging = entry?.messaging?.[0];
+        if (messaging && messaging.message && !messaging.message.is_echo) {
+          userText = messaging.message.text || '';
+          senderPhone = messaging.sender?.id || '';
+          platformMessageId = messaging.message.mid;
+        }
+      }
+
+      // Case B: Meta WhatsApp Cloud API format
+      if (!userText && (body?.object === 'whatsapp_business_account' || body?.entry?.[0]?.changes)) {
         const change = body?.entry?.[0]?.changes?.[0]?.value;
         const message = change?.messages?.[0];
         const contact = change?.contacts?.[0];

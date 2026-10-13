@@ -23128,9 +23128,10 @@ async function handler2(req, res) {
     const token = query["hub.verify_token"];
     const challenge = query["hub.challenge"];
     const VERIFY_TOKEN = process.env.WHATSAPP_VERIFY_TOKEN || "sarinda_whatsapp_token_2026";
+    const SOBARI_VERIFY_TOKEN = "sobari_resort_secure_2026";
     if (mode === "subscribe") {
-      if (token === VERIFY_TOKEN) {
-        console.log("Meta WhatsApp Webhook verified successfully!");
+      if (token === VERIFY_TOKEN || token === SOBARI_VERIFY_TOKEN || token === "veltrix_multitenant_secure_2026") {
+        console.log("Meta Webhook verified successfully!");
         return res.status(200).send(challenge);
       } else {
         return res.status(403).json({ error: "Verification token mismatch" });
@@ -23154,7 +23155,18 @@ async function handler2(req, res) {
       let senderPhone = "";
       let customerName;
       let platformMessageId;
-      if (body?.object === "whatsapp_business_account" || body?.entry?.[0]?.changes) {
+      let isMessenger = false;
+      if (body?.object === "page") {
+        isMessenger = true;
+        const entry = body.entry?.[0];
+        const messaging = entry?.messaging?.[0];
+        if (messaging && messaging.message && !messaging.message.is_echo) {
+          userText = messaging.message.text || "";
+          senderPhone = messaging.sender?.id || "";
+          platformMessageId = messaging.message.mid;
+        }
+      }
+      if (!userText && (body?.object === "whatsapp_business_account" || body?.entry?.[0]?.changes)) {
         const change = body?.entry?.[0]?.changes?.[0]?.value;
         const message = change?.messages?.[0];
         const contact = change?.contacts?.[0];
